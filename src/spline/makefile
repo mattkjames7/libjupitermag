@@ -7,11 +7,15 @@ CC=g++ -fPIC $(CFLAGS)
 CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
 CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 
+ifndef BUILDDIR 
+	BUILDDIR=.
+endif
+
 all: obj lib
 
 obj:
-	$(CCo) spline.cc -o spline.o
-	$(CCo) libspline.cc -o libspline.o
+	$(CCo) spline.cc -o $(BUILDDIR)/spline.o
+	$(CCo) libspline.cc -o $(BUILDDIR)/libspline.o
 
 windows:
 	$(CCWo) spline.cc -o ../build/windows/spline.o

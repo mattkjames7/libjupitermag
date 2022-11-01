@@ -1,39 +1,33 @@
 # CFLAGS for CC
-#CFLAGS=-lm -std=c++17 -Wextra
+CFLAGS=-lm -std=c++17 -Wextra
 
 # Compiler
-#CCo=g++ -fPIC -c $(CFLAGS)
-#CC=g++ -fPIC $(CFLAGS)
-#CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
-#CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
+CCo=g++ -fPIC -c $(CFLAGS)
+CC=g++ -fPIC $(CFLAGS)
+CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
+CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 
-#all: obj lib
-all: objtest
+ifndef BUILDDIR 
+	BUILDDIR=.
+endif
 
-objtest:
+all: obj lib
 
-	echo $(BUILDDIR)
-	echo $(CC)
-	$(CC)
 
+.PHONY: all lib clean
 
 obj:
-	cd con2020;	make all
-	cd spline; make all
-	cd libinternalfield; make all
-	
-	$(CCo) model.cc -o model.o
-	$(CCo) trace.cc -o trace.o
-	$(CCo) interptraceclosestpos.cc -o interptraceclosestpos.o
+	cd con2020;	make obj
+	cd spline; make obj 
+	$(CCo) model.cc -o $(BUILDDIR)/model.o
+	$(CCo) trace.cc -o $(BUILDDIR)/trace.o
+	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o
 
 	
 lib:
-	$(CC) -shared libjupitermag.cc *.o \
-			con2020/*.o \
-			spline/*.o \
-			libinternalfield/libinternalfield.a \
-			-o libjupitermag.so 
-			#-o libjupitermag.so -Wl,-rpath='$$ORIGIN/libinternalfield' -L ./libinternalfield -linternalfield
+	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
+			../lib/libinternalfield/libinternalfield.a \
+			-o ../lib/libjupitermag/libjupitermag.so 
 
 test:
 	$(CC) test.cc *.o \

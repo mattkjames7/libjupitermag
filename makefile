@@ -1,38 +1,49 @@
 # CFLAGS for CC
 CFLAGS=-lm -std=c++17 -Wextra
 
-# Compilers
-defCCo=g++ -fPIC -c $(CFLAGS)
-defCC=g++ -fPIC $(CFLAGS)
-mingwCCo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
-mingwCC=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
+# Compilers - the mingw ones allow us to compile for Windows using Linux
+CCo=g++ -fPIC -c $(CFLAGS)
+CC=g++ -fPIC $(CFLAGS)
+CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
+CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 
 #chose compiler based on OS
 ifeq ($(OS),Windows_NT)
 #windows stuff here
-	BUILDDIR=build/windows
+	export BUILDDIR=$(shell pwd)/build/windows
+	MD=mkdir
+	RBUILD=rm $(BUILDDIR)/*; rmdir $(BUILDDIR); rmdir build
+	RLIB=rm lib/libinternalfield/libinternalfield.dll; rmdir lib/libinternalfield
 else
 #linux and mac here
-	BUILDDIR=build/unix
+	export BUILDDIR=$(shell pwd)/build/unix
+	MD=mkdir -p
+	RBUILD=rm -vfr $(BUILDIR)
+	RLIB=rm lib/libinternalfield/libinternalfield.so; rmdir lib/libinternalfield
 endif
 
 
+.PHONY: all lib clean
 
-all: obj lib
+all: internal obj lib
 
+internal:
+	cd lib/libinternalfield; make all
 
 obj:
-	echo $(BUILDDIR)
-	mkdir -pv $(BUILDDIR)
-	CC="$(defCC)"
-	CCo="$(defCCo)"
-	cd src; make all CC=$(CC) CCo="$(CCo)" BUILDDIR=$(BUILDDIR)
+	$(MD) $(BUILDDIR)
+	cd src; make obj
 
 lib:
-	echo "lib"
+	$(MD) lib/libjupitermag
+	cd src; make lib
 
 
 windows:
 	BUILDDIR=build/windows
-	CC=$(mingwCC)
-	CCo=$(mingwCCo)
+
+clean:
+	cd lib/libinternalfield; make clean
+	$(RBUILD)
+	$(RLIB)
+	

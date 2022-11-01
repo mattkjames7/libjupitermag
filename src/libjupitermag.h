@@ -6,8 +6,7 @@
 #include "trace.h"
 #include "string.h"
 #include "con2020/libcon2020.h"
-#include "libinternalfield/libinternalfield/models.h"
-#include "libinternalfield/libinternalfield/libinternal.h"
+#include "../lib/libinternalfield/libinternalfield.h"
 
 
 using namespace std;
