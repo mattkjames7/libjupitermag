@@ -7,7 +7,7 @@
 #include <math.h>
 #include "interptraceclosestpos.h"
 #endif
-using namespace std;
+
 /* this will be used for all of the model wrapper functions (configure model first) */
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
@@ -16,7 +16,7 @@ typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 class Trace {
 	
 	public:
-		Trace(vector<FieldFuncPtr>);
+		Trace(std::vector<FieldFuncPtr>);
 		~Trace();
 		
 		void InputPos(int,double*,double*,double*);
@@ -114,7 +114,7 @@ class Trace {
 	private:
 		/* this is the number of field contributions */
 		int nf_;
-		vector<FieldFuncPtr> Funcs_;
+		std::vector<FieldFuncPtr> Funcs_;
 
 		/* booleans to tell the object what has been done */
 		bool inputPos_;

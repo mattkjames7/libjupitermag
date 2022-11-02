@@ -4,12 +4,11 @@
 #include <stdlib.h>
 #include <vector>
 #include "trace.h"
-#include "string.h"
+#include <string.h>
 #include "con2020/libcon2020.h"
 #include "../lib/libinternalfield/libinternalfield.h"
 
 
-using namespace std;
 
 extern "C" {
 	bool TraceField(int n, double *x0, double *y0, double *z0,

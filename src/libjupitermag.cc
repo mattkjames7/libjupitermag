@@ -16,7 +16,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	 * be configured. This function will not do any of that, so strange
 	 * things could happen. Make sure that all models are Cartesian in 
 	 * and out! */
-	vector<FieldFuncPtr> Funcs;
+	std::vector<FieldFuncPtr> Funcs;
 
 	/* internal model */
 	Funcs.push_back(getModelFieldPtr(IntFunc));

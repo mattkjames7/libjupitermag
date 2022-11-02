@@ -1,6 +1,6 @@
 #include "trace.h"
 
-Trace::Trace(vector<FieldFuncPtr> Funcs) {
+Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	
 	/* set the field fucntion pointers vector */
 	Funcs_ = Funcs;

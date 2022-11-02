@@ -6,7 +6,6 @@
 #include <string.h>
 
 
-using namespace std;
 
 /* we want to initialize the model objects with its parameters */
 extern Con2020 con2020;

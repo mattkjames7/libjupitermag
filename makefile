@@ -14,18 +14,20 @@ ifeq ($(OS),Windows_NT)
 	MD=mkdir
 	RBUILD=rm $(BUILDDIR)/*; rmdir $(BUILDDIR); rmdir build
 	RLIB=rm lib/libinternalfield/libinternalfield.dll; rmdir lib/libinternalfield
+	LIB=winlib
 else
 #linux and mac here
 	export BUILDDIR=$(shell pwd)/build/unix
 	MD=mkdir -p
 	RBUILD=rm -vfr $(BUILDIR)
 	RLIB=rm lib/libinternalfield/libinternalfield.so; rmdir lib/libinternalfield
+	LIB=lib
 endif
 
 
-.PHONY: all lib clean
+.PHONY: all lib clean header
 
-all: internal obj lib
+all: internal obj lib header
 
 internal:
 	cd lib/libinternalfield; make all
@@ -36,11 +38,20 @@ obj:
 
 lib:
 	$(MD) lib/libjupitermag
-	cd src; make lib
+	cd src; make $(LIB)
 
+header:
+ifneq (,$(shell which python3))
+	python3 generateheader.py
+else
+	@echo "python3 command doesn't appear to exist - skipping header regeneration..."
+endif
 
 windows:
-	BUILDDIR=build/windows
+	export BUILDDIR=build/windows
+	$(MD) $(BUILDDIR)
+	cd src; make winobj
+
 
 clean:
 	cd lib/libinternalfield; make clean

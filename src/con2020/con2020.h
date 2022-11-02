@@ -12,7 +12,6 @@
 #include "trap.h"
 #define deg2rad M_PI/180.0;
 #endif
-using namespace std;
 
 /* function pointer for input conversion */
 class Con2020; /*this is needed for the pointer below */ 
