@@ -18,8 +18,8 @@ obj:
 	$(CCo) libspline.cc -o $(BUILDDIR)/libspline.o
 
 windows:
-	$(CCWo) spline.cc -o ../build/windows/spline.o
-	$(CCWo) libspline.cc -o ../build/windows/libspline.o
+	$(CCWo) spline.cc -o $(BUILDDIR)/spline.o
+	$(CCWo) libspline.cc -o $(BUILDDIR)/libspline.o
 		
 lib: 
 	$(CC) -shared -o libspline.so libspline.o spline.o

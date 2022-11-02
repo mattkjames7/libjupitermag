@@ -37,23 +37,16 @@ test:
 			-o test	-Wl,-rpath='$$ORIGIN/libinternalfield' -L ./libinternalfield -linternalfield
 
 
-windows:
-	mkdir -pv build/windows
-	-rm -v build/windows/*.o
+winobj:
 	cd con2020;	make windows
 	cd spline; make windows
-	cd libinternalfield; make winobj
-	cp -v libinternalfield/libinternalfield/build/windows/*.o build/windows/
-	$(CCWo) model.cc -o build/windows/model.o
-	$(CCWo) trace.cc -o build/windows/trace.o
-	$(CCWo) interptraceclosestpos.cc -o build/windows/interptraceclosestpos.o	
-	$(CCW) -shared libjupitermag.cc build/windows/*.o -o libjupitermag.dll
+	cp -v ../lib/libinternalfield/libinternalfield/build/windows/*.o $(BUILDDIR)
+	$(CCWo) model.cc -o $(BUILDDIR)/model.o
+	$(CCWo) trace.cc -o $(BUILDDIR)/trace.o
+	$(CCWo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o	
+
+winlib:
+	$(CCW) -shared libjupitermag.cc $(BUILDDIR)/*.o -o ../lib/libjupitermag/libjupitermag.dll
 
 
-clean:
-	cd con2020; make clean
-	cd spline; make clean
-	cd libinternalfield; make clean
-	rm -f *.o
-	rm -vf *.so
-	rm -vf test
+

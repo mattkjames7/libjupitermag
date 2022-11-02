@@ -7,21 +7,14 @@ CC=g++ -fPIC $(CFLAGS)
 CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
 CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 
-#chose compiler based on OS
+
+export BUILDDIR=$(shell pwd)/build
 ifeq ($(OS),Windows_NT)
 #windows stuff here
-	export BUILDDIR=$(shell pwd)/build/windows
 	MD=mkdir
-	RBUILD=rm $(BUILDDIR)/*; rmdir $(BUILDDIR); rmdir build
-	RLIB=rm lib/libinternalfield/libinternalfield.dll; rmdir lib/libinternalfield
-	LIB=winlib
 else
 #linux and mac here
-	export BUILDDIR=$(shell pwd)/build/unix
 	MD=mkdir -p
-	RBUILD=rm -vfr $(BUILDIR)
-	RLIB=rm lib/libinternalfield/libinternalfield.so; rmdir lib/libinternalfield
-	LIB=lib
 endif
 
 
@@ -38,7 +31,7 @@ obj:
 
 lib:
 	$(MD) lib/libjupitermag
-	cd src; make $(LIB)
+	cd src; make lib
 
 header:
 ifneq (,$(shell which python3))
@@ -48,13 +41,18 @@ else
 endif
 
 windows:
-	export BUILDDIR=build/windows
+#this should build the library for Windows using mingw
 	$(MD) $(BUILDDIR)
+	cd lib/libinternalfield; make windows
 	cd src; make winobj
+	$(MD) lib/libjupitermag
+	cd src; make winlib
 
 
 clean:
 	cd lib/libinternalfield; make clean
-	$(RBUILD)
-	$(RLIB)
-	
+	-rm -v lib/libjupitermag/libjupitermag.so
+	-rm -v lib/libjupitermag/libjupitermag.dll
+	-rm -vfr lib/libjupitermag
+	-rm -v build/*.o
+	-rmdir -v build
