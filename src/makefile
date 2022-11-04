@@ -25,7 +25,6 @@ obj:
 lib:
 	
 	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
-			../lib/libinternalfield/libinternalfield.a \
 			-o ../lib/libjupitermag/libjupitermag.so 
 
 test:

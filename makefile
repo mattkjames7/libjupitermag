@@ -23,7 +23,7 @@ endif
 all: internal con2020 spline obj lib header
 
 internal:
-	cd lib/libinternalfield; make all
+	cd lib/libinternalfield; make obj
 
 con2020:
 	cd lib/libcon2020; make obj
@@ -49,7 +49,9 @@ endif
 windows:
 #this should build the library for Windows using mingw
 	$(MD) $(BUILDDIR)
-	cd lib/libinternalfield; make windows
+	cd lib/libinternalfield; make winobj
+	cd lib/libcon2020; make winobj
+	cd lib/libspline; make winobj
 	cd src; make winobj
 	$(MD) lib/libjupitermag
 	cd src; make winlib
@@ -59,6 +61,8 @@ test:
 
 clean:
 	cd lib/libinternalfield; make clean
+	cd lib/libcon2020; make clean
+	cd lib/libspline; make clean
 	-rm -v lib/libjupitermag/libjupitermag.so
 	-rm -v lib/libjupitermag/libjupitermag.dll
 	-rm -vfr lib/libjupitermag

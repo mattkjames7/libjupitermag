@@ -7,7 +7,7 @@ headerfiles = [ 'src/libjupitermag.h',
                 'src/traceclosestpos.h',
                 'lib/libcon2020/include/libcon2020.h',
                 'lib/libspline/include/libspline.h',
-                'lib/libinternalfield/libinternalfield.h']
+                'lib/libinternalfield/include/libinternalfield.h']
 
 def ReadFile(fname):
     '''
