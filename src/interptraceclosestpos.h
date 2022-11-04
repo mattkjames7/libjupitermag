@@ -3,9 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib/libspline/include/libspline.h"
+
 #define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
 #endif
+
+
+/* needed this to fix compilation using mingw32 for some reason*/
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
+
+
 void interptraceClosestPos(	int n, double *x, double *y, double *z,
 						double *bx, double *by, double *bz,
 						int n0, double *x0, double *y0, double *z0, double *s0,

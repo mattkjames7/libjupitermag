@@ -37,7 +37,6 @@ test:
 winobj:
 #	cd con2020;	make windows
 #	cd spline; make windows
-	cp -v ../lib/libinternalfield/libinternalfield/build/windows/*.o $(BUILDDIR)
 	$(CCWo) model.cc -o $(BUILDDIR)/model.o
 	$(CCWo) trace.cc -o $(BUILDDIR)/trace.o
 	$(CCWo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o	
