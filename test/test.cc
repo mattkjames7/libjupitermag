@@ -11,7 +11,7 @@ int main() {
 	
 	printf("Create field function vectors\n");
 	/* test function for debugging the trace */
-	vector<FieldFuncPtr> Funcs;
+	std::vector<FieldFuncPtr> Funcs;
 
 	/* internal model */
 	Funcs.push_back(jrm09Field);
@@ -53,9 +53,8 @@ int main() {
 	
 	printf("Trace s and h_alpha\n");
 	int i;
-	for (i=0;i<T.nstep_[0];i++) {
-		printf("%10.4f %10.4f\n",T.S_[0][i],T.Halpha3D_[0][0][i]);
-	}
+	printf("Trace Test Complete\n");
+
 
 	
 }

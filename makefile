@@ -18,7 +18,7 @@ else
 endif
 
 
-.PHONY: all lib clean header
+.PHONY: all lib clean header test
 
 all: internal con2020 spline obj lib header
 
@@ -54,6 +54,8 @@ windows:
 	$(MD) lib/libjupitermag
 	cd src; make winlib
 
+test:
+	cd test; make all
 
 clean:
 	cd lib/libinternalfield; make clean
@@ -62,3 +64,4 @@ clean:
 	-rm -vfr lib/libjupitermag
 	-rm -v build/*.o
 	-rmdir -v build
+	cd test; make clean
