@@ -20,7 +20,7 @@ endif
 
 .PHONY: all lib clean header test
 
-all: internal con2020 spline obj lib header
+all: obj internal con2020 spline lib header
 
 internal:
 	cd lib/libinternalfield; make obj
