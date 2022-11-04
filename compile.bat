@@ -1,14 +1,14 @@
-cd lib/libspline
+cd lib\libspline
 call compile.bat
-cd ../../
+cd ..\..\
 
-cd lib/libcon2020
+cd lib\libcon2020
 call compile.bat
-cd ../../
+cd ..\..\
 
-cd lib/libinternalfield
+cd lib\libinternalfield
 call compile.bat
-cd ../../
+cd ..\..\
 
 cd src
 call compile.bat
