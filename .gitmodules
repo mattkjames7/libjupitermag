@@ -1,3 +1,9 @@
 [submodule "lib/libinternalfield"]
 	path = lib/libinternalfield
 	url = git@github.com:mattkjames7/libinternalfield
+[submodule "lib/libspline"]
+	path = lib/libspline
+	url = git@github.com:mattkjames7/libspline.git
+[submodule "lib/libcon2020"]
+	path = lib/libcon2020
+	url = git@github.com:mattkjames7/libcon2020.git

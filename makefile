@@ -20,10 +20,16 @@ endif
 
 .PHONY: all lib clean header
 
-all: internal obj lib header
+all: internal con2020 spline obj lib header
 
 internal:
 	cd lib/libinternalfield; make all
+
+con2020:
+	cd lib/libcon2020; make obj
+
+spline:
+	cd lib/libspline; make obj
 
 obj:
 	$(MD) $(BUILDDIR)
