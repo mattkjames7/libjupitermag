@@ -16,6 +16,12 @@
 #define INTERNALFIELD_VERSION_MAJOR 0
 #define INTERNALFIELD_VERSION_MINOR 1
 #define INTERNALFIELD_VERSION_PATCH 8
+#define LIBCON2020_VERSION_MAJOR 0
+#define LIBCON2020_VERSION_MINOR 0
+#define LIBCON2020_VERSION_PATCH 1
+#define LIBSPLINE_VERSION_MAJOR 0
+#define LIBSPLINE_VERSION_MINOR 0
+#define LIBSPLINE_VERSION_PATCH 1
 #define _USE_MATH_DEFINES
 #define deg2rad M_PI/180.0;
 
@@ -407,7 +413,6 @@ void j0(int n, double *x, double multx, double *j);
  * ********************************************************************/
 void j1(int n, double *x, double multx, double *j);
 
-
 template <typename T> T clip(T x, T mn, T mx) {
 	return std::min(mx,std::max(x,mn));
 }
@@ -589,7 +594,6 @@ class Con2020 {
 /* we want to initialize the model objects with its parameters */
 extern Con2020 con2020;
 
-
 double polyeval(double x, double *c, int d);
 
 double pol1eval(double x, double *c, int d);
@@ -611,7 +615,6 @@ double pol1eval(double x, double *c, int d);
  * ********************************************************************/
 double smoothd(double z, double dz, double d);
 
-
 double trap(int n, double *x, double *y);
 double trapc(int n, double dx, double *y);
 
@@ -627,7 +630,6 @@ class Spline {
 		double *x_, *y_;
 		bool del_;
 };
-
 
 class Internal;
 

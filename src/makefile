@@ -17,8 +17,6 @@ all: obj lib
 .PHONY: all lib clean
 
 obj:
-	cd con2020;	make obj
-	cd spline; make obj 
 	$(CCo) model.cc -o $(BUILDDIR)/model.o
 	$(CCo) trace.cc -o $(BUILDDIR)/trace.o
 	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o
@@ -38,8 +36,8 @@ test:
 
 
 winobj:
-	cd con2020;	make windows
-	cd spline; make windows
+#	cd con2020;	make windows
+#	cd spline; make windows
 	cp -v ../lib/libinternalfield/libinternalfield/build/windows/*.o $(BUILDDIR)
 	$(CCWo) model.cc -o $(BUILDDIR)/model.o
 	$(CCWo) trace.cc -o $(BUILDDIR)/trace.o

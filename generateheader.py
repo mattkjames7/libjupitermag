@@ -5,15 +5,8 @@ headerfiles = [ 'src/libjupitermag.h',
                 'src/trace.h',
                 'src/model.h',
                 'src/traceclosestpos.h',
-                'src/con2020/bessel.h',
-                'src/con2020/clip.h',
-                'src/con2020/con2020.h',
-                'src/con2020/libcon2020.h',
-                'src/con2020/polyeval.h',
-                'src/con2020/smoothd.h',
-                'src/con2020/trap.h',
-                'src/spline/spline.h',
-                'src/spline/libspline.h',
+                'lib/libcon2020/include/libcon2020.h',
+                'lib/libspline/include/libspline.h',
                 'lib/libinternalfield/libinternalfield.h']
 
 def ReadFile(fname):

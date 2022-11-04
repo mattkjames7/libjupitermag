@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include "trace.h"
-#include "../lib/libinternalfield/libinternalfield.h"
-#include "con2020/libcon2020.h"
+#include "../include/libjupitermag.h"
 #endif
 
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib/libinternalfield/libinternalfield.h"
-#include "con2020/libcon2020.h"
+#include "../lib/libcon2020/include/libcon2020.h"
 #endif
 
 extern "C" {
