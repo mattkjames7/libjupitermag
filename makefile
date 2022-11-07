@@ -17,6 +17,10 @@ else
 	MD=mkdir -p
 endif
 
+ifeq ($(PREFIX),)
+#install path
+	PREFIX=/usr/local
+endif
 
 .PHONY: all lib clean header test
 
@@ -58,6 +62,17 @@ windows:
 
 test:
 	cd test; make all
+
+install:
+	cp -v include/jupitermag.h $(PREFIX)/include
+	cp -v lib/libjupitermag/libjupitermag.so $(PREFIX)/lib
+	chmod 0775 $(PREFIX)/lib/libjupitermag.so
+	ldconfig
+
+uninstall:
+	rm -v $(PREFIX)/include/jupitermag.h
+	rm -v $(PREFIX)/lib/libjupitermag.so
+	ldconfig
 
 clean:
 	cd lib/libinternalfield; make clean

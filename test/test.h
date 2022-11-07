@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include "../include/libjupitermag.h"
+#include "../include/jupitermag.h"
 #endif
 
 

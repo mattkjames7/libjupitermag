@@ -226,7 +226,7 @@ def CombineHeaders():
 
 
     #create the output file
-    with open('include/libjupitermag.h','w') as f:
+    with open('include/jupitermag.h','w') as f:
         f.writelines(out)
         print('Saved header file')
 
