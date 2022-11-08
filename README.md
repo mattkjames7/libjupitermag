@@ -55,8 +55,6 @@ It can also be uninstalled,
 make uninstall
 ```
 
-
-
 Under Windows powershell/command line,
 
 ```powershell
@@ -242,10 +240,6 @@ The above code traces along the magnetic field using the JRM09 internal and Con2
 
 - Connerney, J. E. P., Acuña, M. H., and Ness, N. F. (1981), Modeling the Jovian current sheet and inner magnetosphere, *J. Geophys. Res.*, 86( A10), 8370– 8384, doi:[10.1029/JA086iA10p08370](https://doi.org/10.1029/JA086iA10p08370).
 
-- Edwards T.M., Bunce E.J., Cowley S.W.H. (2001), A note on the vector potential of Connerney et al.'s model of the equatorial current sheet in Jupiter's magnetosphere, *Planetary and Space Science,*49, 1115-1123,[Redirecting](https://doi.org/10.1016/S0032-0633(00)00164-1).
-  
-  Anderson, B.J., Acuña, M.H., Korth, H. et al. The Magnetic Field of Mercury. Space Sci Rev 152, 307–339 (2010). [The Magnetic Field of Mercury | SpringerLink](https://doi.org/10.1007/s11214-009-9544-3)
-
 - Connerney, J. E. P. (1981), The magnetic field of Jupiter: A generalized inverse approach, *J. Geophys. Res.*, 86( A9), 7679– 7693, doi:[10.1029/JA086iA09p07679](https://doi.org/10.1029/JA086iA09p07679 "Link to external resource: 10.1029/JA086iA09p07679").
 
 - Connerney, J. E. P., Acuña, M. H., and Ness, N. F. (1982), Voyager 1 assessment of Jupiter's planetary magnetic field, *J. Geophys. Res.*, 87( A5), 3623– 3627, doi:[10.1029/JA087iA05p03623](https://doi.org/10.1029/JA087iA05p03623 "Link to external resource: 10.1029/JA087iA05p03623").
@@ -256,6 +250,8 @@ The above code traces along the magnetic field using the JRM09 internal and Con2
 
 - Connerney, J. E. P., Timmins, S., Oliversen, R. J., Espley, J. R., Joergensen, J. L., Kotsiaros, S., et al. (2022). A new model of Jupiter's magnetic field at the completion of Juno's Prime Mission. Journal of Geophysical Research: Planets, 127, e2021JE007055. [A New Model of Jupiter's Magnetic Field at the Completion of Juno's Prime Mission - Connerney - 2022 - Journal of Geophysical Research: Planets - Wiley Online Library](https://doi.org/10.1029/2021JE007055)
 
-- Hess, S. L. G., Bonfond, B., Zarka, P., and Grodent, D. (2011), Model of the Jovian magnetic field topology constrained by the Io auroral emissions, *J. Geophys. Res.*, 116, A05217, doi:[10.1029/2010JA016262](https://doi.org/10.1029/2010JA016262 "Link to external resource: 10.1029/2010JA016262").
+- Hess, S. L. G., Bonfond, B., Zarka, P., and Grodent, D. (2011), Model of the Jovian magnetic field topology constrained by the Io auroral emissions, *J. Geophys. Res.*, 116, A05217, doi:[10.1029/2010JA016262](https://doi.org/10.1029/2010JA016262 "Link to external resource: 10.1029/2010JA016262").Redirecting
 
 - Hess, S., Bonfond, B., Bagenal, F., & Lamy, L. (2017). A model of the Jovian internal field derived from in-situ and auroral constraints, doi:[10.1553/PRE8s157](https://doi.org/10.1553/PRE8s157)
+
+- Edwards T.M., Bunce E.J., Cowley S.W.H. (2001), A note on the vector potential of Connerney et al.'s model of the equatorial current sheet in Jupiter's magnetosphere, *Planetary and Space Science,*49, 1115-1123,[https://doi.org/10.1016/S0032-0633(00)00164-1](https://doi.org/10.1016/S0032-0633(00)00164-1).
