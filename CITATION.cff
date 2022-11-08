@@ -58,5 +58,7 @@ authors:
       Leicester, Leicester, UK
     orcid: 'https://orcid.org/0000-0002-4041-0034'
 identifiers:
+  - type: doi
+    value: 10.5281/zenodo.7306035
   - type: url
     value: 'https://github.com/mattkjames7/libjupitermag.git'
