@@ -1,6 +1,8 @@
 # libjupitermag
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.7306035.svg)](https://zenodo.org/badge/latestdoi/560414844)Code for obtaining magnetic field vectors and traces from within Jupiter's magnetosphere using various magnetic field models.
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.7306035.svg)](https://zenodo.org/badge/latestdoi/560414844)
+
+Code for obtaining magnetic field vectors and traces from within Jupiter's magnetosphere using various magnetic field models.
 
 This is part of a community code project :
 
