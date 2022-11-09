@@ -267,7 +267,7 @@ double TimeInternalScalarxyz(int n, double *x, double *y, double *z, const char 
 }
 
 
-def rtptoxyz(int n, double *r, double *t, double *p,
+void rtptoxyz(int n, double *r, double *t, double *p,
 				double *x, double *y, double *z) {
 	
 	int i;
