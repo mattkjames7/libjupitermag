@@ -10,7 +10,10 @@ CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 all:
 	echo $(ORIGIN)
 	$(CC) test.cc -o test	-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag
+	$(CC) timing.cc -o timing	-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag
+
 	./test
+	./timing
 
 clean:
 	-rm -v test
