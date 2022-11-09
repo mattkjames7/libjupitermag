@@ -1,5 +1,5 @@
 # CFLAGS for CC
-CFLAGS=-lm -std=c++17 -Wextra
+CFLAGS=-lm -std=c++17 -Wextra -g
 
 # Compiler
 CCo=g++ -fPIC -c $(CFLAGS)
@@ -8,7 +8,6 @@ CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
 CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 
 all:
-	echo $(ORIGIN)
 	$(CC) test.cc -o test	-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag
 	$(CC) timing.cc -o timing	-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag
 
@@ -17,3 +16,4 @@ all:
 
 clean:
 	-rm -v test
+	-rm -v timing

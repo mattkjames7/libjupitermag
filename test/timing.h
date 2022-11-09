@@ -2,6 +2,7 @@
 #define __TIMING_H__
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/jupitermag.h"
 #include <ctime>
 
 void ReadDataFile(int *n, double *r, double *t, double *p);

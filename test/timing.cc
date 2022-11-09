@@ -1,10 +1,21 @@
 #include "timing.h"
 
+int DataFileLength() {
+	int n;
+	FILE *f = fopen("data.bin","r");
+	fread(&n,1,sizeof(int),f);
+	printf("Found %d elements\n",n);
+
+	fclose(f);
+	return n;	
+}
+
+
 void ReadDataFile(int *n, double *r, double *t, double *p) {
 
 	/* open the file and get the number of elements */
-	FILE *f = open('data.bin','r')
-	fread(n,1,sizeof(int),f)
+	FILE *f = fopen("data.bin","r");
+	fread(n,1,sizeof(int),f);
 	printf("Found %d elements\n",*n);
 
 	/* allocate temporary arrays*/
@@ -23,10 +34,7 @@ void ReadDataFile(int *n, double *r, double *t, double *p) {
 	/* close the file */
 	fclose(f);
 
-	/* convert to doubles */
-	r = new double[*n];
-	t = new double[*n];
-	p = new double[*n];
+
 	int i;
 	for (i=0;i<*n;i++) {
 		r[i] = (double) rf[i];
@@ -167,7 +175,7 @@ double TimeCon2020Scalarxyz(int n, double *x, double *y, double *z, const char *
 
 
 
-double TimeInternalVectorrtp(int n, double *r, double *t, double *p, const char *modelname) {
+double TimeInternalVectorrtp(int n, double *r, double *t, double *p, const char *modelname, int MaxDeg) {
 
 	/* create empty arrays to store B vectors in */
 	double *Br = new double[n];
@@ -176,6 +184,7 @@ double TimeInternalVectorrtp(int n, double *r, double *t, double *p, const char 
 
 	/* create a model object */
 	Internal model = Internal(modelname);
+	model.SetDegree(MaxDeg);
 
 	/* time it */
 	double t0, t1;
@@ -193,7 +202,7 @@ double TimeInternalVectorrtp(int n, double *r, double *t, double *p, const char 
 
 
 
-double TimeInternalVectorxyz(int n, double *x, double *y, double *z, const char *modelname) {
+double TimeInternalVectorxyz(int n, double *x, double *y, double *z, const char *modelname, int MaxDeg) {
 
 	/* create empty arrays to store B vectors in */
 	double *Bx = new double[n];
@@ -202,6 +211,7 @@ double TimeInternalVectorxyz(int n, double *x, double *y, double *z, const char 
 
 	/* create a model object */
 	Internal model = Internal(modelname);
+	model.SetDegree(MaxDeg);
 
 	/* time it */
 	double t0, t1;
@@ -217,7 +227,7 @@ double TimeInternalVectorxyz(int n, double *x, double *y, double *z, const char 
 }
 
 
-double TimeInternalScalarrtp(int n, double *r, double *t, double *p, const char *modelname) {
+double TimeInternalScalarrtp(int n, double *r, double *t, double *p, const char *modelname, int MaxDeg) {
 
 	/* create empty variables for the field vectors */
 	double Br;
@@ -226,6 +236,7 @@ double TimeInternalScalarrtp(int n, double *r, double *t, double *p, const char 
 
 	/* create a model object */
 	Internal model = Internal(modelname);
+	model.SetDegree(MaxDeg);
 
 	/* time it */
 	double t0, t1;
@@ -242,7 +253,7 @@ double TimeInternalScalarrtp(int n, double *r, double *t, double *p, const char 
 }
 
 
-double TimeInternalScalarxyz(int n, double *x, double *y, double *z, const char *modelname) {
+double TimeInternalScalarxyz(int n, double *x, double *y, double *z, const char *modelname, int MaxDeg) {
 
 	/* create empty variables for the field vectors */
 	double Bx;
@@ -251,6 +262,7 @@ double TimeInternalScalarxyz(int n, double *x, double *y, double *z, const char 
 
 	/* create a model object */
 	Internal model = Internal(modelname);
+	model.SetDegree(MaxDeg);
 
 	/* time it */
 	double t0, t1;
@@ -267,6 +279,8 @@ double TimeInternalScalarxyz(int n, double *x, double *y, double *z, const char 
 }
 
 
+
+
 void rtptoxyz(int n, double *r, double *t, double *p,
 				double *x, double *y, double *z) {
 	
@@ -280,24 +294,110 @@ void rtptoxyz(int n, double *r, double *t, double *p,
 
 
 
+
 int main() {
 
 	/* read in positions to test models with */
 	double *r, *t, *p;
 	int n;
+	n = DataFileLength();
+	
+	/* convert to doubles */
+	r = new double[n];
+	t = new double[n];
+	p = new double[n];
+
 	ReadDataFile(&n,r,t,p);
 
-	/* get the cartesian positions too */
-	rtptoxyz(n,r,t,p,x,y,z);
 
+	/* get the cartesian positions too */
+	double *x = new double[n];
+	double *y = new double[n];
+	double *z = new double[n];
+
+	rtptoxyz(n,r,t,p,x,y,z);
 
 	double dt;
 
 	/* test the internal model (vector,rtp)*/
-	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33");
-	printf("Vector, RTP %s: %f s\n","jrm33",dt);
+	printf("Testing internal field models\n");
+	printf("### Vector, RTP ###\n");
+	dt = TimeInternalVectorrtp(n,r,t,p,"jrm33",3);
+	printf("Vector, RTP Model %s, Degree %d: %f s\n","jrm33",3,dt);
+	dt = TimeInternalVectorrtp(n,r,t,p,"jrm33",4);
+	printf("Vector, RTP Model %s, Degree %d: %f s\n","jrm33",4,dt);
+	dt = TimeInternalVectorrtp(n,r,t,p,"jrm33",10);
+	printf("Vector, RTP Model %s, Degree %d: %f s\n","jrm33",10,dt);
+	dt = TimeInternalVectorrtp(n,r,t,p,"jrm33",13);
+	printf("Vector, RTP Model %s, Degree %d: %f s\n","jrm33",13,dt);
+	dt = TimeInternalVectorrtp(n,r,t,p,"jrm33",18);
+	printf("Vector, RTP Model %s, Degree %d: %f s\n","jrm33",18,dt);
+
+
+
+	/* test the internal model (scalar,rtp)*/
+	printf("### Scalar, RTP ###\n");
+	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33",3);
+	printf("Scalar, RTP Model %s, Degree %d: %f s\n","jrm33",3,dt);
+	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33",4);
+	printf("Scalar, RTP Model %s, Degree %d: %f s\n","jrm33",4,dt);
+	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33",10);
+	printf("Scalar, RTP Model %s, Degree %d: %f s\n","jrm33",10,dt);
+	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33",13);
+	printf("Scalar, RTP Model %s, Degree %d: %f s\n","jrm33",13,dt);
+	dt = TimeInternalScalarrtp(n,r,t,p,"jrm33",18);
+	printf("Scalar, RTP Model %s, Degree %d: %f s\n","jrm33",18,dt);
+
+
+
+	/* test the internal model (vector,xyz)*/
+	printf("Testing internal field models\n");
+	printf("### Vector, XYZ ###\n");
+	dt = TimeInternalVectorxyz(n,r,t,p,"jrm33",3);
+	printf("Vector, XYZ Model %s, Degree %d: %f s\n","jrm33",3,dt);
+	dt = TimeInternalVectorxyz(n,r,t,p,"jrm33",4);
+	printf("Vector, XYZ Model %s, Degree %d: %f s\n","jrm33",4,dt);
+	dt = TimeInternalVectorxyz(n,r,t,p,"jrm33",10);
+	printf("Vector, XYZ Model %s, Degree %d: %f s\n","jrm33",10,dt);
+	dt = TimeInternalVectorxyz(n,r,t,p,"jrm33",13);
+	printf("Vector, XYZ Model %s, Degree %d: %f s\n","jrm33",13,dt);
+	dt = TimeInternalVectorxyz(n,r,t,p,"jrm33",18);
+	printf("Vector, XYZ Model %s, Degree %d: %f s\n","jrm33",18,dt);
+
+
+
+	/* test the internal model (scalar,xyz)*/
+	printf("### Scalar, XYZ ###\n");
+	dt = TimeInternalScalarxyz(n,r,t,p,"jrm33",3);
+	printf("Scalar, XYZ Model %s, Degree %d: %f s\n","jrm33",3,dt);
+	dt = TimeInternalScalarxyz(n,r,t,p,"jrm33",4);
+	printf("Scalar, XYZ Model %s, Degree %d: %f s\n","jrm33",4,dt);
+	dt = TimeInternalScalarxyz(n,r,t,p,"jrm33",10);
+	printf("Scalar, XYZ Model %s, Degree %d: %f s\n","jrm33",10,dt);
+	dt = TimeInternalScalarxyz(n,r,t,p,"jrm33",13);
+	printf("Scalar, XYZ Model %s, Degree %d: %f s\n","jrm33",13,dt);
+	dt = TimeInternalScalarxyz(n,r,t,p,"jrm33",18);
+	printf("Scalar, XYZ Model %s, Degree %d: %f s\n","jrm33",18,dt);
+
+
+	printf("\n\n");
+	printf("Testing Con2020\n");
+	dt = TimeCon2020Vectorrtp(n,r,t,p,"analytic");
+	printf("Analytic, Vector: %f\n",dt);
+	dt = TimeCon2020Scalarrtp(n,r,t,p,"analytic");
+	printf("Analytic, Scalar: %f\n",dt);
+
+	dt = TimeCon2020Vectorrtp(n,r,t,p,"hybrid");
+	printf("Hybrid, Vector: %f\n",dt);
+	dt = TimeCon2020Scalarrtp(n,r,t,p,"hybrid");
+	printf("Hybrid, Scalar: %f\n",dt);
+
+	dt = TimeCon2020Vectorrtp(n,r,t,p,"integral");
+	printf("Integral, Vector: %f\n",dt);
+	dt = TimeCon2020Scalarrtp(n,r,t,p,"integral");
+	printf("Integral, Scalar: %f\n",dt);
 
 	/* free memory */
 	FreeData(r,t,p);
-	FreeData(Br,Bt,Bp);
+	FreeData(x,y,z);
 }
