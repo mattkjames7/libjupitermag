@@ -78,9 +78,6 @@ clean:
 	cd lib/libinternalfield; make clean
 	cd lib/libcon2020; make clean
 	cd lib/libspline; make clean
-	-rm -v lib/libjupitermag/libjupitermag.so
-	-rm -v lib/libjupitermag/libjupitermag.dll
-	-rm -vfr lib/libjupitermag
 	-rm -v build/*.o
 	-rmdir -v build
 	cd test; make clean
