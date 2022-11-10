@@ -9,6 +9,6 @@ do
     echo $i ${libdirs[$i]} ${libgits[$i]}
     cd ${libdirs[$i]}
     git stash
-    git pull
+    git pull origin main
     cd ${CWD}
 done
