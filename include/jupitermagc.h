@@ -1,13 +1,11 @@
 #ifndef __LIBJUPITERMAG_H__
 #define __LIBJUPITERMAG_H__
-#include <algorithm>
-#include <map>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
-#include <vector>
+#include <stdbool.h>
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
 #define LIBJUPITERMAG_VERSION_MINOR 0
@@ -23,14 +21,12 @@
 #define LIBSPLINE_VERSION_MINOR 0
 #define LIBSPLINE_VERSION_PATCH 1
 #define M_PI		3.14159265358979323846
-#define USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
+
 #define __LIBCON2020_H__
 #define __LIBINTERNALFIELD_H__
 #define __LIBSPLINE_H__
 #define deg2rad M_PI/180.0;
 
-extern "C" {
 	bool TraceField(int n, double *x0, double *y0, double *z0,
 					const char *IntFunc, int nExt, char **ExtFunc,
 					int MaxLen, double MaxStep, double InitStep,
@@ -144,7 +140,8 @@ extern "C" {
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
-*       double deltarho Scale length to smoothly transition from
+*       double deltarho Sc}
+extern "C" {ale length to smoothly transition from
 *                       small to large rho approx
 *       double deltaz   Scale length over which to smooth 4th
 *                        term of the equation
@@ -549,8 +546,7 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 				double *Bx, double *By, double *Bz);
 	void umohField(double x, double y, double z,
 				double *Bx, double *By, double *Bz);
-}
-extern "C" {
+
 	/* these wrappers can be used to get the magnetic field vectors */
 
 	/***********************************************************************
@@ -631,7 +627,7 @@ extern "C" {
 	void GetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg);
 
 	
-}
+
 
 
 
