@@ -12,10 +12,18 @@ export BUILDDIR=$(shell pwd)/build
 ifeq ($(OS),Windows_NT)
 #windows stuff here
 	MD=mkdir
+	LIBFILE=libinternalfield.dll
 else
 #linux and mac here
+	OS=$(shell uname -s)
+	ifeq ($(OS),Linux)
+		LIBFILE=libinternalfield.so
+	else
+		LIBFILE=libinternalfield.dylib
+	endif
 	MD=mkdir -p
 endif
+
 
 ifeq ($(PREFIX),)
 #install path
@@ -65,15 +73,21 @@ test:
 
 install:
 	cp -v include/jupitermag.h $(PREFIX)/include
-	cp -v lib/libjupitermag/libjupitermag.so $(PREFIX)/lib
-	chmod 0775 $(PREFIX)/lib/libjupitermag.so
-	ldconfig
+	cp -v include/jupitermagc.h $(PREFIX)/include
+	cp -v lib/libjupitermag/$(LIBFILE) $(PREFIX)/lib
+	chmod 0775 $(PREFIX)/lib/$(LIBFILE)
+	ifeq ($(OS),Linux)
+		ldconfig
+	endif
 
 uninstall:
 	rm -v $(PREFIX)/include/jupitermag.h
-	rm -v $(PREFIX)/lib/libjupitermag.so
-	ldconfig
-
+	rm -v $(PREFIX)/include/jupitermagc.h
+	rm -v $(PREFIX)/lib/$(LIBFILE)
+	ifeq ($(OS),Linux)
+		ldconfig
+	endif
+	
 clean:
 	cd lib/libinternalfield; make clean
 	cd lib/libcon2020; make clean

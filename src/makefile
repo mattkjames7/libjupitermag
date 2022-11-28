@@ -11,6 +11,13 @@ ifndef BUILDDIR
 	BUILDDIR=.
 endif
 
+OS=$(shell uname -s)
+ifeq ($(OS),Linux)
+	LIBFILE=libcon2020.so
+else
+	LIBFILE=libcon2020.dylib
+endif
+
 all: obj lib
 
 
@@ -25,7 +32,7 @@ obj:
 lib:
 	
 	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
-			-o ../lib/libjupitermag/libjupitermag.so 
+			-o ../lib/libjupitermag/$(LIBFILE)
 
 test:
 	$(CC) test.cc *.o \
