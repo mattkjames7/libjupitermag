@@ -1,7 +1,11 @@
-#include "test.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+#include <jupitermag.h>
 
 int main() {
 	
+	printf("C++ Test...\n");
 	int n = 1;
 	double x0 = 5.0;
 	double y0 = 0.0;
@@ -53,7 +57,8 @@ int main() {
 	
 	printf("Trace s and h_alpha\n");
 	int i;
-	printf("Trace Test Complete\n");
+	printf("C++ Test Complete\n");
+
 
 
 	

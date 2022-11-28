@@ -22,9 +22,9 @@ ifeq ($(PREFIX),)
 	PREFIX=/usr/local
 endif
 
-.PHONY: all lib clean header test
+.PHONY: all lib clean header test internal con2020 spline obj install uninstall  windows
 
-all: obj internal con2020 spline lib header
+all: obj internal con2020 spline lib
 
 internal:
 	cd lib/libinternalfield; make obj

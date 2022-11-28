@@ -19,12 +19,15 @@ else
 endif
 
 all:
-	$(CC) test.cc -o test	$(LDFLAGS)
+	$(CC) -I ../include cpptest.cc -o cpptest	$(LDFLAGS)
 	$(CC) timing.cc -o timing	$(LDFLAGS)
+	gcc -I ../include ctest.c -o ctest -lm -ljupitermag
 
-	./test
+	./ctest
+	./cpptest
 	./timing
 
 clean:
-	-rm -v test
+	-rm -v ctest
+	-rm -v cpptest
 	-rm -v timing

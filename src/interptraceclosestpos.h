@@ -2,7 +2,7 @@
 #define __INTERPTRACECLOSESTPOS_H__
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/libspline/include/libspline.h"
+#include "../lib/libspline/include/spline.h"
 
 #define _USE_MATH_DEFINES
 #include <cmath>

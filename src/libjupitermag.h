@@ -5,8 +5,8 @@
 #include <vector>
 #include "trace.h"
 #include <string.h>
-#include "../lib/libcon2020/include/libcon2020.h"
-#include "../lib/libinternalfield/libinternalfield.h"
+#include "../lib/libcon2020/src/libcon2020.h"
+#include "../lib/libinternalfield/include/internalfield.h"
 
 
 

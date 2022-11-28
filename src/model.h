@@ -2,8 +2,8 @@
 #define __MODEL_H__
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/libinternalfield/include/libinternalfield.h"
-#include "../lib/libcon2020/include/libcon2020.h"
+#include "../lib/libinternalfield/include/internalfield.h"
+#include "../lib/libcon2020/include/con2020.h"
 #endif
 
 extern "C" {
