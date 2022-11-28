@@ -368,6 +368,7 @@ extern "C" {
  *		modelFieldPtr *ptr		Pointer to model wrapper.
  *
  **********************************************************************/
+ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	modelFieldPtr getModelFieldPtr(const char *Model);
 
 /* functions to directly call each model for a single Cartesian vector (this will be used for tracing) */
@@ -1418,7 +1419,7 @@ std::map<std::string,InternalFunc> getModelPtrMap();
  * RETURNS :
  *		InternalFunc ptr		Function pointer to model object.
  *
- **********************************************************************/
+ ********************************************************************typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);**/
 InternalFunc getModelObjPointer(std::string Model);
 
 /***********************************************************************
@@ -1448,7 +1449,7 @@ InternalFunc getModelObjPointer(const char *Model);
 std::vector<std::string> listAvailableModels();
 
 /* map of strings to direct field model function pointers */
-typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
+
 std::map<std::string,modelFieldPtr> getModelFieldPtrMap();
 
 /* functions to return pointer to model field function */

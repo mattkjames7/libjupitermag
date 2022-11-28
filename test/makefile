@@ -21,7 +21,7 @@ endif
 all:
 	$(CC) -I ../include cpptest.cc -o cpptest	$(LDFLAGS)
 	$(CC) timing.cc -o timing	$(LDFLAGS)
-	gcc -I ../include ctest.c -o ctest -lm -ljupitermag
+	gcc -I ../include ctest.c -o ctest -lm $(LDFLAGS)
 
 	./ctest
 	./cpptest
