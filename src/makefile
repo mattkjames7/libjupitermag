@@ -13,9 +13,9 @@ endif
 
 OS=$(shell uname -s)
 ifeq ($(OS),Linux)
-	LIBFILE=libcon2020.so
+	LIBFILE=libjupitermag.so
 else
-	LIBFILE=libcon2020.dylib
+	LIBFILE=libjupitermag.dylib
 endif
 
 all: obj lib
