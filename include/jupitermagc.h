@@ -9,7 +9,7 @@
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
 #define LIBJUPITERMAG_VERSION_MINOR 1
-#define LIBJUPITERMAG_VERSION_PATCH 0
+#define LIBJUPITERMAG_VERSION_PATCH 1
 
 #define INTERNALFIELD_VERSION_MAJOR 1
 #define INTERNALFIELD_VERSION_MINOR 1
@@ -37,44 +37,44 @@
 					double **Bx, double **By, double **Bz,
 					double **R, double **S, double **Rnorm, double **FP,
 					int nalpha, double *alpha, double *halpha);
-	void ModelField(double p0, double p1, double p2, 
-					const char *internal, const char *external, 
+	void ModelField(double p0, double p1, double p2,
+					const char *internal, const char *external,
 					bool CartIn, bool CartOut,
 					double *B0, double *B1, double *B2);
 
-	void ModelFieldArray(	int n, double *p0, double *p1, double *p2, 
-							const char *internal, const char *external, 
+	void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+							const char *internal, const char *external,
 							bool CartIn, bool CartOut,
 							double *B0, double *B1, double *B2);
 	/* these wrappers can be used to get the magnetic field vectors */
 	void Con2020FieldArray(int n, double *p0, double *p1, double *p2,
 					double *B0, double *B1, double *B2);
-	
+
 	void Con2020Field(double p0, double p1, double p2,
 			double *B0, double *B1, double *B2);
 
 
 	void GetCon2020Params(double *mui, double *irho, double *r0, double *r1,
 					double *d, double *xt, double *xp, char *eqtype,
-					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut, 
+					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
 					bool *smooth, double *DeltaRho, double *DeltaZ,
 					double *g, char *azfunc, double *wO_open, double *wO_oc,
 					double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc);
-						
-	
+
+
 	void SetCon2020Params(double mui, double irho, double r0, double r1,
 					double d, double xt, double xp, const char *eqtype,
-					bool Edwards, bool ErrChk, bool CartIn, bool CartOut, 
+					bool Edwards, bool ErrChk, bool CartIn, bool CartOut,
 					bool smooth, double DeltaRho, double DeltaZ,
 					double g, const char *azfunc, double wO_open, double wO_oc,
 					double thetamm, double dthetamm, double thetaoc, double dthetaoc);
 
-	void Con2020AnalyticField(	int n, double a, 
-							double *rho, double *z, 
+	void Con2020AnalyticField(	int n, double a,
+							double *rho, double *z,
 							double *Brho, double *Bz);
 
-	void Con2020AnalyticFieldSmooth(	int n, double a, 
-							double *rho, double *z, 
+	void Con2020AnalyticFieldSmooth(	int n, double a,
+							double *rho, double *z,
 							double *Brho, double *Bz);
 
 
@@ -86,11 +86,11 @@
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equation 8).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -108,11 +108,11 @@
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equation 12).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -132,11 +132,11 @@
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equations 8 & 12).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -148,7 +148,7 @@ extern "C" {ale length to smoothly transition from
 *
 ***************************************************************/
 	double ScalarPotential( double rho, double z, double a,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz);
 
 	/*************************************************************
@@ -173,7 +173,7 @@ extern "C" {ale length to smoothly transition from
 	*						thetaoc,dthetaoc)
 	*
 	*	DESCRIPTION: Ratio of the angular velocity mapped to
-	*		thetai to the planetary rotation. Equation 15 of 
+	*		thetai to the planetary rotation. Equation 15 of
 	*		Cowley et al., 2008.
 	*
 	*	INPUTS:
@@ -183,8 +183,8 @@ extern "C" {ale length to smoothly transition from
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -219,8 +219,8 @@ extern "C" {ale length to smoothly transition from
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -232,16 +232,16 @@ extern "C" {ale length to smoothly transition from
 	*		double Ihp		Ionospheric Pedersen current.
 	*
 	*************************************************************/
-	double PedersenCurrent(	double thetai, double g, 
+	double PedersenCurrent(	double thetai, double g,
 						double wO_open, double wO_om,
 						double thetamm, double dthetamm,
-						double thetaoc, double dthetaoc );				
+						double thetaoc, double dthetaoc );
 
 	/*************************************************************
 	*
 	*	NAME: ThetaIonosphere(r,theta,g,r0,r1,mui2,D,deltarho,deltaz)
 	*
-	*	DESCRIPTION: Use the flux functions of the CAN model and a 
+	*	DESCRIPTION: Use the flux functions of the CAN model and a
 	*		dipole field to map the current position to a position
 	*		on the ionosphere.
 	*
@@ -265,7 +265,7 @@ extern "C" {ale length to smoothly transition from
 	*************************************************************/
 	double ThetaIonosphere(	double r, double theta, double g,
 							double r0, double r1,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz);
 
 	/*************************************************************
@@ -274,7 +274,7 @@ extern "C" {ale length to smoothly transition from
 	*					wO_open,wO_om,thetamm,dthetamm,
 	*					thetaom,dthetaom)
 	*
-	*	DESCRIPTION: Calculate the azimuthal field using the LMIC 
+	*	DESCRIPTION: Calculate the azimuthal field using the LMIC
 	*		model.
 	*
 	*	INPUTS:
@@ -293,8 +293,8 @@ extern "C" {ale length to smoothly transition from
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -309,7 +309,7 @@ extern "C" {ale length to smoothly transition from
 	*************************************************************/
 	double BphiLMIC(double r, double theta, double g,
 							double r0, double r1,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz,
 							double wO_open, double wO_om,
 							double thetamm, double dthetamm,
@@ -320,7 +320,7 @@ extern "C" {ale length to smoothly transition from
 	*	NAME: BphiIonosphere(thetai,g,wO_open,wO_om,thetamm,dthetamm,
 	*					thetaom,dthetaom)
 	*
-	*	DESCRIPTION: Calculate the ionospheric azimuthal field using the LMIC 
+	*	DESCRIPTION: Calculate the ionospheric azimuthal field using the LMIC
 	*		model.
 	*
 	*	INPUTS:
@@ -330,8 +330,8 @@ extern "C" {ale length to smoothly transition from
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere boundary (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere boundary (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere boundary
@@ -349,7 +349,7 @@ extern "C" {ale length to smoothly transition from
 							double wO_open, double wO_om,
 							double thetamm, double dthetamm,
 							double thetaoc, double dthetaoc );
-	void spline(int n0, double *x0, double *y0, 
+	void spline(int n0, double *x0, double *y0,
 				int n1, double *x1, double *y1);
 
 /* map of strings to direct field model function pointers */
@@ -359,10 +359,10 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
  * NAME : getModelFieldPointer(Model)
  *
  * DESCRIPTION : Function to return a pointer to a wrapper function
- * 			which will provide a single field vector at a single 
+ * 			which will provide a single field vector at a single
  * 			position.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		const char *Model		Model name (use lower case!).
  *
  * RETURNS :
@@ -376,10 +376,10 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 /***********************************************************************
  * NAME : XXXXXField(x,y,z,Bx,By,Bz)
  *
- * DESCRIPTION : Model wrapper functions which can be passed to the 
+ * DESCRIPTION : Model wrapper functions which can be passed to the
  * 			tracing code. Replace XXXXXX with the name of the model...
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		double	x			x coordinate in planetary radii.
  *		double	y			y coordinate in planetary radii.
  *		double	z			z coordinate in planetary radii.
@@ -388,7 +388,7 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
  *		double	*Bx			x component of the field (nT).
  *		double	*By			y component of the field (nT).
  *		double	*Bz			z component of the field (nT).
- * 
+ *
  **********************************************************************/
 	void gsfc15evsField(double x, double y, double z,
 				double *Bx, double *By, double *Bz);
@@ -552,13 +552,13 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	/***********************************************************************
 	 * NAME : InternalField(n,p0,p1,p2,B0,B1,B2)
 	 *
-	 * DESCRIPTION : Call the model field function. Coordinates depend 
+	 * DESCRIPTION : Call the model field function. Coordinates depend
 	 * 		on the model  configuration
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		int		n			Number of array elements
 	 *		double	*p0			x or r coordinate in planetary radii.
-	 *		double	*p1			y coordinate in planetary radii or theta 
+	 *		double	*p1			y coordinate in planetary radii or theta
 	 * 							in radians.
 	 *		double	*p2			z coordinate in planetary radii or phi
 	 * 							in radians.
@@ -567,7 +567,7 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	 *		double	*B0			x or r component of the field (nT).
 	 *		double	*B1			y or theta component of the field (nT).
 	 *		double	*B2			z or phi component of the field (nT).
-	 * 
+	 *
 	 **********************************************************************/
 	void InternalField(int n, double *p0, double *p1, double *p2,
 						double *B0, double *B1, double *B2);
@@ -575,13 +575,13 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	/***********************************************************************
 	 * NAME : InternalFieldDeg(n,p0,p1,p2,MaxDeg,B0,B1,B2)
 	 *
-	 * DESCRIPTION : Call the model field function. Coordinates depend 
+	 * DESCRIPTION : Call the model field function. Coordinates depend
 	 * 		on the model  configuration
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		int		n			Number of array elements
 	 *		double	*p0			x or r coordinate in planetary radii.
-	 *		double	*p1			y coordinate in planetary radii or theta 
+	 *		double	*p1			y coordinate in planetary radii or theta
 	 * 							in radians.
 	 *		double	*p2			z coordinate in planetary radii or phi
 	 * 							in radians.
@@ -591,7 +591,7 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	 *		double	*B0			x or r component of the field (nT).
 	 *		double	*B1			y or theta component of the field (nT).
 	 *		double	*B2			z or phi component of the field (nT).
-	 * 
+	 *
 	 **********************************************************************/
 	void InternalFieldDeg(int n, double *p0, double *p1, double *p2,
 						int MaxDeg, double *B0, double *B1, double *B2);
@@ -600,14 +600,14 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	 * NAME : SetInternalCFG(Model,CartIn,CartOut,MaxDeg)
 	 *
 	 * DESCRIPTION : Configure the current model.
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		const char *Model		Model name.
 	 * 		bool CartIn				Set to True for Cartesian input
 	 * 								coordinates or false for polar.
 	 * 		bool CartOut			As above, but for the output.
 	 * 		int  MaxDeg				Maximum degree used by model
-	 * 
+	 *
 	 **********************************************************************/
 	void SetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg);
 
@@ -615,18 +615,18 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 	 * NAME : GetInternalCFG(Model,CartIn,CartOut,MaxDeg)
 	 *
 	 * DESCRIPTION : Return the current model configuration.
-	 *		
-	 * OUTPUTS : 
+	 *
+	 * OUTPUTS :
 	 * 		char *Model				Model name.
 	 * 		bool CartIn				True for Cartesian input
 	 * 								coordinates or false for polar.
 	 * 		bool CartOut			As above, but for the output.
 	 * 		int  MaxDeg				Maximum degree used by model
-	 * 
+	 *
 	 **********************************************************************/
 	void GetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg);
 
-	
+
 
 
 
@@ -641,16 +641,16 @@ typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 *
 *   NAME : FluxCan(rho,z,r0,r1,mui2,D,deltarho,deltaz)
 *
-*   DESCRIPTION : Calculate the flux contribution from the 
+*   DESCRIPTION : Calculate the flux contribution from the
 * 		CAN current sheet (using Edwards et al. 2001 equations).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  r0       inner edge of semi-infinite current 
+*       double  r0       inner edge of semi-infinite current
 *                       sheet, Rj
-*		double 	r1		inner edge of the outer portion of the 
+*		double 	r1		inner edge of the outer portion of the
 *						current sheet to be subtracted
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -661,7 +661,7 @@ typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 *
 ***************************************************************/
 double FluxCan(	double rho,double z, double r0, double r1,
-				double mui2, double D, 
+				double mui2, double D,
 				double deltarho, double deltaz) {
 
 	double A0 = ScalarPotential(rho,z,r0,mui2,D,deltarho,deltaz);
@@ -680,7 +680,7 @@ double FluxCan(	double rho,double z, double r0, double r1,
 *
 *   DESCRIPTION : Calculate the flux cfunction for a dipole
 *
-*   INPUTS : 
+*   INPUTS :
 *       double  r 		radial coordinate, Rj
 *       double  theta   Colatitude, Rads
 *       double  g		Magnetic dipole coefficient, nT

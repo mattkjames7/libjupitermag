@@ -11,7 +11,7 @@
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
 #define LIBJUPITERMAG_VERSION_MINOR 1
-#define LIBJUPITERMAG_VERSION_PATCH 0
+#define LIBJUPITERMAG_VERSION_PATCH 1
 
 #define INTERNALFIELD_VERSION_MAJOR 1
 #define INTERNALFIELD_VERSION_MINOR 1
@@ -41,44 +41,44 @@ extern "C" {
 					double **Bx, double **By, double **Bz,
 					double **R, double **S, double **Rnorm, double **FP,
 					int nalpha, double *alpha, double *halpha);
-	void ModelField(double p0, double p1, double p2, 
-					const char *internal, const char *external, 
+	void ModelField(double p0, double p1, double p2,
+					const char *internal, const char *external,
 					bool CartIn, bool CartOut,
 					double *B0, double *B1, double *B2);
 
-	void ModelFieldArray(	int n, double *p0, double *p1, double *p2, 
-							const char *internal, const char *external, 
+	void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+							const char *internal, const char *external,
 							bool CartIn, bool CartOut,
 							double *B0, double *B1, double *B2);
 	/* these wrappers can be used to get the magnetic field vectors */
 	void Con2020FieldArray(int n, double *p0, double *p1, double *p2,
 					double *B0, double *B1, double *B2);
-	
+
 	void Con2020Field(double p0, double p1, double p2,
 			double *B0, double *B1, double *B2);
 
 
 	void GetCon2020Params(double *mui, double *irho, double *r0, double *r1,
 					double *d, double *xt, double *xp, char *eqtype,
-					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut, 
+					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
 					bool *smooth, double *DeltaRho, double *DeltaZ,
 					double *g, char *azfunc, double *wO_open, double *wO_oc,
 					double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc);
-						
-	
+
+
 	void SetCon2020Params(double mui, double irho, double r0, double r1,
 					double d, double xt, double xp, const char *eqtype,
-					bool Edwards, bool ErrChk, bool CartIn, bool CartOut, 
+					bool Edwards, bool ErrChk, bool CartIn, bool CartOut,
 					bool smooth, double DeltaRho, double DeltaZ,
 					double g, const char *azfunc, double wO_open, double wO_oc,
 					double thetamm, double dthetamm, double thetaoc, double dthetaoc);
 
-	void Con2020AnalyticField(	int n, double a, 
-							double *rho, double *z, 
+	void Con2020AnalyticField(	int n, double a,
+							double *rho, double *z,
 							double *Brho, double *Bz);
 
-	void Con2020AnalyticFieldSmooth(	int n, double a, 
-							double *rho, double *z, 
+	void Con2020AnalyticFieldSmooth(	int n, double a,
+							double *rho, double *z,
 							double *Brho, double *Bz);
 
 
@@ -90,11 +90,11 @@ extern "C" {
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equation 8).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -112,11 +112,11 @@ extern "C" {
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equation 12).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -136,11 +136,11 @@ extern "C" {
 *       of the scalar potential accoring to Edwards et al.,
 *       2001 (equations 8 & 12).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  a       inner edge of semi-infinite current 
+*       double  a       inner edge of semi-infinite current
 *                       sheet, Rj
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -151,7 +151,7 @@ extern "C" {
 *
 ***************************************************************/
 	double ScalarPotential( double rho, double z, double a,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz);
 
 	/*************************************************************
@@ -176,7 +176,7 @@ extern "C" {
 	*						thetaoc,dthetaoc)
 	*
 	*	DESCRIPTION: Ratio of the angular velocity mapped to
-	*		thetai to the planetary rotation. Equation 15 of 
+	*		thetai to the planetary rotation. Equation 15 of
 	*		Cowley et al., 2008.
 	*
 	*	INPUTS:
@@ -186,8 +186,8 @@ extern "C" {
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -222,8 +222,8 @@ extern "C" {
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -235,16 +235,16 @@ extern "C" {
 	*		double Ihp		Ionospheric Pedersen current.
 	*
 	*************************************************************/
-	double PedersenCurrent(	double thetai, double g, 
+	double PedersenCurrent(	double thetai, double g,
 						double wO_open, double wO_om,
 						double thetamm, double dthetamm,
-						double thetaoc, double dthetaoc );				
+						double thetaoc, double dthetaoc );
 
 	/*************************************************************
 	*
 	*	NAME: ThetaIonosphere(r,theta,g,r0,r1,mui2,D,deltarho,deltaz)
 	*
-	*	DESCRIPTION: Use the flux functions of the CAN model and a 
+	*	DESCRIPTION: Use the flux functions of the CAN model and a
 	*		dipole field to map the current position to a position
 	*		on the ionosphere.
 	*
@@ -268,7 +268,7 @@ extern "C" {
 	*************************************************************/
 	double ThetaIonosphere(	double r, double theta, double g,
 							double r0, double r1,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz);
 
 	/*************************************************************
@@ -277,7 +277,7 @@ extern "C" {
 	*					wO_open,wO_om,thetamm,dthetamm,
 	*					thetaom,dthetaom)
 	*
-	*	DESCRIPTION: Calculate the azimuthal field using the LMIC 
+	*	DESCRIPTION: Calculate the azimuthal field using the LMIC
 	*		model.
 	*
 	*	INPUTS:
@@ -296,8 +296,8 @@ extern "C" {
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere in radians.
@@ -312,7 +312,7 @@ extern "C" {
 	*************************************************************/
 	double BphiLMIC(double r, double theta, double g,
 							double r0, double r1,
-							double mui2, double D, 
+							double mui2, double D,
 							double deltarho, double deltaz,
 							double wO_open, double wO_om,
 							double thetamm, double dthetamm,
@@ -323,7 +323,7 @@ extern "C" {
 	*	NAME: BphiIonosphere(thetai,g,wO_open,wO_om,thetamm,dthetamm,
 	*					thetaom,dthetaom)
 	*
-	*	DESCRIPTION: Calculate the ionospheric azimuthal field using the LMIC 
+	*	DESCRIPTION: Calculate the ionospheric azimuthal field using the LMIC
 	*		model.
 	*
 	*	INPUTS:
@@ -333,8 +333,8 @@ extern "C" {
 	*						planetary spin
 	*		double wO_om	angular velocity ratio of outer magnetosphere
 	*						to planetary spin
-	*		double thetamm	ionospheric footprint latitude of the 
-	*						middle magnetosphere boundary (where plasma 
+	*		double thetamm	ionospheric footprint latitude of the
+	*						middle magnetosphere boundary (where plasma
 	*						goes from rigid corotation to subcorotation)
 	*						in radians.
 	*		double dthetamm	width of the middle magnetosphere boundary
@@ -352,16 +352,16 @@ extern "C" {
 							double wO_open, double wO_om,
 							double thetamm, double dthetamm,
 							double thetaoc, double dthetaoc );
-	void spline(int n0, double *x0, double *y0, 
+	void spline(int n0, double *x0, double *y0,
 				int n1, double *x1, double *y1);
 /***********************************************************************
  * NAME : getModelFieldPointer(Model)
  *
  * DESCRIPTION : Function to return a pointer to a wrapper function
- * 			which will provide a single field vector at a single 
+ * 			which will provide a single field vector at a single
  * 			position.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		const char *Model		Model name (use lower case!).
  *
  * RETURNS :
@@ -376,10 +376,10 @@ extern "C" {
 /***********************************************************************
  * NAME : XXXXXField(x,y,z,Bx,By,Bz)
  *
- * DESCRIPTION : Model wrapper functions which can be passed to the 
+ * DESCRIPTION : Model wrapper functions which can be passed to the
  * 			tracing code. Replace XXXXXX with the name of the model...
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		double	x			x coordinate in planetary radii.
  *		double	y			y coordinate in planetary radii.
  *		double	z			z coordinate in planetary radii.
@@ -388,7 +388,7 @@ extern "C" {
  *		double	*Bx			x component of the field (nT).
  *		double	*By			y component of the field (nT).
  *		double	*Bz			z component of the field (nT).
- * 
+ *
  **********************************************************************/
 	void gsfc15evsField(double x, double y, double z,
 				double *Bx, double *By, double *Bz);
@@ -553,13 +553,13 @@ extern "C" {
 	/***********************************************************************
 	 * NAME : InternalField(n,p0,p1,p2,B0,B1,B2)
 	 *
-	 * DESCRIPTION : Call the model field function. Coordinates depend 
+	 * DESCRIPTION : Call the model field function. Coordinates depend
 	 * 		on the model  configuration
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		int		n			Number of array elements
 	 *		double	*p0			x or r coordinate in planetary radii.
-	 *		double	*p1			y coordinate in planetary radii or theta 
+	 *		double	*p1			y coordinate in planetary radii or theta
 	 * 							in radians.
 	 *		double	*p2			z coordinate in planetary radii or phi
 	 * 							in radians.
@@ -568,7 +568,7 @@ extern "C" {
 	 *		double	*B0			x or r component of the field (nT).
 	 *		double	*B1			y or theta component of the field (nT).
 	 *		double	*B2			z or phi component of the field (nT).
-	 * 
+	 *
 	 **********************************************************************/
 	void InternalField(int n, double *p0, double *p1, double *p2,
 						double *B0, double *B1, double *B2);
@@ -576,13 +576,13 @@ extern "C" {
 	/***********************************************************************
 	 * NAME : InternalFieldDeg(n,p0,p1,p2,MaxDeg,B0,B1,B2)
 	 *
-	 * DESCRIPTION : Call the model field function. Coordinates depend 
+	 * DESCRIPTION : Call the model field function. Coordinates depend
 	 * 		on the model  configuration
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		int		n			Number of array elements
 	 *		double	*p0			x or r coordinate in planetary radii.
-	 *		double	*p1			y coordinate in planetary radii or theta 
+	 *		double	*p1			y coordinate in planetary radii or theta
 	 * 							in radians.
 	 *		double	*p2			z coordinate in planetary radii or phi
 	 * 							in radians.
@@ -592,7 +592,7 @@ extern "C" {
 	 *		double	*B0			x or r component of the field (nT).
 	 *		double	*B1			y or theta component of the field (nT).
 	 *		double	*B2			z or phi component of the field (nT).
-	 * 
+	 *
 	 **********************************************************************/
 	void InternalFieldDeg(int n, double *p0, double *p1, double *p2,
 						int MaxDeg, double *B0, double *B1, double *B2);
@@ -601,14 +601,14 @@ extern "C" {
 	 * NAME : SetInternalCFG(Model,CartIn,CartOut,MaxDeg)
 	 *
 	 * DESCRIPTION : Configure the current model.
-	 *		
-	 * INPUTS : 
+	 *
+	 * INPUTS :
 	 * 		const char *Model		Model name.
 	 * 		bool CartIn				Set to True for Cartesian input
 	 * 								coordinates or false for polar.
 	 * 		bool CartOut			As above, but for the output.
 	 * 		int  MaxDeg				Maximum degree used by model
-	 * 
+	 *
 	 **********************************************************************/
 	void SetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg);
 
@@ -616,18 +616,18 @@ extern "C" {
 	 * NAME : GetInternalCFG(Model,CartIn,CartOut,MaxDeg)
 	 *
 	 * DESCRIPTION : Return the current model configuration.
-	 *		
-	 * OUTPUTS : 
+	 *
+	 * OUTPUTS :
 	 * 		char *Model				Model name.
 	 * 		bool CartIn				True for Cartesian input
 	 * 								coordinates or false for polar.
 	 * 		bool CartOut			As above, but for the output.
 	 * 		int  MaxDeg				Maximum degree used by model
-	 * 
+	 *
 	 **********************************************************************/
 	void GetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg);
 
-	
+
 }
 
 
@@ -636,17 +636,17 @@ extern "C" {
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
 class Trace {
-	
+
 	public:
 		Trace(std::vector<FieldFuncPtr>);
 		~Trace();
-		
+
 		void InputPos(int,double*,double*,double*);
 		void SetTraceCFG(int, double,double,double,double,double,bool,int);
 		void SetTraceCFG();
-		
+
 		void SetAlpha(int,double*);
-	
+
 		/* tracing */
 		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**);
 		void TraceField();
@@ -658,7 +658,7 @@ class Trace {
 						double*,double*,double*,double*,double*,double*);
 		void FixFootprints(	int,double*,double*,double*,double*,
 							double*,double*,double*);
-						
+
 		/* get a single field vector */
 		void Field(double,double,double,double*,double*,double*);
 
@@ -669,18 +669,18 @@ class Trace {
 		void CalculateTraceRnorm(double**);
 		void CalculateTraceRnorm();
 		void _CalculateTraceRnorm();
-	
+
 		/* Calculate footprints */
 		void CalculateTraceFP(double**);
 		void CalculateTraceFP();
 		void _CalculateTraceFP();
-		
+
 		/* calculate halpha */
 		void CalculateHalpha();
 		void CalculateHalpha(double*);
 		void CalculateHalpha(double***);
 		void CalculateHalpha(double*,double***);
-	
+
 		/* return things*/
 		void GetTraceNstep(int*);
 		void GetTrace(double**,double**,double**);
@@ -691,12 +691,12 @@ class Trace {
 		void GetTraceFootprints(double**);
 		void GetTraceHalpha(double*);	/* python will use this */
 		void GetTraceHalpha(double***); /* no idea how to link this to python*/
-		
+
 		Trace TracePosition(int,double,double,double);
 
 		/* input coords */
 		int n_;
-		double *x0_, *y0_, *z0_;  
+		double *x0_, *y0_, *z0_;
 		int *Date_;
 		float *ut_;
 
@@ -708,11 +708,11 @@ class Trace {
 		double ErrMax_;
 		double MaxR_;
 		double Rsurf_;
-		
+
 		/* trace coords */
 		int *nstep_;
 		double **x_, **y_, **z_;
-	
+
 		/* trace fields */
 		double **bx_, **by_, **bz_;
 
@@ -731,7 +731,7 @@ class Trace {
 		double *Halpha_;
 		double ***Halpha3D_;
 		double **FP_;
-	
+
 	private:
 		/* this is the number of field contributions */
 		int nf_;
@@ -746,7 +746,7 @@ class Trace {
 		bool hasRnorm_,allocRnorm_;
 		bool hasHalpha_,allocHalpha_, allocHalpha3D_;
 		bool allocAlpha_;
-	
+
 		/* hidden trace functions */
 		void _TraceField();
 
@@ -757,7 +757,7 @@ class Trace {
 		void _CalculateHalphaStartPoints(int i, int j,
 							double *xe0, double *ye0, double *ze0,
 							double *xe1, double *ye1, double *ze1);
-	
+
 };
 
 
@@ -772,118 +772,118 @@ void _ClosestPos(	double px, double py, double pz,
 					double bx, double by, double bz,
 					int n, double *x, double *y, double *z,
 					double *xc, double *yc, double *zc );
-					
+
 void _Closest4Pos(	double px, double py, double pz,
-					int n, double *x, double *y, double *z, 
+					int n, double *x, double *y, double *z,
 					int *nc, double *cx, double *cy, double *cz);
 
 void _ClosestPosSpline(int nc, double *cx, double *cy, double *cz,
 						double *costheta,
 						double *xc, double *yc, double *zc);
-						
+
 void _ClosestPosLinear(int nc, double *cx, double *cy, double *cz,
 						double *costheta,
 						double *xc, double *yc, double *zc);
 
 /***********************************************************************
  * NAME : j0(x)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j0 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		double 	x	position to calculate J0 at.
- * 
+ *
  * RETURNS :
  * 		double j	j0 function evaluated at x.
- * 
+ *
  * ********************************************************************/
 double j0(double x);
 
 /***********************************************************************
  * NAME : j1(x)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j1 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		double 	x	position to calculate J1 at.
- * 
+ *
  * RETURNS :
  * 		double j	j1 function evaluated at x.
- * 
+ *
  * ********************************************************************/
 double j1(double x);
 
 /***********************************************************************
  * NAME : j0(n,x,j)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j0 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		int 	n	Number of elements in x
  * 		double 	*x	position to calculate J0 at.
- * 
+ *
  * OUTPUTS :
  * 		double *j	j0 function evaluated at x.
- * 
+ *
  * ********************************************************************/
 void j0(int n, double *x, double *j);
 
 /***********************************************************************
  * NAME : j1(n,x,j)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j1 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		int 	n	Number of elements in x
  * 		double 	*x	position to calculate J1 at.
- * 
+ *
  * OUTPUTS :
  * 		double *j	j1 function evaluated at x.
- * 
+ *
  * ********************************************************************/
 void j1(int n, double *x, double *j);
 
 /***********************************************************************
  * NAME : j0(n,x,multx,j)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j0 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		int 	n	Number of elements in x
  * 		double 	*x	position to calculate J0(x*multx) at.
  * 		double multx	Constant to multiply x by
- * 
+ *
  * OUTPUTS :
  * 		double *j	j0 function evaluated at x*multx.
- * 
+ *
  * ********************************************************************/
 void j0(int n, double *x, double multx, double *j);
 
 /***********************************************************************
  * NAME : j1(n,x,multx,j)
- * 
- * DESCRIPTION : Fucntion to calculate an estimate of the Bessel 
+ *
+ * DESCRIPTION : Fucntion to calculate an estimate of the Bessel
  * function j1 using code based on the Cephes C library
  * (Cephes Mathematical Functions Library, http://www.netlib.org/cephes/).
- * 
+ *
  * INPUTS :
  * 		int 	n	Number of elements in x
  * 		double 	*x	position to calculate J1(x*multx) at.
  * 		double multx	Constant to multiply x by
- * 
+ *
  * OUTPUTS :
  * 		double *j	j1 function evaluated at x*multx.
- * 
+ *
  * ********************************************************************/
 void j1(int n, double *x, double multx, double *j);
 
@@ -892,7 +892,7 @@ template <typename T> T clip(T x, T mn, T mx) {
 }
 
 /* function pointer for input conversion */
-class Con2020; /*this is needed for the pointer below */ 
+class Con2020; /*this is needed for the pointer below */
 typedef void (Con2020::*InputConvFunc)(int,double*,double*,double*,
 						double*,double*,double*,double*,double*,
 						double*,double*,double*,double*);
@@ -916,10 +916,10 @@ class Con2020 {
 		/* constructors */
 		Con2020();
 		Con2020(double,double,double,double,double,double,double,const char*,bool,bool,bool,bool);
-	
+
 		/* destructor */
 		~Con2020();
-		
+
 		/* these functions will be used to set the equations used, if
 		 * they need to be changed post-initialisation */
 		void SetEdwardsEqs(bool);
@@ -945,7 +945,7 @@ class Con2020 {
 		void SetdThetaOC(double);
 		void SetG(double);
 		void SetAzimuthalFunc(const char*);
-		
+
 		/* these mamber functions will be the "getter" version of the
 		 * above setters */
 		bool GetEdwardsEqs();
@@ -995,7 +995,7 @@ class Con2020 {
 		/* LMIC parameters*/
 		double wO_open_, wO_oc_, thetamm_, dthetamm_, thetaoc_, dthetaoc_, g_;
 		char azfunc_[10];
-		
+
 		/* Bessel function arrays - arrays prefixed with r and z are
 		 * to be used for integrals which calcualte Brho and Bz,
 		 * respectively */
@@ -1007,9 +1007,9 @@ class Con2020 {
 		double **rj1_lambda_rho_;/* j1(lambda*rho) */
 		double **zj0_lambda_r0_; /* j0(lambda*r0) */
 		double **zj0_lambda_rho_;/* j0(lambda*rho) */
-		
+
 		/* arrays to multiply be stuff to be integrated */
-		/* these arrays will store the parts of equations 14, 15, 17 
+		/* these arrays will store the parts of equations 14, 15, 17
 		 * and 18 of Connerny 1981 which only need to be calculated once*/
 		double **Eq14_;		/* j0(lambda*r0)*sinh(lamba*d)/lambda */
 		double **Eq15_;     /* j0(lambda*r0)*sinh(lamba*d)/lambda */
@@ -1021,7 +1021,7 @@ class Con2020 {
 		static constexpr double dlambda_ = 1e-4;
 		static constexpr double dlambda_brho_ = 1e-4;
 		static constexpr double dlambda_bz_ = 5e-5;
-		
+
 		/* Arrays containing maximum lambda values */
 		double rlmx_array_[6];
 		double zlmx_array_[6];
@@ -1034,7 +1034,7 @@ class Con2020 {
 		void _PolSysIII2Mag(int,double*,double*,double*,
 						double*,double*,double*,double*,double*,
 						double*,double*,double*,double*);
-		
+
 		/* coordinate conversion for magnetic field vector */
 		OutputConvFunc _ConvOutput;
 		void _BMag2SysIII(int,double*,double*,double*,
@@ -1044,20 +1044,20 @@ class Con2020 {
 		void _BMag2PolSysIII(int,double*,double*,double*,
 							double*,double*,double*,double*,
 							double*,double*,double*,
-							double*,double*,double*);	
+							double*,double*,double*);
 
 		/* Functions to update function pointers */
 		void _SetIOFunctions();
 		void _SetModelFunctions();
 		ModelFunc _Model;
-							
+
 		/* Azimuthal field */
 		AzimFunc _AzimuthalField;
 		void _BphiConnerney(int,double*,double*,double*,double*);
 		void _BphiConnerney(double,double,double,double*);
 		void _BphiLMIC(double,double,double,double*);
 		Approx _LargeRho;
-		Approx _SmallRho;		
+		Approx _SmallRho;
 		/* analytic equations */
 		void _Analytic(double,double,double,double*,double*,double*);
 		void _AnalyticSmooth(double,double,double,double*,double*,double*);
@@ -1071,7 +1071,7 @@ class Con2020 {
 		void _LargeRhoEdwards(double,double,double,double,double,double*,double*);
 		void _LargeRhoEdwardsSmooth(double,double,double,double,double,double*,double*);
 		void _SmallRhoEdwards(double,double,double,double,double,double*,double*);
-		
+
 		/* integral-related functions */
 		void _Integral(double,double,double,double*,double*,double*);
 		void _IntegralInner(double, double, double,	double*, double*);
@@ -1099,18 +1099,18 @@ double pol1eval(double x, double *c, int d);
 
 /***********************************************************************
  * NAME : smoothd(z,dz,d)
- * 
- * DESCRIPTION : Smooth fucntion for crossing the current sheet 
+ *
+ * DESCRIPTION : Smooth fucntion for crossing the current sheet
  * (replaces the last bit of equation 12 in Edwards et al 2000).
- * 
- * INPUTS : 
+ *
+ * INPUTS :
  * 		double z	z-coordinate in dipole coordinate system (Rj)
  * 		double dz	Scale of the transition to use (Rj)
  * 		double d	Half thickness of the current sheet.
- * 
- * RETURNS : 
+ *
+ * RETURNS :
  * 		double out	Smoothed function across the current sheet.
- * 
+ *
  * ********************************************************************/
 double smoothd(double z, double dz, double d);
 
@@ -1121,16 +1121,16 @@ double trapc(int n, double dx, double *y);
 *
 *   NAME : FluxCan(rho,z,r0,r1,mui2,D,deltarho,deltaz)
 *
-*   DESCRIPTION : Calculate the flux contribution from the 
+*   DESCRIPTION : Calculate the flux contribution from the
 * 		CAN current sheet (using Edwards et al. 2001 equations).
 *
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
+*   INPUTS :
+*       double  rho     Cylindrical rho coordinate (in disc
 *                       coordinate system, Rj)
 *       double  z       z-coordinate, Rj
-*       double  r0       inner edge of semi-infinite current 
+*       double  r0       inner edge of semi-infinite current
 *                       sheet, Rj
-*		double 	r1		inner edge of the outer portion of the 
+*		double 	r1		inner edge of the outer portion of the
 *						current sheet to be subtracted
 *       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
 *       double D        Current sheet half-thickness, Rj
@@ -1141,7 +1141,7 @@ double trapc(int n, double dx, double *y);
 *
 ***************************************************************/
 double FluxCan(	double rho,double z, double r0, double r1,
-				double mui2, double D, 
+				double mui2, double D,
 				double deltarho, double deltaz) {
 
 	double A0 = ScalarPotential(rho,z,r0,mui2,D,deltarho,deltaz);
@@ -1160,7 +1160,7 @@ double FluxCan(	double rho,double z, double r0, double r1,
 *
 *   DESCRIPTION : Calculate the flux cfunction for a dipole
 *
-*   INPUTS : 
+*   INPUTS :
 *       double  r 		radial coordinate, Rj
 *       double  theta   Colatitude, Rads
 *       double  g		Magnetic dipole coefficient, nT
@@ -1183,7 +1183,7 @@ class Spline {
 		Spline(const Spline &);
 		~Spline();
 		void Interpolate(int,double*,double*);
-	
+
 		int n_;
 		double *a_, *b_, *c_, *d_;
 		double *x_, *y_;
@@ -1194,7 +1194,7 @@ class Internal;
 
 /* structure for storing the coefficients in memory (replaces binary stuff) */
 typedef struct coeffStruct {
-    const int len;    
+    const int len;
     const int nmax;
     const int ndef;
     const double rscale;
@@ -1295,10 +1295,10 @@ std::map<std::string,coeffStructFunc> getCoeffMap();
 /***********************************************************************
  * NAME : getModelCoeffStruct(Model)
  *
- * DESCRIPTION : Function to return a structure containing model 
+ * DESCRIPTION : Function to return a structure containing model
         coefficients.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		std::string Model	Model name (use lower case!).
  *
  * RETURNS :
@@ -1310,10 +1310,10 @@ coeffStructFunc getModelCoeffStruct(std::string Model);
 /***********************************************************************
  * NAME : getModelCoeffStruct(Model)
  *
- * DESCRIPTION : Function to return a structure containing model 
+ * DESCRIPTION : Function to return a structure containing model
         coefficients.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		const char *Model	Model name (use lower case!).
  *
  * RETURNS :
@@ -1412,8 +1412,8 @@ std::map<std::string,InternalFunc> getModelPtrMap();
  * NAME : getModelObjPointer(Model)
  *
  * DESCRIPTION : Function to return a pointer to a model object.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		std::string Model	Model name (use lower case!).
  *
  * RETURNS :
@@ -1426,8 +1426,8 @@ InternalFunc getModelObjPointer(std::string Model);
  * NAME : getModelObjPointer(Model)
  *
  * DESCRIPTION : Function to return a pointer to a model object.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		const char *Model	Model name (use lower case!).
  *
  * RETURNS :
@@ -1441,7 +1441,7 @@ InternalFunc getModelObjPointer(const char *Model);
  * NAME : listAvailableModels()
  *
  * DESCRIPTION : Function to return a list of model names available.
- *		
+ *
  * RETURNS :
  *		vector<string> Models	Model list.
  *
@@ -1458,10 +1458,10 @@ std::map<std::string,modelFieldPtr> getModelFieldPtrMap();
  * NAME : getModelFieldPointer(Model)
  *
  * DESCRIPTION : Function to return a pointer to a wrapper function
- * 			which will provide a single field vector at a single 
+ * 			which will provide a single field vector at a single
  * 			position.
- *		
- * INPUTS : 
+ *
+ * INPUTS :
  *		std::string Model		Model name (use lower case!).
  *
  * RETURNS :
@@ -1473,28 +1473,28 @@ modelFieldPtr getModelFieldPtr(std::string Model);
 /* based upon https://www.lonecpluspluscoder.com/2015/08/13/an-elegant-way-to-extract-keys-from-a-c-map/ */
 /***********************************************************************
  * NAME : vector<> listMapKeys(inmap)
- * 
+ *
  * DESCRIPTION : List the keys used for a std::map.
- * 
- * INPUTS : 
- * 		map		inmap		std::map instance			
- * 
- * 
+ *
+ * INPUTS :
+ * 		map		inmap		std::map instance
+ *
+ *
  * RETURNS :
- * 		vector	keys		vector object containing a list of the map 
+ * 		vector	keys		vector object containing a list of the map
  * 							keys
- * 
- * 
- * 
+ *
+ *
+ *
  * ********************************************************************/
-template <typename Tkey, typename Tval> 
+template <typename Tkey, typename Tval>
 std::vector<Tkey> listMapKeys(std::map<Tkey,Tval> const &inmap) {
 	std::vector<Tkey> keys;
 	for (auto const& element: inmap) {
 		keys.push_back(element.first);
 	}
 	return keys;
-}	
+}
 
 /* This structure will store the Schmidt coefficients */
 struct schmidtcoeffs {
@@ -1506,12 +1506,12 @@ struct schmidtcoeffs {
 
 /***********************************************************************
  * NAME : class Internal
- * 
- * DESCRIPTION : 
- * 		Class which will store the g and h spherical harmonic 
+ *
+ * DESCRIPTION :
+ * 		Class which will store the g and h spherical harmonic
  * 		coefficients for a given model. To obtain the magnetic field,
  * 		use the Field() and FieldCart() member functions.
- * 
+ *
  * ********************************************************************/
 class Internal {
 	public:
@@ -1519,14 +1519,14 @@ class Internal {
 		Internal(const char *);
 		Internal(const Internal&);
 		~Internal();
-	
+
 		/*these four functions will calculate the field in spherical
 		 * polar RH system III coordinates.*/
 		void Field(int,double*,double*,double*,double*,double*,double*);
 		void Field(int,double*,double*,double*,int,double*,double*,double*);
 		void Field(double,double,double,double*,double*,double*);
 		void Field(double,double,double,int,double*,double*,double*);
-		
+
 		/* these will be Cartesian */
 		void FieldCart(double,double,double,double*,double*,double*);
 		void FieldCart(double,double,double,int,double*,double*,double*);
@@ -1534,36 +1534,36 @@ class Internal {
 		/* set current degree */
 		void SetDegree(int n);
 		int GetDegree();
-		
+
 	private:
 		/*Schmidt coefficients */
 		struct schmidtcoeffs *schc_;
 		int nschc_;
 		double **Snm_;
-		
+
 		/* maximum, default and current degree */
 		int nmax_;
 		int ndef_;
 		int *ncur_;
-		
+
 		/* these ones will have Snm_ already multiplied */
 		double **g_;
 		double **h_;
-		
+
 		/* Legendre Polynomial and derivative arrays */
 		double **Pnm_, **dPnm_;
-		
+
 		/* cosmp and sinmp arrays */
-		double *cosmp_, *sinmp_;		
-		
+		double *cosmp_, *sinmp_;
+
 		/* hack to scale r or x,y,z because some models use a different
-		 * definition for the planetary radius - notably the different 
+		 * definition for the planetary radius - notably the different
 		 * Jupiter models - this should be rpgood/rpbad, where rpgood
 		 * is the accepted planetary radius and rpbad is the erroneous
 		 * one - this will be then multiplied by r: rnew = r*rscale_
 		 * where rscale_ = rgood/rbad */
 		double rscale_;
-		
+
 		/* functions for initializing the object */
 		void _LoadSchmidt(unsigned char*);
 		void _LoadSchmidt(coeffStruct );
@@ -1573,16 +1573,16 @@ class Internal {
 		/* This function will calculate the Legendre polynomials */
 		void _Legendre(int,double*,double*,int,double***,double***);
 		void _Legendre(double,double,int,double**,double**);
-		
+
 		/* this function will calculate the magnetic field components in
 		 * spherical polar coordinates */
 		void _SphHarm(int,double*,double*,double*,double*,double*,double*);
 		/* could do with writing a scalar version of this for extra speed */
 		void _SphHarm(double,double,double,double*,double*,double*);
-		
+
 		void _Cart2Pol(double,double,double,double*,double*,double*);
 		void _BPol2BCart(double,double,double,double,double,double*,double*,double*);
-		
+
 		bool copy;
 
 		/* initialization */
@@ -1592,32 +1592,32 @@ class Internal {
 		coeffStruct *modelstr_;
 		void _Init();
 		void _CheckInit();
-	
+
 };
 
 /***********************************************************************
  * NAME : class InternalModel
- * 
- * DESCRIPTION : 
+ *
+ * DESCRIPTION :
  * 		Class which can access all instances of Internal objects.
- * 
+ *
  * ********************************************************************/
 class InternalModel {
-	
+
 	public:
 		/* constructor */
 		InternalModel();
-		
+
 		/* copy constructor */
 		InternalModel(const InternalModel&);
-		
+
 		/* destructor */
 		~InternalModel();
-		
+
 		/* Init this function - I would like to remove this if at all possible*/
 		void CheckInit();
 		void Init();
-		
+
 		/* set model parameters */
 		void SetCartIn(bool);
 		void SetCartOut(bool);
@@ -1633,7 +1633,7 @@ class InternalModel {
 		void Field(int,double*,double*,double*,double*,double*,double*);
 		void Field(double,double,double,int,double*,double*,double*);
 		void Field(double,double,double,double*,double*,double*);
-				
+
 		/* these objects are the models to use */
 		std::map<std::string,Internal*> Models_;
 		std::vector<std::string> ModelNames_;
