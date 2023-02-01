@@ -12,13 +12,13 @@ This is part of a community code project :
 
 - Matt James - University of Leicester
 
-- Rob Wilson - LASP
-
-- Marissa Vogt - Boston University
-
 - Gabby Provan - University of Leicester
 
 - Aneesah Kamran - University of Leicester
+
+- Rob Wilson - LASP
+
+- Marissa Vogt - Boston University
 
 - Marty Brennan - NASA JPL
 
