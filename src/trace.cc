@@ -27,7 +27,7 @@ Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	
 	/* this is a hack - used to end trace at lower altitudes, while
 	 * retaining Jupiter's oblateness */
-	Rsurf_ = 1.0;
+	RMultiplier_ = 1.0;
 		
 }
 
@@ -207,7 +207,7 @@ Trace Trace::TracePosition(int i, double x, double y, double z) {
 	
 	/* set the model up */
 	T.SetTraceCFG(MaxLen_,MaxStep_,InitStep_,MinStep_,ErrMax_,Delta_,false,0);
-	T.Rsurf_ = 0.8;
+	T.RMultiplier_ = 0.8;
 	
 	/* run the GSM trace */
 	T.TraceField();
@@ -461,7 +461,7 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	double Rj = sqrt(rhoj*rhoj + zj*zj);
 		
 		
-	if (R[0] < Rsurf_*Rj) {
+	if (R[0] < RMultiplier_*Rj) {
 		return false;
 	}
 	
@@ -1079,4 +1079,26 @@ void Trace::GetTraceNstep(int *nstep) {
 	for (i=0;i<n_;i++) {
 		nstep[i] = nstep_[i];
 	}
+}
+
+
+void Trace::SetTraceBoundDefaults() {
+
+	/* set the default radius to 1.0 */
+	rs_ = 1.0;
+	as_ = 1.0;
+	bs_ = 0.93513;
+	SurfaceIsSphere_ = false;
+
+	/* ionoshere = surface + 500 km,
+	although here we use the polar radius (66854 km)
+	so ri_ = (66854 + 500)/71492*/
+	ri_ = 0.94212;
+	ai_ = 1.00699;
+	bi_ = 0.94212;
+	IonosphereIsSphere_ = true;
+
+	/* maximum radial distance */
+	MaxR_ = 1000.0;
+
 }

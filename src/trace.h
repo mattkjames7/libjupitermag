@@ -24,7 +24,32 @@ class Trace {
 		void SetTraceCFG();
 		
 		void SetAlpha(int,double*);
-	
+
+		/* Trace boundary stuff */
+		/* Maximum radial distance (default = 1000)*/
+		void SetTraceMaxR(double);
+		double GetTraceMaxR();
+
+
+		/* Spheroid/Sphere radii for suface/1 bar level*/
+		void SetSurfaceSpheroidR(double,double);
+		void GetSurfaceSpheroidR(double*,double*);
+		void SetSurfaceSphereR(double);
+		double GetSurfaceSphereR();
+		void SetSurfaceIsSphere(bool);
+		bool GetSurfaceIsSphere();
+
+		/* Spheroid/sphere radii for the ionosphere */
+		void SetIonosphereSpheroidR(double,double);
+		void GetIonosphereSpheroidR(double*,double*);
+		void SetIonosphereSphereR(double);
+		double GetIonosphereSphereR();
+		void SetIonosphereIsSphere();
+		bool GetIonosphereIsSphere();
+
+		/* this is needed to initialize the trace boundaries */
+		void SetTraceBoundDefaults();
+
 		/* tracing */
 		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**);
 		void TraceField();
@@ -49,7 +74,7 @@ class Trace {
 		void _CalculateTraceRnorm();
 	
 		/* Calculate footprints */
-		void CalculateTraceFP(double**);
+		void CalculateTr2aceFP(double**);
 		void CalculateTraceFP();
 		void _CalculateTraceFP();
 		
@@ -84,8 +109,17 @@ class Trace {
 		bool Verbose_;
 		int TraceDir_;
 		double ErrMax_;
+		
+		/* this multiplier is basically a hack to make parallel traces
+		used to calculate h_alpha trace a bit further into the planet
+		so that the interpolation works and there is no extrapolation*/
+		double RMultiplier_;
+
+		/* Trace boundaries */
 		double MaxR_;
-		double Rsurf_;
+		bool SurfaceIsSphere_, IonosphereIsSphere_;
+		double rs_, ri_; //sphere radii
+		double as_, bs_, ai_, bi_; //spheroid major/minor axes
 		
 		/* trace coords */
 		int *nstep_;
