@@ -442,26 +442,31 @@ void Trace::StepVector(	double x, double y, double z, double step3,
 bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	
 	R[0] = sqrt(x*x + y*y + z*z);
+	
+	/* check if we have gone too far away (this is arbitrary, I know...)*/
 	if (R[0] >= MaxR_) {
-		return true;
+		return false;
 	}
-
-	/* Jupiter's equatorial and polar Radii (a and b, respectively)
-	 * in Rj, assuming Rj == equatorial radius */
-	double a = 1.0;
-	double b = 0.935;
-		
+	
 	/* figure out some latitudes (t) */
 	double rho = sqrt(x*x + y*y);
 	double t = atan2(z,rho);
 		
 	/* work out the Radius of Jupiter at that latitude */
-	double rhoj = a*cos(t);
-	double zj = b*sin(t);
+	double rhoj = as_*cos(t);
+	double zj = bs_*sin(t);
 	double Rj = sqrt(rhoj*rhoj + zj*zj);
 		
-		
-	if (R[0] < RMultiplier_*Rj) {
+	/* do the same for the ionosphere */
+	double rhoi = ai_*cos(t);
+	double zi = bi_*sin(t);
+	double Ri = sqrt(rhoi*rhoi + zi*zi);
+
+	/* work out the minimum value, below which we stop */	
+	double rmin = std::min(Rj,Ri)*RMultiplier;
+
+	/* stop the trace if we go below rmin */
+	if (R[0] < rmin) {
 		return false;
 	}
 	
@@ -1101,4 +1106,79 @@ void Trace::SetTraceBoundDefaults() {
 	/* maximum radial distance */
 	MaxR_ = 1000.0;
 
+}
+
+void Trace::SetSurfaceSpheroidR(double a, double b) {
+
+	as_ = a;
+	bs_ = b;
+}
+
+void Trace::GetSurfaceSpheroidR(double *a, double *b) {
+
+	*a = as_;
+	*b = bs_;
+}
+
+void Trace::SetSurfaceSphereR(double r) {
+
+	rs_ = r;
+}
+
+double Trace::GetSurfaceSphereR() {
+
+	return rs_;
+}
+
+void Trace::SetSurfaceIsSphere(bool s) {
+
+	SurfaceIsSphere_ = s;
+}
+
+bool Trace::GetSurfaceIsSphere() {
+
+	return SurfaceIsSphere_;
+}
+
+
+void Trace::SetIonosphereSpheroidR(double a, double b) {
+
+	ai_ = a;
+	bi_ = b;
+}
+
+void Trace::GetIonosphereSpheroidR(double *a, double *b) {
+
+	*a = ai_;
+	*b = bi_;
+}
+
+void Trace::SetIonosphereSphereR(double r) {
+
+	ri_ = r;
+}
+
+double Trace::GetIonosphereSphereR() {
+
+	return ri_;
+}
+
+void Trace::SetIonosphereIsSphere(bool s) {
+
+	IonosphereIsSphere_ = s;
+}
+
+bool Trace::GetIonosphereIsSphere() {
+
+	return IonosphereIsSphere_;
+}
+
+void SetTraceMaxR(double MaxR) {
+
+	MaxR_ = MaxR;
+}
+
+double GetTraceMaxR() {
+
+	return MaxR_;
 }
