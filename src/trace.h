@@ -6,6 +6,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "interptraceclosestpos.h"
+#include "footprint.h"
+#include "coordconv.h"
 #endif
 
 /* this will be used for all of the model wrapper functions (configure model first) */
@@ -131,6 +133,8 @@ class Trace {
 		/* trace end points */
 		double *xfn_, *yfn_, *zfn_;
 		double *xfs_, *yfs_, *zfs_;
+		double *xin_, *yin_, *zin_;
+		double *xis_, *yis_, *zis_;
 		double *xfe_, *yfe_, *zfe_;
 
 

@@ -27,7 +27,8 @@ obj:
 	$(CCo) model.cc -o $(BUILDDIR)/model.o
 	$(CCo) trace.cc -o $(BUILDDIR)/trace.o
 	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o
-
+	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o
+	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o
 	
 lib:
 	
