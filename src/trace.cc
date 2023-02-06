@@ -416,17 +416,17 @@ void Trace::_CalculateHalphaStartPoints(int i, int j,
 	dp = Delta_*sin(alpha0_[j]);
 	
 	/* rotate based on the local time */
-	beta = atan2(-xfe_[i],-yfe_[i]);
+	beta = atan2(-xfe3_[i],-yfe3_[i]);
 	dx = dp*cos(beta) - dt*sin(beta);
 	dy = dp*sin(beta) + dt*cos(beta);
 	
 	/* set the start points of the new field lines */
-	xe0[0] = xfe_[i] + dx;
-	ye0[0] = yfe_[i] + dy;
-	ze0[0] = zfe_[i];
-	xe1[0] = xfe_[i] - dx;
-	ye1[0] = yfe_[i] - dy;
-	ze1[0] = zfe_[i];
+	xe0[0] = xfe3_[i] + dx;
+	ye0[0] = yfe3_[i] + dy;
+	ze0[0] = zfe3_[i];
+	xe1[0] = xfe3_[i] - dx;
+	ye1[0] = yfe3_[i] - dy;
+	ze1[0] = zfe3_[i];
 
 }
 
@@ -487,7 +487,7 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	double Ri = sqrt(rhoi*rhoi + zi*zi);
 
 	/* work out the minimum value, below which we stop */	
-	double rmin = std::min(Rj,Ri)*RMultiplier;
+	double rmin = std::min(Rj,Ri)*RMultiplier_;
 
 	/* stop the trace if we go below rmin */
 	if (R[0] < rmin) {

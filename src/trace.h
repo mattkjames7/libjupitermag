@@ -80,7 +80,7 @@ class Trace {
 		void _CalculateTraceRnorm();
 	
 		/* Calculate footprints */
-		void CalculateTr2aceFP(double**);
+		void CalculateTraceFP(double**);
 		void CalculateTraceFP();
 		void _CalculateTraceFP();
 		
