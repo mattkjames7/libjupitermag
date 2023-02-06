@@ -28,14 +28,16 @@ void footprints(int n, double *x, double *y, double *z,
 	zp = b*sin(t);
 	rp = sqrt(rhop*rhop + zp*zp);
 	bool begfp = (r <= rp);
-
+	printf("%f %f\n",r,rp);
+	printf("%f %f %f\n",x[0],y[0],z[0]);
+	printf("%f %f \n",x[n-1],x[n-2]);
 	r = sqrt(x[n-1]*x[n-1] + y[n-1]*y[n-1] + z[n-1]*z[n-1]);
 	t = asin(x[n-1]/r);
 	rhop = a*cos(t);
 	zp = b*sin(t);
 	rp = sqrt(rhop*rhop + zp*zp);
 	bool endfp = (r <= rp);
-
+	printf("%f %f\n",r,rp);
 	/* determine which is north and which is south */
 	int begns = 0;
 	int endns = 0;
@@ -44,7 +46,7 @@ void footprints(int n, double *x, double *y, double *z,
 	double ty = 0.0;
 	double tz = 0.0;
 	int i;
-
+	printf("Here %d %d\n",begfp, endfp);
 	if (begfp && endfp) {
 		/* if both ends are footprints - then the north one
 		should be the one with the largest positive z-value */
@@ -181,7 +183,7 @@ void interpCrossing(double x0, double y0, double z0,
 					double x1, double y1, double z1,
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {
-
+	printf("Interp\n");
 	double rho0 = sqrt(x0*x0 + y0*y0);
 	double rho1 = sqrt(x1*x1 + y1*y1);
 
@@ -226,7 +228,7 @@ void findFootprint(	double *x, double *y, double *z,
 					int starti, int endi, 
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {
-	
+	printf("findFootprint\n");
 	/* make sure that there are enough points to scan */
 	if (abs(starti-endi) < 1) {
 		*xfp = NAN;

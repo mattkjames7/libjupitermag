@@ -24,9 +24,12 @@ Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	xt_ = 10.25*deg2rad;
 	xp_ = 163.62*deg2rad;
 	
+	
 	/* default trace parameters */
 	SetTraceCFG();
 	
+	SetTraceBoundDefaults();
+
 	/* this is a hack - used to end trace at lower altitudes, while
 	 * retaining Jupiter's oblateness */
 	RMultiplier_ = 1.0;
@@ -475,7 +478,7 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	/* figure out some latitudes (t) */
 	double rho = sqrt(x*x + y*y);
 	double t = atan2(z,rho);
-		
+	printf("%f %f %f %f %f %f\n",rs_,ri_,as_,bs_,ai_,bi_);
 	/* work out the Radius of Jupiter at that latitude */
 	double rhoj = as_*cos(t);
 	double zj = bs_*sin(t);
@@ -488,7 +491,7 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 
 	/* work out the minimum value, below which we stop */	
 	double rmin = std::min(Rj,Ri)*RMultiplier_;
-
+	printf("%f %f %f %f %f\n",*R,Rj,Ri,rmin,RMultiplier_);
 	/* stop the trace if we go below rmin */
 	if (R[0] < rmin) {
 		return false;
@@ -1003,27 +1006,32 @@ void Trace::_CalculateTraceFP() {
 
 	int i, j, imaxR;
 	for (i=0;i<n_;i++) {
-		
+		printf("Footprint %d of %d\n",i+1,n_);
 		/* calculate the surface footprints */
 		if (SurfaceIsSphere_) {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],rs_,rs_,xt_,xp_,
+			printf("Sphere Surface\n");
+			footprints(nstep_[i],x_[i],y_[i],z_[i],rs_,rs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
 		} else {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
+			printf("Spheroid surface\n");
+			footprints(nstep_[i],x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
 		}
 
 		/* calculate the surface footprints */
 		if (IonosphereIsSphere_) {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
+			printf("Sphere Ionosphere\n");
+			footprints(nstep_[i],x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
 		} else {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
+			printf("Spheroid Ionosphere\n");
+			footprints(nstep_[i],x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
 		}
 
 		if (!isnan(xfn3_[i]) && !isnan(xfs3_[i])) {
-			eqfootprints(MaxLen_,x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
+			printf("Equator\n");
+			eqfootprints(nstep_[i],x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
 			FlLen = S_[i][nstep_[i]];
 		} else {
 			xfe3_[i] = NAN;
@@ -1037,6 +1045,7 @@ void Trace::_CalculateTraceFP() {
 
 		/* convert to magnetic coordinates */
 		if (!isnan(xfn3_[i])) {
+			printf("Mag Conversion North\n");
 			SIIItoMag(xfn3_[i],yfn3_[i],zfn3_[i],xt_,xp_,&xfnm_[i],&yfnm_[i],&zfnm_[i]);
 
 		 	rho = sqrt(xfn3_[i]*xfn3_[i] + yfn3_[i]*yfn3_[i]);
