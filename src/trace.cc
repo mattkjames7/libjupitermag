@@ -1000,34 +1000,38 @@ void Trace::_CalculateTraceFP() {
 	double mlatn, mlats, mlonn, mlons, mlone;
 	double latni, latsi, lonni, lonsi;
 	double mlatni, mlatsi, mlonni, mlonsi;
-	double rad2deg = 180/M_PI;
+
 	int i, j, imaxR;
 	for (i=0;i<n_;i++) {
 		
 		/* calculate the surface footprints */
 		if (SurfaceIsSphere_) {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],rs_,rs_,
+			footprints(MaxLen_,x_[i],y_[i],z_[i],rs_,rs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
 		} else {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],as_,bs_,
+			footprints(MaxLen_,x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
 		}
 
 		/* calculate the surface footprints */
 		if (IonosphereIsSphere_) {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],ri_,ri_,
+			footprints(MaxLen_,x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
 		} else {
-			footprints(MaxLen_,x_[i],y_[i],z_[i],ai_,bi_,
+			footprints(MaxLen_,x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
 		}
 
 		if (!isnan(xfn3_[i]) && !isnan(xfs3_[i])) {
-			eqfootprints(MaxLen_,x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],zfe3_[i],&Lshell[i],lone[i]);
+			eqfootprints(MaxLen_,x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
+			FlLen = S_[i][nstep_[i]];
 		} else {
 			xfe3_[i] = NAN;
 			yfe3_[i] = NAN;
 			zfe3_[i] = NAN;
+			Lshell = NAN;
+			lone = NAN;
+			FlLen = NAN;
 		}
 
 
@@ -1183,11 +1187,11 @@ void Trace::_CalculateTraceFP() {
 			
 		// 	/* field length */
 		// 	FlLen = S_[i][nstep_[i]];
-		} else {
-			Lshell = NAN;
-			lone = NAN;
-			FlLen = NAN;
-		}	
+		// } else {
+		// 	Lshell = NAN;
+		// 	lone = NAN;
+		// 	FlLen = NAN;
+		// }	
 		FP_[i][0] = latn;
 		FP_[i][1] = lonn;
 		FP_[i][2] = lats;
@@ -1373,40 +1377,34 @@ bool Trace::GetIonosphereIsSphere() {
 	return IonosphereIsSphere_;
 }
 
-void SetTraceMaxR(double MaxR) {
+void Trace::SetTraceMaxR(double MaxR) {
 
 	MaxR_ = MaxR;
 }
 
-double GetTraceMaxR() {
+double Trace::GetTraceMaxR() {
 
 	return MaxR_;
 }
 
 
 
-void Trace::GetTraceNstep(int *nstep) {
-	int i;
-	for (i=0;i<n_;i++) {
-		nstep[i] = nstep_[i];
-	}
-}
 
-void SetMagTilt(double xt) {
+void Trace::SetMagTilt(double xt) {
 	/* input in degrees */
 	xt_ = xt*deg2rad;
 }
 
-double GetMagTilt() {
+double Trace::GetMagTilt() {
 	/* convert back to degrees */
 	return xt_*rad2deg;
 }
 
-void SetMagTiltAzimuth(double xp) {
+void Trace::SetMagTiltAzimuth(double xp) {
 	xp_ = xp*deg2rad;
 }
 
-double GetMagTiltAzimuth() {
+double Trace::GetMagTiltAzimuth() {
 	return xp_*rad2deg;
 }
 	

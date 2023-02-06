@@ -5,10 +5,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "footprint.h"
+#include "coordconv.h"
 
 
 void footprints(int n, double *x, double *y, double *z, 
-				double a, double b, 
+				double a, double b, double xt, double xp,
 				double *xfn, double *yfn, double *zfn,
 				double *xfs, double *yfs, double *zfs);
 

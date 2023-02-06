@@ -5,11 +5,11 @@ void MagtoSIII(	double xm, double ym, double zm,
 				double *x3, double *y3, double *z3) {
 
 	/* angles should be provided in rads */
-	double cosxt = cos(xtr);
-	double sinxt = sin(xtr);
+	double cosxt = cos(xt);
+	double sinxt = sin(xt);
 
-	double cosxp = cos(xpr - M_PI);
-	double sinxp = sin(xpr - M_PI);
+	double cosxp = cos(xp - M_PI);
+	double sinxp = sin(xp - M_PI);
 
 	double xtmp = xm*cosxt - zm*sinxt;
 	*x3 = xtmp*cosxp - ym*sinxp;
@@ -24,11 +24,11 @@ void SIIItoMag(	double x3, double y3, double z3,
 				double *xm, double *ym, double *zm) {
 
 	/* angles should be provided in rads */
-	double cosxt = cos(xtr);
-	double sinxt = sin(xtr);
+	double cosxt = cos(xt);
+	double sinxt = sin(xt);
 
-	double cosxp = cos(xpr - M_PI);
-	double sinxp = sin(xpr - M_PI);
+	double cosxp = cos(xp - M_PI);
+	double sinxp = sin(xp - M_PI);
 
 	double xtmp = x3*cosxp + y3*sinxp;
 	*xm = xtmp*cosxt + z3*sinxt;

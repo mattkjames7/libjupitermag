@@ -15,7 +15,7 @@
  *
  *******************************************************/
 void footprints(int n, double *x, double *y, double *z, 
-				double a, double b, 
+				double a, double b, double xt, double xp,
 				double *xfn, double *yfn, double *zfn,
 				double *xfs, double *yfs, double *zfs) {
 
@@ -185,8 +185,8 @@ void interpCrossing(double x0, double y0, double z0,
 	double rho0 = sqrt(x0*x0 + y0*y0);
 	double rho1 = sqrt(x1*x1 + y1*y1);
 
-	double t0 = asin(z0,r0);
-	double t1 = asin(z1,r1);
+	double t0 = atan(z0/rho0);
+	double t1 = atan(z1/rho1);
 
 	double deg = 0.01745;
 	double tp0, tp1, rhop0, rhop1, zp0, zp1;
@@ -250,8 +250,8 @@ void findFootprint(	double *x, double *y, double *z,
 	int i, i0 = -1, i1 = -1;
 	double r0, r1, rp, t0, t1, tmid;
 	r0 = sqrt(x[starti]*x[starti] + y[starti]*y[starti] + z[starti]*z[starti]);
-	t0 = asin(z[starti]/r0)
-	for (i=starti,i<endi;i+=dir) {
+	t0 = asin(z[starti]/r0);
+	for (i=starti;i<endi;i+=dir) {
 		if (isCrossing(x[i],y[i],z[i],x[i+dir],y[i+dir],z[i+dir],a,b)) {
 			i0 = i;
 			i1 = i + dir;
@@ -295,7 +295,7 @@ void eqfootprints(	int n, double *x, double *y, double *z,
 
 	/* set L shell and calculate longitude*/
 	*L = rmx;
-	*Lon = 180*arctan2((*yfe),(*xfe))/M_PI;
+	*Lon = 180*atan2((*yfe),(*xfe))/M_PI;
 
 
 }

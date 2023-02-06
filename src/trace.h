@@ -9,8 +9,8 @@
 #include "footprint.h"
 #include "coordconv.h"
 
-#define deg2rad M_PI/180.0
-#define rad2deg 180.0/M_PI
+const double deg2rad = M_PI/180.0;
+const double rad2deg = 180.0/M_PI;
 
 
 
@@ -50,7 +50,7 @@ class Trace {
 		void GetIonosphereSpheroidR(double*,double*);
 		void SetIonosphereSphereR(double);
 		double GetIonosphereSphereR();
-		void SetIonosphereIsSphere();
+		void SetIonosphereIsSphere(bool);
 		bool GetIonosphereIsSphere();
 
 		/* this is needed to initialize the trace boundaries */
