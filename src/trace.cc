@@ -921,7 +921,7 @@ void Trace::CalculateTraceFP() {
 	int i;
 	FP_ = new double*[n_];
 	for (i=0;i<n_;i++) {
-		FP_[i] = new double[7];
+		FP_[i] = new double[20];
 	}
 	allocFootprints_ = true;
 	
