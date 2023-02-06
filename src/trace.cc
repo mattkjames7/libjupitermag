@@ -21,6 +21,8 @@ Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	allocHalpha3D_ = false;
 	allocEqFP_ = false;
 	allocAlpha_ = false;
+	xt_ = 10.25*deg2rad;
+	xp_ = 163.62*deg2rad;
 	
 	/* default trace parameters */
 	SetTraceCFG();
@@ -108,15 +110,37 @@ Trace::~Trace() {
 
 	/* footprint/endpoints */
 	if (allocEqFP_) {
-		delete[] xfn_;
-		delete[] yfn_;
-		delete[] zfn_;
-		delete[] xfs_;
-		delete[] yfs_;
-		delete[] zfs_;
-		delete[] xfe_;
-		delete[] yfe_;
-		delete[] zfe_;
+		delete[] xfn3_;
+		delete[] yfn3_;
+		delete[] zfn3_;
+		delete[] xfs3_;
+		delete[] yfs3_;
+		delete[] zfs3_;
+		delete[] xin3_;
+		delete[] yin3_;
+		delete[] zin3_;
+		delete[] xis3_;
+		delete[] yis3_;
+		delete[] zis3_;
+		delete[] xfe3_;
+		delete[] yfe3_;
+		delete[] zfe3_;
+
+		delete[] xfnm_;
+		delete[] yfnm_;
+		delete[] zfnm_;
+		delete[] xfsm_;
+		delete[] yfsm_;
+		delete[] zfsm_;
+		delete[] xinm_;
+		delete[] yinm_;
+		delete[] zinm_;
+		delete[] xism_;
+		delete[] yism_;
+		delete[] zism_;
+		delete[] xfem_;
+		delete[] yfem_;
+		delete[] zfem_;
 	}
 }
 
@@ -927,75 +951,238 @@ void Trace::_CalculateTraceFP() {
 	}
 	
 
-	/* allocate the endpoints */
-	xfn_ = new double[n_];
-	yfn_ = new double[n_];
-	zfn_ = new double[n_];
-	xfs_ = new double[n_];
-	yfs_ = new double[n_];
-	zfs_ = new double[n_];
+	/* allocate the surface footprints (SIII) */
+	xfn3_ = new double[n_];
+	yfn3_ = new double[n_];
+	zfn3_ = new double[n_];
+	xfs3_ = new double[n_];
+	yfs3_ = new double[n_];
+	zfs3_ = new double[n_];
+
+	/* allocate ionospheric footprints (SIII) */
+	xin3_ = new double[n_];
+	yin3_ = new double[n_];
+	zin3_ = new double[n_];
+	xis3_ = new double[n_];
+	yis3_ = new double[n_];
+	zis3_ = new double[n_];
 	
-	/* and "equatorial" footprints" */	
-	xfe_ = new double[n_];
-	yfe_ = new double[n_];
-	zfe_ = new double[n_];
+	/* and "equatorial" footprints" (SIII) */	
+	xfe3_ = new double[n_];
+	yfe3_ = new double[n_];
+	zfe3_ = new double[n_];
+
+	
+	/* allocate the surface footprints (Mag) */
+	xfnm_ = new double[n_];
+	yfnm_ = new double[n_];
+	zfnm_ = new double[n_];
+	xfsm_ = new double[n_];
+	yfsm_ = new double[n_];
+	zfsm_ = new double[n_];
+
+	/* allocate ionospheric footprints (Mag) */
+	xinm_ = new double[n_];
+	yinm_ = new double[n_];
+	zinm_ = new double[n_];
+	xism_ = new double[n_];
+	yism_ = new double[n_];
+	zism_ = new double[n_];
+	
+	/* and "equatorial" footprints" (Mag) */	
+	xfem_ = new double[n_];
+	yfem_ = new double[n_];
+	zfem_ = new double[n_];
+	
 	allocEqFP_ = true;
 	
 	double rho, latn, lats, lonn, lons, lone, Lshell, FlLen;
+	double mlatn, mlats, mlonn, mlons, mlone;
+	double latni, latsi, lonni, lonsi;
+	double mlatni, mlatsi, mlonni, mlonsi;
 	double rad2deg = 180/M_PI;
 	int i, j, imaxR;
 	for (i=0;i<n_;i++) {
-		/* north footprint */
-		if ((TraceDir_ == 0) || (TraceDir_ == 1)) {
-			xfn_[i] = x_[i][0];
-			yfn_[i] = y_[i][0];
-			zfn_[i] = z_[i][0];
-			
-			/* latitude (not co-lat)  and longitude - in degrees*/
-			rho = sqrt(xfn_[i]*xfn_[i] + yfn_[i]*yfn_[i]);
-			latn = rad2deg*atan2(zfn_[i],rho);
-			lonn = rad2deg*atan2(yfn_[i],xfn_[i]);
+		
+		/* calculate the surface footprints */
+		if (SurfaceIsSphere_) {
+			footprints(MaxLen_,x_[i],y_[i],z_[i],rs_,rs_,
+						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
 		} else {
+			footprints(MaxLen_,x_[i],y_[i],z_[i],as_,bs_,
+						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
+		}
+
+		/* calculate the surface footprints */
+		if (IonosphereIsSphere_) {
+			footprints(MaxLen_,x_[i],y_[i],z_[i],ri_,ri_,
+						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
+		} else {
+			footprints(MaxLen_,x_[i],y_[i],z_[i],ai_,bi_,
+						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
+		}
+
+		if (!isnan(xfn3_[i]) && !isnan(xfs3_[i])) {
+			eqfootprints(MaxLen_,x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],zfe3_[i],&Lshell[i],lone[i]);
+		} else {
+			xfe3_[i] = NAN;
+			yfe3_[i] = NAN;
+			zfe3_[i] = NAN;
+		}
+
+
+		/* convert to magnetic coordinates */
+		if (!isnan(xfn3_[i])) {
+			SIIItoMag(xfn3_[i],yfn3_[i],zfn3_[i],xt_,xp_,&xfnm_[i],&yfnm_[i],&zfnm_[i]);
+
+		 	rho = sqrt(xfn3_[i]*xfn3_[i] + yfn3_[i]*yfn3_[i]);
+		 	latn = rad2deg*atan2(zfn3_[i],rho);
+		 	lonn = rad2deg*atan2(yfn3_[i],xfn3_[i]);
+		 	
+			rho = sqrt(xfnm_[i]*xfnm_[i] + yfnm_[i]*yfnm_[i]);
+		 	mlatn = rad2deg*atan2(zfnm_[i],rho);
+		 	mlonn = rad2deg*atan2(yfnm_[i],xfnm_[i]);
+		} else {
+			xfnm_[i] = NAN;
+			yfnm_[i] = NAN;
+			zfnm_[i] = NAN;
+
 			latn = NAN;
 			lonn = NAN;
+
+			mlatn = NAN;
+			mlonn = NAN;
+
 		}
-		
-		/* south footprint */
-		if ((TraceDir_ == 0) || (TraceDir_ == -1)) {
-			xfs_[i] = x_[i][nstep_[i]-1];
-			yfs_[i] = y_[i][nstep_[i]-1];
-			zfs_[i] = z_[i][nstep_[i]-1];
-			
-			/* latitude (not co-lat)  and longitude - in degrees*/
-			rho = sqrt(xfs_[i]*xfs_[i] + yfs_[i]*yfs_[i]);
-			lats = rad2deg*atan2(zfs_[i],rho);
-			lons = rad2deg*atan2(yfs_[i],xfs_[i]);
+		if (!isnan(xin3_[i])) {
+			SIIItoMag(xin3_[i],yin3_[i],zin3_[i],xt_,xp_,&xinm_[i],&yinm_[i],&zinm_[i]);
+
+		 	rho = sqrt(xin3_[i]*xin3_[i] + yin3_[i]*yin3_[i]);
+		 	latni = rad2deg*atan2(zin3_[i],rho);
+		 	lonni = rad2deg*atan2(yin3_[i],xin3_[i]);
+		 	
+			rho = sqrt(xinm_[i]*xinm_[i] + yinm_[i]*yinm_[i]);
+		 	mlatni = rad2deg*atan2(zinm_[i],rho);
+		 	mlonni = rad2deg*atan2(yinm_[i],xinm_[i]);
+
 		} else {
+			xinm_[i] = NAN;
+			yinm_[i] = NAN;
+			zinm_[i] = NAN;
+
+			latni = NAN;
+			lonni = NAN;
+
+			mlatni = NAN;
+			mlonni = NAN;
+		}
+		if (!isnan(xfs3_[i])) {
+			SIIItoMag(xfs3_[i],yfs3_[i],zfs3_[i],xt_,xp_,&xfsm_[i],&yfsm_[i],&zfsm_[i]);
+
+		 	rho = sqrt(xfs3_[i]*xfs3_[i] + yfs3_[i]*yfs3_[i]);
+		 	lats = rad2deg*atan2(zfs3_[i],rho);
+		 	lons = rad2deg*atan2(yfs3_[i],xfs3_[i]);
+		 	
+			rho = sqrt(xfsm_[i]*xfsm_[i] + yfsm_[i]*yfsm_[i]);
+		 	mlats = rad2deg*atan2(zfsm_[i],rho);
+		 	mlons = rad2deg*atan2(yfsm_[i],xfsm_[i]);
+
+		} else {
+			xinm_[i] = NAN;
+			yinm_[i] = NAN;
+			zinm_[i] = NAN;
+
+
 			lats = NAN;
 			lons = NAN;
-		}				
+
+			mlats = NAN;
+			mlons = NAN;
+		}
+		if (!isnan(xis3_[i])) {
+			SIIItoMag(xis3_[i],yis3_[i],zis3_[i],xt_,xp_,&xism_[i],&yism_[i],&zism_[i]);
+
+		 	rho = sqrt(xis3_[i]*xis3_[i] + yis3_[i]*yis3_[i]);
+		 	latsi = rad2deg*atan2(zis3_[i],rho);
+		 	lonsi = rad2deg*atan2(yis3_[i],xis3_[i]);
+		 	
+			rho = sqrt(xism_[i]*xism_[i] + yism_[i]*yism_[i]);
+		 	mlatsi = rad2deg*atan2(zism_[i],rho);
+		 	mlonsi = rad2deg*atan2(yism_[i],xism_[i]);
+		} else {
+			xism_[i] = NAN;
+			yism_[i] = NAN;
+			zism_[i] = NAN;
+
+			latsi = NAN;
+			lonsi = NAN;
+
+			mlatsi = NAN;
+			mlonsi = NAN;
+		}
+		if (!isnan(xfe3_[i])) {
+			SIIItoMag(xfe3_[i],yfe3_[i],zfe3_[i],xt_,xp_,&xfem_[i],&yfem_[i],&zfem_[i]);
+			mlone = rad2deg*atan2(yfem_[i],xfem_[i]);
+		} else {
+			xfem_[i] = NAN;
+			yfem_[i] = NAN;
+			zfem_[i] = NAN;
+		}
+
+
+		/* calculate the equatorial footprints */
+
+		// /* north footprint */
+		// if ((TraceDir_ == 0) || (TraceDir_ == 1)) {
+		// 	xfn_[i] = x_[i][0];
+		// 	yfn_[i] = y_[i][0];
+		// 	zfn_[i] = z_[i][0];
+			
+		// 	/* latitude (not co-lat)  and longitude - in degrees*/
+		// 	rho = sqrt(xfn_[i]*xfn_[i] + yfn_[i]*yfn_[i]);
+		// 	latn = rad2deg*atan2(zfn_[i],rho);
+		// 	lonn = rad2deg*atan2(yfn_[i],xfn_[i]);
+		// } else {
+		// 	latn = NAN;
+		// 	lonn = NAN;
+		// }
 		
-		/* equatorial (sort of, axtually at Rmax) footprint */
-		if (TraceDir_ == 0) {
-			/* find the furthest point along the field line */
-			imaxR = -1;
-			Lshell = 0.0;
-			for (j=0;j<nstep_[i];j++) {
-				if (R_[i][j] > Lshell) {
-					Lshell = R_[i][j];
-					imaxR = j;
-				}
-			}
+		// /* south footprint */
+		// if ((TraceDir_ == 0) || (TraceDir_ == -1)) {
+		// 	xfs_[i] = x_[i][nstep_[i]-1];
+		// 	yfs_[i] = y_[i][nstep_[i]-1];
+		// 	zfs_[i] = z_[i][nstep_[i]-1];
 			
-			xfe_[i] = x_[i][imaxR];
-			yfe_[i] = y_[i][imaxR];
-			zfe_[i] = z_[i][imaxR];
+		// 	/* latitude (not co-lat)  and longitude - in degrees*/
+		// 	rho = sqrt(xfs_[i]*xfs_[i] + yfs_[i]*yfs_[i]);
+		// 	lats = rad2deg*atan2(zfs_[i],rho);
+		// 	lons = rad2deg*atan2(yfs_[i],xfs_[i]);
+		// } else {
+		// 	lats = NAN;
+		// 	lons = NAN;
+		// }				
+		
+		// /* equatorial (sort of, axtually at Rmax) footprint */
+		// if (TraceDir_ == 0) {
+		// 	/* find the furthest point along the field line */
+		// 	imaxR = -1;
+		// 	Lshell = 0.0;
+		// 	for (j=0;j<nstep_[i];j++) {
+		// 		if (R_[i][j] > Lshell) {
+		// 			Lshell = R_[i][j];
+		// 			imaxR = j;
+		// 		}
+		// 	}
 			
-			/* latitude (not co-lat)  and longitude - in degrees*/
-			lone = rad2deg*atan2(yfe_[i],xfe_[i]);
+		// 	xfe_[i] = x_[i][imaxR];
+		// 	yfe_[i] = y_[i][imaxR];
+		// 	zfe_[i] = z_[i][imaxR];
 			
-			/* field length */
-			FlLen = S_[i][nstep_[i]];
+		// 	/* latitude (not co-lat)  and longitude - in degrees*/
+		// 	lone = rad2deg*atan2(yfe_[i],xfe_[i]);
+			
+		// 	/* field length */
+		// 	FlLen = S_[i][nstep_[i]];
 		} else {
 			Lshell = NAN;
 			lone = NAN;
@@ -1005,9 +1192,22 @@ void Trace::_CalculateTraceFP() {
 		FP_[i][1] = lonn;
 		FP_[i][2] = lats;
 		FP_[i][3] = lons;
-		FP_[i][4] = lone;
-		FP_[i][5] = Lshell;
-		FP_[i][6] = FlLen;
+		FP_[i][4] = latni;
+		FP_[i][5] = lonni;
+		FP_[i][6] = latsi;
+		FP_[i][7] = lonsi;
+		FP_[i][8] = lone;
+		FP_[i][9] = mlatn;
+		FP_[i][10] = mlonn;
+		FP_[i][11] = mlats;
+		FP_[i][12] = mlons;
+		FP_[i][13] = mlatni;
+		FP_[i][14] = mlonni;
+		FP_[i][15] = mlatsi;
+		FP_[i][16] = mlonsi;
+		FP_[i][17] = mlone;
+		FP_[i][18] = Lshell;
+		FP_[i][19] = FlLen;
 	}
 	hasFootprints_ = true;
 }
@@ -1182,3 +1382,31 @@ double GetTraceMaxR() {
 
 	return MaxR_;
 }
+
+
+
+void Trace::GetTraceNstep(int *nstep) {
+	int i;
+	for (i=0;i<n_;i++) {
+		nstep[i] = nstep_[i];
+	}
+}
+
+void SetMagTilt(double xt) {
+	/* input in degrees */
+	xt_ = xt*deg2rad;
+}
+
+double GetMagTilt() {
+	/* convert back to degrees */
+	return xt_*rad2deg;
+}
+
+void SetMagTiltAzimuth(double xp) {
+	xp_ = xp*deg2rad;
+}
+
+double GetMagTiltAzimuth() {
+	return xp_*rad2deg;
+}
+	

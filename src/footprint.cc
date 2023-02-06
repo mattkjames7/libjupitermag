@@ -270,3 +270,32 @@ void findFootprint(	double *x, double *y, double *z,
 	interpCrossing(x[i0],y[i0],z[i0],x[i1],y[i1],z[i1],a,b,xfp,yfp,zfp);
 
 }
+
+void eqfootprints(	int n, double *x, double *y, double *z,
+					double *xfe, double *yfe, double *zfe, 
+					double *L, double *Lon) {
+	
+	/* find the furthest point along the field line */
+	int indmxr = -1;
+	int i;
+	double rmx = 0.0;
+	double r;
+	for (i=0;i<n;i++) {
+		r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);
+		if (r > rmx) {
+			indmxr = i;
+			rmx = r;
+		}
+	}
+
+	/* set the footprints */
+	*xfe = x[indmxr];
+	*yfe = y[indmxr];
+	*zfe = z[indmxr];
+
+	/* set L shell and calculate longitude*/
+	*L = rmx;
+	*Lon = 180*arctan2((*yfe),(*xfe))/M_PI;
+
+
+}

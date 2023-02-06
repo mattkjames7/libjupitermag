@@ -8,7 +8,11 @@
 #include "interptraceclosestpos.h"
 #include "footprint.h"
 #include "coordconv.h"
-#endif
+
+#define deg2rad M_PI/180.0
+#define rad2deg 180.0/M_PI
+
+
 
 /* this will be used for all of the model wrapper functions (configure model first) */
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
@@ -85,7 +89,13 @@ class Trace {
 		void CalculateHalpha(double*);
 		void CalculateHalpha(double***);
 		void CalculateHalpha(double*,double***);
-	
+
+		/* for the conversion between SIII and Mag */
+		void SetMagTilt(double);
+		double GetMagTilt();
+		void SetMagTiltAzimuth(double);
+		double GetMagTiltAzimuth();
+
 		/* return things*/
 		void GetTraceNstep(int*);
 		void GetTrace(double**,double**,double**);
@@ -130,12 +140,24 @@ class Trace {
 		/* trace fields */
 		double **bx_, **by_, **bz_;
 
-		/* trace end points */
-		double *xfn_, *yfn_, *zfn_;
-		double *xfs_, *yfs_, *zfs_;
-		double *xin_, *yin_, *zin_;
-		double *xis_, *yis_, *zis_;
-		double *xfe_, *yfe_, *zfe_;
+		/* magnetic z-axis tilt (xt) and longitude of tilt (xp)*/
+		double xt_;
+		double xp_;
+
+		/* trace end points (SIII Coordinates)*/
+		double *xfn3_, *yfn3_, *zfn3_;
+		double *xfs3_, *yfs3_, *zfs3_;
+		double *xin3_, *yin3_, *zin3_;
+		double *xis3_, *yis3_, *zis3_;
+		double *xfe3_, *yfe3_, *zfe3_;
+
+
+		/* trace end points (Magnetic/Dipole coordinates)*/
+		double *xfnm_, *yfnm_, *zfnm_;
+		double *xfsm_, *yfsm_, *zfsm_;
+		double *xinm_, *yinm_, *zinm_;
+		double *xism_, *yism_, *zism_;
+		double *xfem_, *yfem_, *zfem_;
 
 
 		/* field length, R, Rnorm, Halpha, Footprints */
@@ -178,3 +200,4 @@ class Trace {
 							double *xe1, double *ye1, double *ze1);
 	
 };
+#endif

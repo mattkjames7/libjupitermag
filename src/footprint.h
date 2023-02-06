@@ -30,5 +30,8 @@ void findFootprint(	double *x, double *y, double *z,
 					double a, double b,
 					double *xfp, double *yfp, double *zfp);
 
+void eqfootprints(	int n, double *x, double *y, double *z,
+					double *xfe, double *yfe, double *zfe, 
+					double *L, double *Lon);
 
 #endif
