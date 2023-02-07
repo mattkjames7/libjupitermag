@@ -21,23 +21,24 @@ void footprints(int n, double *x, double *y, double *z,
 
 	/* determine whether each end is a footprint */
 	double r,t,rp,tp,rhop,zp;
-	
+	printf("xyz 0 : %f %f %f\n",x[0],y[0],z[0]);
+	printf("xyz 1 : %f %f %f\n",x[n-1],y[n-1],z[n-1]);
 	r = sqrt(x[0]*x[0] + y[0]*y[0] + z[0]*z[0]);
 	t = asin(x[0]/r);
 	rhop = a*cos(t);
 	zp = b*sin(t);
 	rp = sqrt(rhop*rhop + zp*zp);
 	bool begfp = (r <= rp);
-	printf("%f %f\n",r,rp);
-	printf("%f %f %f\n",x[0],y[0],z[0]);
-	printf("%f %f \n",x[n-1],x[n-2]);
+	//printf("%f %f\n",r,rp);
+	//printf("%f %f %f\n",x[0],y[0],z[0]);
+	//printf("%f %f \n",x[n-1],x[n-2]);
 	r = sqrt(x[n-1]*x[n-1] + y[n-1]*y[n-1] + z[n-1]*z[n-1]);
 	t = asin(x[n-1]/r);
 	rhop = a*cos(t);
 	zp = b*sin(t);
 	rp = sqrt(rhop*rhop + zp*zp);
 	bool endfp = (r <= rp);
-	printf("%f %f\n",r,rp);
+	//printf("%f %f\n",r,rp);
 	/* determine which is north and which is south */
 	int begns = 0;
 	int endns = 0;
@@ -46,7 +47,7 @@ void footprints(int n, double *x, double *y, double *z,
 	double ty = 0.0;
 	double tz = 0.0;
 	int i;
-	printf("Here %d %d\n",begfp, endfp);
+	//printf("Here %d %d\n",begfp, endfp);
 	if (begfp && endfp) {
 		/* if both ends are footprints - then the north one
 		should be the one with the largest positive z-value */
@@ -120,7 +121,7 @@ void footprints(int n, double *x, double *y, double *z,
 		ye = NAN;
 		ze = NAN;
 	}
-
+	//printf("%f %f %f %f %f %f\n",xe,ye,ze,xb,yb,zb);
 	/* now put the beginning/end footprints in the correct 
 	north/south fopotprint output*/
 	if (begns == 1) {
@@ -139,7 +140,7 @@ void footprints(int n, double *x, double *y, double *z,
 		yfs[0] = yb;
 		zfs[0] = zb;
 	}
-	printf("FP: %f %f %f %f %f %f\n",&xfn,*yfn,*zfn,*xfs, *yfs,*zfs);
+	//printf("FP: %f %f %f %f %f %f\n",*xfn,*yfn,*zfn,*xfs, *yfs,*zfs);
 }
 
 double planetRadius(double x, double y, double z, double a, double b) {
@@ -171,7 +172,7 @@ bool isCrossing(double x0, double y0, double z0,
 	t1 = asin(z1/r1);
 	tmid = 0.5*(t0 + t1);
 	rp = thetaPlanetRadius(tmid,a,b);
-	printf("%f %f %f %f\n",r0,r1,rp,tmid);
+	//printf("%f %f %f %f\n",r0,r1,rp,tmid);
 	double rmin = std::min(r0,r1);
 	double rmax = std::max(r0,r1);
 
@@ -183,7 +184,7 @@ void interpCrossing(double x0, double y0, double z0,
 					double x1, double y1, double z1,
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {
-	printf("Interp\n");
+	//printf("Interp\n");
 	double rho0 = sqrt(x0*x0 + y0*y0);
 	double rho1 = sqrt(x1*x1 + y1*y1);
 
@@ -219,7 +220,7 @@ void interpCrossing(double x0, double y0, double z0,
 	double rhofp = (ct - cr)/(mr - mt);
 	*zfp = rhofp*mt + ct;
 	*xfp = mx*(*zfp) + cx;
-	*yfp = my*(*yfp) + cy;
+	*yfp = my*(*zfp) + cy;
 	
 
 }
@@ -228,7 +229,7 @@ void findFootprint(	double *x, double *y, double *z,
 					int starti, int endi, 
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {
-	printf("findFootprint\n");
+	//printf("findFootprint\n");
 	/* make sure that there are enough points to scan */
 	if (abs(starti-endi) < 1) {
 		*xfp = NAN;
@@ -253,7 +254,7 @@ void findFootprint(	double *x, double *y, double *z,
 	t0 = asin(z[starti]/r0);
 	if (dir == 1) {
 		for (i=starti;i<endi;i++) {
-			printf("%d\n",i);
+			printf("i: %d\n",i);
 			if (isCrossing(x[i],y[i],z[i],x[i+dir],y[i+dir],z[i+dir],a,b)) {
 				i0 = i;
 				i1 = i + dir;
@@ -262,7 +263,7 @@ void findFootprint(	double *x, double *y, double *z,
 		}
 	} else {
 		for (i=starti;i>endi;i--) {
-			printf("%d\n",i);
+			printf("i: %d\n",i);
 			if (isCrossing(x[i],y[i],z[i],x[i-1],y[i-1],z[i-1],a,b)) {
 				i0 = i;
 				i1 = i + dir;
@@ -270,7 +271,7 @@ void findFootprint(	double *x, double *y, double *z,
 			}
 		}		
 	}
-	printf("%d %d %d %d %d\n",dir,starti,endi,i0,i1);
+	//printf("%d %d %d %d %d\n",dir,starti,endi,i0,i1);
 
 	if (i0 == -1) {
 		*xfp = NAN;
@@ -278,10 +279,13 @@ void findFootprint(	double *x, double *y, double *z,
 		*zfp = NAN;
 		return;		
 	}
-
+	printf("%f %f %f \n",x[i0],y[i0],z[i0]);
+	printf("%f %f %f \n",x[i1],y[i1],z[i1]);
+	printf("%f %f \n",a,b);
+	
 	/* interpolate to find the footprint */
 	interpCrossing(x[i0],y[i0],z[i0],x[i1],y[i1],z[i1],a,b,xfp,yfp,zfp);
-
+	printf("%f %f %f \n",*xfp,*yfp,*zfp);
 }
 
 void eqfootprints(	int n, double *x, double *y, double *z,

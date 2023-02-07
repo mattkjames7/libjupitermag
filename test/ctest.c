@@ -46,7 +46,7 @@ int main () {
 	double *FP = (double *) malloc(MaxLen*sizeof(double));
 
 	/* this is for polarization */
-	int nalpha = 0;
+	int nalpha = 2;
 	double alpha[] = {0.0,90.0};
 	double halpha[nalpha*n*MaxLen];
 

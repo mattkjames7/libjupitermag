@@ -226,6 +226,7 @@ void Trace::SetAlpha(int nalpha, double *alpha) {
 Trace Trace::TracePosition(int i, double x, double y, double z) {
 	/* return a new trace object at the supplied position using the
 	 * parameters at time i */
+	printf("Creating parallel trace\n");
 	Trace T(Funcs_);
 	
 	/* input position and time - I am pretty certain that the midpoints
@@ -1080,7 +1081,7 @@ void Trace::_CalculateTraceFP() {
 			printf("Spheroid surface\n");
 			footprints(nstep_[i],x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
-			printf("S %f %f %f %f %f %f\n",xfn3_[i],yfn3_[i],zfn3_[i],xfs3_[i],yfs3_[i],zfs3_[i]);
+			//printf("S %f %f %f %f %f %f\n",xfn3_[i],yfn3_[i],zfn3_[i],xfs3_[i],yfs3_[i],zfs3_[i]);
 		}
 
 		/* calculate the surface footprints */
@@ -1088,12 +1089,12 @@ void Trace::_CalculateTraceFP() {
 			printf("Sphere Ionosphere\n");
 			footprints(nstep_[i],x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
-			printf("I %f\n",xin3_[i]);
-			printf("I %f\n",yin3_[i]);
-			printf("I %f\n",zin3_[i]);
-			printf("I %f\n",xis3_[i]);
-			printf("I %f\n",yis3_[i]);
-			printf("I %f\n",zis3_[i]);
+			//printf("I %f\n",xin3_[i]);
+			//printf("I %f\n",yin3_[i]);
+			//printf("I %f\n",zin3_[i]);
+			//printf("I %f\n",xis3_[i]);
+			//printf("I %f\n",yis3_[i]);
+			//printf("I %f\n",zis3_[i]);
 
 		} else {
 			printf("Spheroid Ionosphere\n");
@@ -1121,13 +1122,13 @@ void Trace::_CalculateTraceFP() {
 			
 		 	latn = rad2deg*atan2(zfn3_[i],rho);
 		 	lonn = rad2deg*atan2(yfn3_[i],xfn3_[i]);
-		 	printf("%f %f %f\n",zfn3_[i],rho,latn);
-			printf("%f %f %f\n",yfn3_[i],xfn3_[i],lonn);
+		 	//printf("%f %f %f\n",zfn3_[i],rho,latn);
+			//printf("%f %f %f\n",yfn3_[i],xfn3_[i],lonn);
 			rho = sqrt(xfnm_[i]*xfnm_[i] + yfnm_[i]*yfnm_[i]);
 		 	mlatn = rad2deg*atan2(zfnm_[i],rho);
 		 	mlonn = rad2deg*atan2(yfnm_[i],xfnm_[i]);
-			printf("%f %f %f\n",zfnm_[i],rho,mlatn);
-			printf("%f %f %f\n",yfnm_[i],xfnm_[i],mlonn);
+			//printf("%f %f %f\n",zfnm_[i],rho,mlatn);
+			//printf("%f %f %f\n",yfnm_[i],xfnm_[i],mlonn);
 		} else {
 			latn = NAN;
 			lonn = NAN;
@@ -1142,14 +1143,14 @@ void Trace::_CalculateTraceFP() {
 		 	rho = sqrt(xin3_[i]*xin3_[i] + yin3_[i]*yin3_[i]);
 		 	latni = rad2deg*atan2(zin3_[i],rho);
 		 	lonni = rad2deg*atan2(yin3_[i],xin3_[i]);
-		 	printf("%f %f %f\n",zin3_[i],rho,latni);
-			printf("%f %f %f\n",yin3_[i],xin3_[i],lonni);
+		 	//printf("%f %f %f\n",zin3_[i],rho,latni);
+			//printf("%f %f %f\n",yin3_[i],xin3_[i],lonni);
 		 	
 			rho = sqrt(xinm_[i]*xinm_[i] + yinm_[i]*yinm_[i]);
 		 	mlatni = rad2deg*atan2(zinm_[i],rho);
 		 	mlonni = rad2deg*atan2(yinm_[i],xinm_[i]);
-			printf("%f %f %f\n",zinm_[i],rho,mlatni);
-			printf("%f %f %f\n",yinm_[i],xinm_[i],mlonni);
+			//printf("%f %f %f\n",zinm_[i],rho,mlatni);
+			//printf("%f %f %f\n",yinm_[i],xinm_[i],mlonni);
 		} else {
 			latni = NAN;
 			lonni = NAN;
