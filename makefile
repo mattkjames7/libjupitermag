@@ -1,5 +1,10 @@
 # CFLAGS for CC
-CFLAGS=-lm -std=c++17 -Wextra
+ifdef DEBUG
+	CFLAGS=-lm -std=c++17 -Wextra -g
+else 
+	CFLAGS=-lm -std=c++17 -Wextra
+endif
+
 
 # Compilers - the mingw ones allow us to compile for Windows using Linux
 CCo=g++ -fPIC -c $(CFLAGS)

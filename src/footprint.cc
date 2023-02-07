@@ -124,22 +124,22 @@ void footprints(int n, double *x, double *y, double *z,
 	/* now put the beginning/end footprints in the correct 
 	north/south fopotprint output*/
 	if (begns == 1) {
-		*xfn = xb;
-		*yfn = yb;
-		*zfn = zb;
-		*xfs = xe;
-		*yfs = ye;
-		*zfs = ze;
+		xfn[0] = xb;
+		yfn[0] = yb;
+		zfn[0] = zb;
+		xfs[0] = xe;
+		yfs[0] = ye;
+		zfs[0] = ze;
 
 	} else {
-		*xfn = xe;
-		*yfn = ye;
-		*zfn = ze;
-		*xfs = xb;
-		*yfs = yb;
-		*zfs = zb;
+		xfn[0] = xe;
+		yfn[0] = ye;
+		zfn[0] = ze;
+		xfs[0] = xb;
+		yfs[0] = yb;
+		zfs[0] = zb;
 	}
-
+	printf("FP: %f %f %f %f %f %f\n",&xfn,*yfn,*zfn,*xfs, *yfs,*zfs);
 }
 
 double planetRadius(double x, double y, double z, double a, double b) {
@@ -171,7 +171,7 @@ bool isCrossing(double x0, double y0, double z0,
 	t1 = asin(z1/r1);
 	tmid = 0.5*(t0 + t1);
 	rp = thetaPlanetRadius(tmid,a,b);
-
+	printf("%f %f %f %f\n",r0,r1,rp,tmid);
 	double rmin = std::min(r0,r1);
 	double rmax = std::max(r0,r1);
 
@@ -242,24 +242,35 @@ void findFootprint(	double *x, double *y, double *z,
 	if (starti > endi) {
 		dir = -1;
 	} else {
-		dir = 1;		*xfp = NAN;
-		*yfp = NAN;
-		*zfp = NAN;
-		return;
+		dir = 1;		
 	}
 
+	
 	/* find the indices surrounding the crossing */
 	int i, i0 = -1, i1 = -1;
 	double r0, r1, rp, t0, t1, tmid;
 	r0 = sqrt(x[starti]*x[starti] + y[starti]*y[starti] + z[starti]*z[starti]);
 	t0 = asin(z[starti]/r0);
-	for (i=starti;i<endi;i+=dir) {
-		if (isCrossing(x[i],y[i],z[i],x[i+dir],y[i+dir],z[i+dir],a,b)) {
-			i0 = i;
-			i1 = i + dir;
-			break;
+	if (dir == 1) {
+		for (i=starti;i<endi;i++) {
+			printf("%d\n",i);
+			if (isCrossing(x[i],y[i],z[i],x[i+dir],y[i+dir],z[i+dir],a,b)) {
+				i0 = i;
+				i1 = i + dir;
+				break;
+			}
 		}
+	} else {
+		for (i=starti;i>endi;i--) {
+			printf("%d\n",i);
+			if (isCrossing(x[i],y[i],z[i],x[i-1],y[i-1],z[i-1],a,b)) {
+				i0 = i;
+				i1 = i + dir;
+				break;
+			}
+		}		
 	}
+	printf("%d %d %d %d %d\n",dir,starti,endi,i0,i1);
 
 	if (i0 == -1) {
 		*xfp = NAN;

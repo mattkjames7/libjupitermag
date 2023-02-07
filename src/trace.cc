@@ -431,6 +431,10 @@ void Trace::_CalculateHalphaStartPoints(int i, int j,
 	ye1[0] = yfe3_[i] - dy;
 	ze1[0] = zfe3_[i];
 
+	printf("A: %f %f %f\n",xfe3_[i],yfe3_[i],zfe3_[i]);
+	printf("B: %f %f %f\n",xe0[0],ye0[0],ze0[0]);
+	printf("C: %f %f %f\n",xe1[0],ye1[0],ze1[0]);
+
 }
 
 void Trace::Field(	double x, double y, double z, 
@@ -474,24 +478,40 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	if (R[0] >= MaxR_) {
 		return false;
 	}
+
+	/* check that input is actually finite */
+	if (!isfinite(R[0])) {
+		printf("Invalid value detected\n");
+		return false;
+	}
 	
 	/* figure out some latitudes (t) */
 	double rho = sqrt(x*x + y*y);
 	double t = atan2(z,rho);
-	printf("%f %f %f %f %f %f\n",rs_,ri_,as_,bs_,ai_,bi_);
+
 	/* work out the Radius of Jupiter at that latitude */
-	double rhoj = as_*cos(t);
-	double zj = bs_*sin(t);
-	double Rj = sqrt(rhoj*rhoj + zj*zj);
-		
+	double rhoj, zj, Rj;
+	if (!SurfaceIsSphere_) {
+		rhoj = as_*cos(t);
+		zj = bs_*sin(t);
+		Rj = sqrt(rhoj*rhoj + zj*zj);
+	} else {
+		Rj = rs_;
+	}
+
 	/* do the same for the ionosphere */
-	double rhoi = ai_*cos(t);
-	double zi = bi_*sin(t);
-	double Ri = sqrt(rhoi*rhoi + zi*zi);
+	double rhoi, zi, Ri;
+	if (!IonosphereIsSphere_) {
+		rhoi = ai_*cos(t);
+		zi = bi_*sin(t);
+		Ri = sqrt(rhoi*rhoi + zi*zi);
+	} else {
+		Ri = ri_;
+	}
 
 	/* work out the minimum value, below which we stop */	
 	double rmin = std::min(Rj,Ri)*RMultiplier_;
-	printf("%f %f %f %f %f\n",*R,Rj,Ri,rmin,RMultiplier_);
+
 	/* stop the trace if we go below rmin */
 	if (R[0] < rmin) {
 		return false;
@@ -1007,6 +1027,50 @@ void Trace::_CalculateTraceFP() {
 	int i, j, imaxR;
 	for (i=0;i<n_;i++) {
 		printf("Footprint %d of %d\n",i+1,n_);
+
+		/* initialize with NAN */
+		xfn3_[i] = NAN;
+		yfn3_[i] = NAN;
+		zfn3_[i] = NAN;
+
+		xfs3_[i] = NAN;
+		yfs3_[i] = NAN;
+		zfs3_[i] = NAN;
+
+		xin3_[i] = NAN;
+		yin3_[i] = NAN;
+		zin3_[i] = NAN;
+
+		xis3_[i] = NAN;
+		yis3_[i] = NAN;
+		zis3_[i] = NAN;
+
+		xfnm_[i] = NAN;
+		yfnm_[i] = NAN;
+		zfnm_[i] = NAN;
+
+		xfsm_[i] = NAN;
+		yfsm_[i] = NAN;
+		zfsm_[i] = NAN;
+
+		xinm_[i] = NAN;
+		yinm_[i] = NAN;
+		zinm_[i] = NAN;
+
+		xism_[i] = NAN;
+		yism_[i] = NAN;
+		zism_[i] = NAN;
+
+		xfe3_[i] = NAN;
+		yfe3_[i] = NAN;
+		zfe3_[i] = NAN;
+
+		xfem_[i] = NAN;
+		yfem_[i] = NAN;
+		zfem_[i] = NAN;
+
+
+
 		/* calculate the surface footprints */
 		if (SurfaceIsSphere_) {
 			printf("Sphere Surface\n");
@@ -1016,6 +1080,7 @@ void Trace::_CalculateTraceFP() {
 			printf("Spheroid surface\n");
 			footprints(nstep_[i],x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
 						&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
+			printf("S %f %f %f %f %f %f\n",xfn3_[i],yfn3_[i],zfn3_[i],xfs3_[i],yfs3_[i],zfs3_[i]);
 		}
 
 		/* calculate the surface footprints */
@@ -1023,6 +1088,13 @@ void Trace::_CalculateTraceFP() {
 			printf("Sphere Ionosphere\n");
 			footprints(nstep_[i],x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
 						&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
+			printf("I %f\n",xin3_[i]);
+			printf("I %f\n",yin3_[i]);
+			printf("I %f\n",zin3_[i]);
+			printf("I %f\n",xis3_[i]);
+			printf("I %f\n",yis3_[i]);
+			printf("I %f\n",zis3_[i]);
+
 		} else {
 			printf("Spheroid Ionosphere\n");
 			footprints(nstep_[i],x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
@@ -1034,9 +1106,6 @@ void Trace::_CalculateTraceFP() {
 			eqfootprints(nstep_[i],x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
 			FlLen = S_[i][nstep_[i]];
 		} else {
-			xfe3_[i] = NAN;
-			yfe3_[i] = NAN;
-			zfe3_[i] = NAN;
 			Lshell = NAN;
 			lone = NAN;
 			FlLen = NAN;
@@ -1049,17 +1118,17 @@ void Trace::_CalculateTraceFP() {
 			SIIItoMag(xfn3_[i],yfn3_[i],zfn3_[i],xt_,xp_,&xfnm_[i],&yfnm_[i],&zfnm_[i]);
 
 		 	rho = sqrt(xfn3_[i]*xfn3_[i] + yfn3_[i]*yfn3_[i]);
+			
 		 	latn = rad2deg*atan2(zfn3_[i],rho);
 		 	lonn = rad2deg*atan2(yfn3_[i],xfn3_[i]);
-		 	
+		 	printf("%f %f %f\n",zfn3_[i],rho,latn);
+			printf("%f %f %f\n",yfn3_[i],xfn3_[i],lonn);
 			rho = sqrt(xfnm_[i]*xfnm_[i] + yfnm_[i]*yfnm_[i]);
 		 	mlatn = rad2deg*atan2(zfnm_[i],rho);
 		 	mlonn = rad2deg*atan2(yfnm_[i],xfnm_[i]);
+			printf("%f %f %f\n",zfnm_[i],rho,mlatn);
+			printf("%f %f %f\n",yfnm_[i],xfnm_[i],mlonn);
 		} else {
-			xfnm_[i] = NAN;
-			yfnm_[i] = NAN;
-			zfnm_[i] = NAN;
-
 			latn = NAN;
 			lonn = NAN;
 
@@ -1073,16 +1142,15 @@ void Trace::_CalculateTraceFP() {
 		 	rho = sqrt(xin3_[i]*xin3_[i] + yin3_[i]*yin3_[i]);
 		 	latni = rad2deg*atan2(zin3_[i],rho);
 		 	lonni = rad2deg*atan2(yin3_[i],xin3_[i]);
+		 	printf("%f %f %f\n",zin3_[i],rho,latni);
+			printf("%f %f %f\n",yin3_[i],xin3_[i],lonni);
 		 	
 			rho = sqrt(xinm_[i]*xinm_[i] + yinm_[i]*yinm_[i]);
 		 	mlatni = rad2deg*atan2(zinm_[i],rho);
 		 	mlonni = rad2deg*atan2(yinm_[i],xinm_[i]);
-
+			printf("%f %f %f\n",zinm_[i],rho,mlatni);
+			printf("%f %f %f\n",yinm_[i],xinm_[i],mlonni);
 		} else {
-			xinm_[i] = NAN;
-			yinm_[i] = NAN;
-			zinm_[i] = NAN;
-
 			latni = NAN;
 			lonni = NAN;
 
@@ -1101,11 +1169,6 @@ void Trace::_CalculateTraceFP() {
 		 	mlons = rad2deg*atan2(yfsm_[i],xfsm_[i]);
 
 		} else {
-			xinm_[i] = NAN;
-			yinm_[i] = NAN;
-			zinm_[i] = NAN;
-
-
 			lats = NAN;
 			lons = NAN;
 
@@ -1123,9 +1186,6 @@ void Trace::_CalculateTraceFP() {
 		 	mlatsi = rad2deg*atan2(zism_[i],rho);
 		 	mlonsi = rad2deg*atan2(yism_[i],xism_[i]);
 		} else {
-			xism_[i] = NAN;
-			yism_[i] = NAN;
-			zism_[i] = NAN;
 
 			latsi = NAN;
 			lonsi = NAN;
@@ -1136,10 +1196,6 @@ void Trace::_CalculateTraceFP() {
 		if (!isnan(xfe3_[i])) {
 			SIIItoMag(xfe3_[i],yfe3_[i],zfe3_[i],xt_,xp_,&xfem_[i],&yfem_[i],&zfem_[i]);
 			mlone = rad2deg*atan2(yfem_[i],xfem_[i]);
-		} else {
-			xfem_[i] = NAN;
-			yfem_[i] = NAN;
-			zfem_[i] = NAN;
 		}
 
 
