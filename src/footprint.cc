@@ -92,7 +92,8 @@ void footprints(int n, double *x, double *y, double *z,
 
 	/* find the first footprint indices */
 	int i0, i1;
-	double xb, yb, zb;
+	double xb = NAN, yb = NAN, zb = NAN;
+	begfp = false;
 	if (begfp) {
 		i0 = 0;
 		if (endfp) {
@@ -101,13 +102,10 @@ void footprints(int n, double *x, double *y, double *z,
 			i1 = n - 1;
 		}
 		findFootprint(x,y,z,i0,i1,a,b,&xb,&yb,&zb);
-	} else {
-		xb = NAN;
-		yb = NAN;
-		zb = NAN;
 	}
 
-	double xe, ye, ze;
+	double xe = NAN, ye = NAN, ze = NAN;
+	endfp = false;
 	if (endfp) {
 		i0 = n - 1;
 		if (begfp) {
@@ -116,10 +114,6 @@ void footprints(int n, double *x, double *y, double *z,
 			i1 = 0;
 		}
 		findFootprint(x,y,z,i0,i1,a,b,&xe,&ye,&ze);
-	} else {
-		xe = NAN;
-		ye = NAN;
-		ze = NAN;
 	}
 	//printf("%f %f %f %f %f %f\n",xe,ye,ze,xb,yb,zb);
 	/* now put the beginning/end footprints in the correct 

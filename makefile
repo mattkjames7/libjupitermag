@@ -1,8 +1,8 @@
 # CFLAGS for CC
 ifdef DEBUG
-	CFLAGS=-lm -std=c++17 -Wextra -g
+	CFLAGS=-lm -std=c++17 -Wextra -g -fsanitize=address
 else 
-	CFLAGS=-lm -std=c++17 -Wextra
+	CFLAGS=-lm -std=c++17 -Wextra -fsanitize=address
 endif
 
 

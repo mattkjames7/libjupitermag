@@ -1,8 +1,8 @@
 # CFLAGS for CC
 ifdef DEBUG
-	CFLAGS=-lm -std=c++17 -Wextra -g
+	CFLAGS=-lm -std=c++17 -Wextra -g -fsanitize=address
 else 
-	CFLAGS=-lm -std=c++17 -Wextra
+	CFLAGS=-lm -std=c++17 -Wextra -fsanitize=address
 endif
 
 # Compiler
@@ -28,22 +28,22 @@ all: obj lib
 .PHONY: all lib clean
 
 obj:
-	$(CCo) model.cc -o $(BUILDDIR)/model.o
-	$(CCo) trace.cc -o $(BUILDDIR)/trace.o
-	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o
-	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o
-	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o
+	$(CCo) model.cc -o $(BUILDDIR)/model.o  -static-libasan
+	$(CCo) trace.cc -o $(BUILDDIR)/trace.o  -static-libasan
+	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o -static-libasan
+	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o -static-libasan
+	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o -static-libasan
 	
 lib:
 	
 	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
-			-o ../lib/libjupitermag/$(LIBFILE)
+			-o ../lib/libjupitermag/$(LIBFILE) -static-libasan
 
 test:
 	$(CC) test.cc *.o \
 			con2020/*.o \
 			spline/*.o \
-			-o test	-Wl,-rpath='$$ORIGIN/libinternalfield' -L ./libinternalfield -linternalfield
+			-o test	-Wl,-rpath='$$ORIGIN/libinternalfield' -L ./libinternalfield -linternalfield  -static-libasan
 
 
 winobj:

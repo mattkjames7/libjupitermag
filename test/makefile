@@ -1,5 +1,5 @@
 # CFLAGS for CC
-CFLAGS=-lm -std=c++17 -Wextra -g -O3
+CFLAGS=-lm -std=c++17 -Wextra -g -O3 -fsanitize=address
 
 # Compiler
 CCo=g++ -fPIC -c $(CFLAGS)
@@ -14,14 +14,14 @@ else
 	ifeq ($(UNAME_S),Darwin)
 		LDFLAGS=-L ../lib/libjupitermag -ljupitermag
 	else
-		LDFLAGS=-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag
+		LDFLAGS=-Wl,-rpath='$$ORIGIN/../lib/libjupitermag' -L ../lib/libjupitermag -ljupitermag  -static-libasan
 	endif
 endif
 
 all:
 	$(CC) -I ../include cpptest.cc -o cpptest	$(LDFLAGS)
 	$(CC) timing.cc -o timing	$(LDFLAGS)
-	gcc -I ../include ctest.c -o ctest -lm $(LDFLAGS)
+	gcc -fsanitize=address -I ../include ctest.c -o ctest -lm $(LDFLAGS)
 
 	./ctest
 	./cpptest
