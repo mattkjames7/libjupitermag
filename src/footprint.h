@@ -7,6 +7,62 @@
 #include "footprint.h"
 #include "coordconv.h"
 
+const double deg2rad = M_PI/180.0;
+const double rad2deg = 180.0/M_PI;
+
+typedef struct FPstr {
+	/* SIII North */
+	double xn3; 
+	double yn3;
+	double zn3;
+	/* SIII South */
+	double xs3; 
+	double ys3;
+	double zs3;
+	/* MAG North */
+	double xnm; 
+	double ynm;
+	double znm;
+	/* MAG South */
+	double xsm; 
+	double ysm;
+	double zsm;
+
+	/* SIII North */	
+	double lonn;
+	double latn;
+	/* MAG North */	
+	double mlonn;
+	double mlatn;
+	/* SIII South */	
+	double lons;
+	double lats;
+	/* MAG South */	
+	double mlons;
+	double mlats;
+
+} FPstr;
+
+typedef struct EqFPstr {
+	/* SIII coords */
+	double x3; 
+	double y3;
+	double z3;
+
+	/* MAG coords */
+	double xm; 
+	double ym;
+	double zm;
+
+	/*Equatorial footprint*/
+	double lshell;
+	double mlone;
+	double fllen;
+} EqFPstr;
+
+void calculateFootprints(int n, double *x, double *y, double *z,
+							double a, double b, double xt, double xp,
+							FPstr *fp);
 
 void footprints(int n, double *x, double *y, double *z, 
 				double a, double b, double xt, double xp,

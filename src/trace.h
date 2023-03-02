@@ -144,20 +144,23 @@ class Trace {
 		double xt_;
 		double xp_;
 
-		/* trace end points (SIII Coordinates)*/
-		double *xfn3_, *yfn3_, *zfn3_;
-		double *xfs3_, *yfs3_, *zfs3_;
-		double *xin3_, *yin3_, *zin3_;
-		double *xis3_, *yis3_, *zis3_;
-		double *xfe3_, *yfe3_, *zfe3_;
+		/* trace footprints)*/
+		FPstr *fps_;
+		FPstr *fpi_;
+		EqFPstr *fpe_;
+		//double *xfn3_, *yfn3_, *zfn3_;
+		//double *xfs3_, *yfs3_, *zfs3_;
+		//double *xin3_, *yin3_, *zin3_;
+		//double *xis3_, *yis3_, *zis3_;
+		//double *xfe3_, *yfe3_, *zfe3_;
 
 
 		/* trace end points (Magnetic/Dipole coordinates)*/
-		double *xfnm_, *yfnm_, *zfnm_;
-		double *xfsm_, *yfsm_, *zfsm_;
-		double *xinm_, *yinm_, *zinm_;
-		double *xism_, *yism_, *zism_;
-		double *xfem_, *yfem_, *zfem_;
+		//double *xfnm_, *yfnm_, *zfnm_;
+		//double *xfsm_, *yfsm_, *zfsm_;
+		//double *xinm_, *yinm_, *zinm_;
+		//double *xism_, *yism_, *zism_;
+		//double *xfem_, *yfem_, *zfem_;
 
 
 		/* field length, R, Rnorm, Halpha, Footprints */

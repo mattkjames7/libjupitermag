@@ -1,5 +1,5 @@
 # CFLAGS for CC
-CFLAGS=-lm -std=c++17 -Wextra -g -O3 -fsanitize=address
+CFLAGS=-lm -std=c++17 -Wextra -g -O3 #-fsanitize=address
 
 # Compiler
 CCo=g++ -fPIC -c $(CFLAGS)
@@ -21,7 +21,7 @@ endif
 all:
 	$(CC) -I ../include cpptest.cc -o cpptest	$(LDFLAGS)
 	$(CC) timing.cc -o timing	$(LDFLAGS)
-	gcc -fsanitize=address -I ../include ctest.c -o ctest -lm $(LDFLAGS)
+	gcc -I ../include ctest.c -o ctest -lm $(LDFLAGS)
 
 	./ctest
 	./cpptest

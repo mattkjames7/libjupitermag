@@ -1,5 +1,197 @@
 #include "footprint.h"
 
+
+void calculateFootprints(int n, double *x, double *y, double *z,
+							double a, double b, double xt, double xp,
+							FPstr *fp) {
+	
+	/* check if each end is a footprint or not*/
+	bool begfp = _posisfp(x[0],y[0],z[0],a,b);
+	bool endfp = _posisfp(x[n-1],y[n-1],z[n-1],a,b);
+
+	/* work out whether each footprint is north or south */
+	int begns, endns, indmxr;
+	_nsends(n,x,y,z,xt,xp,begfp,endfp,&begns,&endns,&indmxr)
+
+	/* get the beginning footprint */
+	double xb, yb, zb;
+	_getbegfp(n,x,y,z,begfp,endfp,indmxr,a,b,&xb,&yb,&zb);
+
+	/* get the ending footprint */
+	double xe, ye, ze;
+	_getendfp(n,x,y,z,begfp,endfp,indmxr,a,b,&xe,&ye,&ze);
+
+	/* now put the beginning/end footprints in the correct 
+	north/south fopotprint output*/
+	if (begns == 1) {
+		fp->xn3 = xb;
+		fp->yn3 = yb;
+		fp->zn3 = zb;
+		fp->xs3 = xe;
+		fp->ys3 = ye;
+		fp->zs3 = ze;
+	} else {
+		fp->xn3 = xe;
+		fp->yn3 = ye;
+		fp->zn3 = ze;
+		fp->xs3 = xb;
+		fp->ys3 = yb;
+		fp->zs3 = zb;
+	}
+
+	/* fill all of the rest of the fields */
+	_fillfp(fp,xt,xp);
+
+}
+
+void _fillfp(FPstr *fp, double xt, double xp) {
+
+	/* calcualte mag coords */
+	SIIItoMag(fp->xn3,fp->yn3,fp->zn3,xt,xp,&(fp->xnm),&(fp->ynm),&(fp->znm));
+	SIIItoMag(fp->xs3,fp->ys3,fp->zs3,xt,xp,&(fp->xsm),&(fp->ysm),&(fp->zsm));
+
+	/* calculate lats and lons */
+	rn = sqrt(fp->xn3*fp->xn3 + fp->yn3*fp->yn3 + fp->zn3*fp->zn3);
+	rs = sqrt(fp->xs3*fp->xs3 + fp->ys3*fp->ys3 + fp->zs3*fp->zs3);
+	
+	fp->latn = sin(fp->zn3/rn)*rad2deg;
+	fp->lats = sin(fp->zs3/rs)*rad2deg;
+	fp->mlatn = sin(fp->znm/rn)*rad2deg;
+	fp->mlats = sin(fp->zsm/rs)*rad2deg;
+
+	fp->lonn = atan2(fp->yn3,fp->xn3)*rad2deg;
+	fp->lons = atan2(fp->ys3,fp->xs3)*rad2deg;
+	fp->mlonn = atan2(fp->ynm,fp->xnm)*rad2deg;
+	fp->mlons = atan2(fp->ysm,fp->xsm)*rad2deg;
+
+}
+
+void _getbegfp(	int n, double *x, double *y, double *z,
+				bool begfp, bool endfp, int indmxr,
+				double a, double b,
+				double *xfp, double *yfp, double *zfp) {
+
+	/* get the footprint at the beginning of the array */
+
+	int i0, i1;
+	xfp[0] = NAN;
+	yfp[0] = NAN;
+	zfp[0] = NAN;
+	if (begfp) {
+		i0 = 0;
+		if (endfp) {
+			i1 = indmxr;
+		} else {
+			i1 = n - 1;
+		}
+		findFootprint(x,y,z,i0,i1,a,b,xfp,yfp,zfp);
+	}
+}
+
+void _getendfp(	int n, double *x, double *y, double *z,
+				bool begfp, bool endfp, int indmxr,
+				double a, double b,
+				double *xfp, double *yfp, double *zfp) {
+
+	/* get the footprint at the beginning of the array */
+
+	int i0, i1;
+	xfp[0] = NAN;
+	yfp[0] = NAN;
+	zfp[0] = NAN;
+	if (endfp) {
+		i0 = n - 1;
+		if (begfp) {
+			i1 = indmxr;
+		} else {
+			i1 = 0;
+		}
+		findFootprint(x,y,z,i0,i1,a,b,xfp,yfp,zfp);
+	}
+}
+
+bool _posisfp(x,y,z,a,b) {
+	/* determine whether a position (the end of a trace)
+	 * is a footprint by whether is is below the surface*/
+
+	double r,t,rp,tp,rhop,zp;
+	r = sqrt(x*x + y*y + z*z);
+	t = asin(x/r);
+	rhop = a*cos(t);
+	zp = b*sin(t);
+	rp = sqrt(rhop*rhop + zp*zp);
+	return r <= rp;
+}
+
+int _maxR(n,x,y,z) {
+	/* find the index of the maximum in R*/
+	double rmx = -1.0;
+	double r;
+	int imx = -1;
+	int i;
+	for (i=0;<n;i++) {
+		r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);
+		if (r > rmx) {
+			rmx = r;
+			imx = i;
+		}
+	}
+	return imx;
+
+}
+
+void _nsends(int n, double *x, double *y, double *z,
+			double xt, double xp,
+			bool begfp, bool endfp,
+			int *begns, int *endns, int indmxr) {
+	/* find the maximum r index */
+	indmxr[0] = _maxR(n,x,y,z);
+	
+	/* determine which is north and which is south */
+	begns[0] = 0;
+	endns[0] = 0;
+	
+	double tx = 0.0;
+	double ty = 0.0;
+	double tz = 0.0;
+	int i;
+	//printf("Here %d %d\n",begfp, endfp);
+	if (begfp && endfp) {
+		/* if both ends are footprints - then the north one
+		should be the one with the largest positive z-value */
+		if (z[0] > z[n-1]) {
+			begns[0] = 1;
+			endns[0] = -1;
+		} else {
+			begns[0] = -1;
+			endns[0] = 1;
+		}
+	
+	} else {
+		if (begfp) {
+			/*convert to mag coordinates */
+			SIIItoMag(x[0],y[0],z[0],xt,xp,&tx,&ty,&tz);
+			if (tz >= 0) {
+				begns[0] = 1;
+			} else {
+				begns[0] = -1;
+			}
+		}
+		if (endfp) {
+			/*convert to mag coordinates */
+			SIIItoMag(x[n-1],y[n-1],z[n-1],xt,xp,&tx,&ty,&tz);
+			if (tz > 0) {
+				endns[0] = 1;
+			} else {
+				endns[0] = -1;
+			}
+		}
+	}	 virtual hard drive image
+
+
+
+}
+
 /******************************************************
  *
  *	NAME: footprints(n,x,y,z,a,b,xt,xp,xfn,yfn,zfn,xfs,yfs,zfs)
@@ -61,8 +253,14 @@ void footprints(int n, double *x, double *y, double *z,
 
 		/* find the maximum r index */
 		rp = sqrt(x[0]*x[0] + y[0]*y[0] + z[0]*z[0]);
-		for (i=1;i<n;i++) {
-			r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);
+		for (i=1;i<n;i++) {	begfp = false;
+
+			r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);		i0 = n - 1;
+		if (begfp) {
+			i1 = indmxr;
+		} else {
+			i1 = 0;
+		}
 			if (r > rp) {
 				rp = r;
 				indmxr = i;
@@ -219,7 +417,7 @@ void interpCrossing(double x0, double y0, double z0,
 
 }
 
-void findFootprint(	double *x, double *y, double *z,
+void findFootprint(	doubl virtual hard drive imagee *x, double *y, double *z,
 					int starti, int endi, 
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {
@@ -309,4 +507,36 @@ void eqfootprints(	int n, double *x, double *y, double *z,
 	*Lon = 180*atan2((*yfe),(*xfe))/M_PI;
 
 
+}
+
+double _fllen(int n, double *x, double *y, double *z) {
+	int i;
+	double s = 0.0;
+	double dx, dy, dz;
+	for (i=0;i<n-1;i++) {
+		dx = x[i] - x[i+1];
+		dy = y[i] - y[i+1];
+		dz = z[i] - z[i+1];
+		s += sqrt(dx*dx + dy*dy + dz*dz);
+	}
+	return s;
+}
+
+void calculateEquatorialFootprints(int n, double *x, double *y, double *z, 
+						double xt, double xp, EqFPstr *efp) {
+
+	/* find the furthest point along the field line*/
+	int indmxr = _maxR(n,x,y,z);
+
+	efp->x3 = x[indmxr];
+	efp->y3 = y[indmxr];
+	efp->z3 = z[indmxr];
+
+	/* convert to mag */
+	SIIItoMag(efp->x3,efp->y3,efp->z3,xt,xp,&(efp->xm),&(efp->ym),&(efp->zm));
+
+	/* lshell, lon, field line length */
+	efp->fllen = _fllen(n,x,y,z);
+	efp->lshell = sqrt(x[indmxr]*x[indmxr] + y[indmxr]*y[indmxr] + z[indmxr]*z[indmxr]);
+	efp->mlone = atan2(y[indmxr],x[indmxr]);
 }

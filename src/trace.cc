@@ -1,5 +1,8 @@
 #include "trace.h"
 
+
+
+
 Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	
 	/* set the field fucntion pointers vector */
@@ -113,37 +116,7 @@ Trace::~Trace() {
 
 	/* footprint/endpoints */
 	if (allocEqFP_) {
-		delete[] xfn3_;
-		delete[] yfn3_;
-		delete[] zfn3_;
-		delete[] xfs3_;
-		delete[] yfs3_;
-		delete[] zfs3_;
-		delete[] xin3_;
-		delete[] yin3_;
-		delete[] zin3_;
-		delete[] xis3_;
-		delete[] yis3_;
-		delete[] zis3_;
-		delete[] xfe3_;
-		delete[] yfe3_;
-		delete[] zfe3_;
 
-		delete[] xfnm_;
-		delete[] yfnm_;
-		delete[] zfnm_;
-		delete[] xfsm_;
-		delete[] yfsm_;
-		delete[] zfsm_;
-		delete[] xinm_;
-		delete[] yinm_;
-		delete[] zinm_;
-		delete[] xism_;
-		delete[] yism_;
-		delete[] zism_;
-		delete[] xfem_;
-		delete[] yfem_;
-		delete[] zfem_;
 	}
 }
 
@@ -424,21 +397,21 @@ void Trace::_CalculateHalphaStartPoints(int i, int j,
 	dp = Delta_*sin(alpha0_[j]);
 	
 	/* rotate based on the local time */
-	beta = atan2(-xfe3_[i],-yfe3_[i]);
+	beta = atan2(-fpe_[i].x3,-fpe_[i].y3);
 	dx = dp*cos(beta) - dt*sin(beta);
 	dy = dp*sin(beta) + dt*cos(beta);
 	
 	/* set the start points of the new field lines */
-	xe0[0] = xfe3_[i] + dx;
-	ye0[0] = yfe3_[i] + dy;
-	ze0[0] = zfe3_[i];
-	xe1[0] = xfe3_[i] - dx;
-	ye1[0] = yfe3_[i] - dy;
-	ze1[0] = zfe3_[i];
+	xe0[0] = fpe_[i].x3 + dx;
+	ye0[0] = fpe_[i].y3 + dy;
+	ze0[0] = fpe_[i].z3;
+	xe1[0] = fpe_[i].x3 - dx;
+	ye1[0] = fpe_[i].y3 - dy;
+	ze1[0] = fpe_[i].z3;
 
-	printf("A: %f %f %f\n",xfe3_[i],yfe3_[i],zfe3_[i]);
-	printf("B: %f %f %f\n",xe0[0],ye0[0],ze0[0]);
-	printf("C: %f %f %f\n",xe1[0],ye1[0],ze1[0]);
+	//printf("A: %f %f %f\n",xfe3_[i],yfe3_[i],zfe3_[i]);
+	//printf("B: %f %f %f\n",xe0[0],ye0[0],ze0[0]);
+	//printf("C: %f %f %f\n",xe1[0],ye1[0],ze1[0]);
 
 }
 
@@ -978,311 +951,311 @@ void Trace::_CalculateTraceFP() {
 		return;
 	}
 	
-	/* allocate the surface footprints (SIII) */
-	xfn3_ = new double[n_];
-	yfn3_ = new double[n_];
-	zfn3_ = new double[n_];
-	xfs3_ = new double[n_];
-	yfs3_ = new double[n_];
-	zfs3_ = new double[n_];
+	// /* allocate the surface footprints (SIII) */
+	// xfn3_ = new double[n_];
+	// yfn3_ = new double[n_];
+	// zfn3_ = new double[n_];
+	// xfs3_ = new double[n_];
+	// yfs3_ = new double[n_];
+	// zfs3_ = new double[n_];
 
-	/* allocate ionospheric footprints (SIII) */
-	xin3_ = new double[n_];
-	yin3_ = new double[n_];
-	zin3_ = new double[n_];
-	xis3_ = new double[n_];
-	yis3_ = new double[n_];
-	zis3_ = new double[n_];
+	// /* allocate ionospheric footprints (SIII) */
+	// xin3_ = new double[n_];
+	// yin3_ = new double[n_];
+	// zin3_ = new double[n_];
+	// xis3_ = new double[n_];
+	// yis3_ = new double[n_];
+	// zis3_ = new double[n_];
 	
-	/* and "equatorial" footprints" (SIII) */	
-	xfe3_ = new double[n_];
-	yfe3_ = new double[n_];
-	zfe3_ = new double[n_];
+	// /* and "equatorial" footprints" (SIII) */	
+	// xfe3_ = new double[n_];
+	// yfe3_ = new double[n_];
+	// zfe3_ = new double[n_];
 	
-	/* allocate the surface footprints (Mag) */
-	xfnm_ = new double[n_];
-	yfnm_ = new double[n_];
-	zfnm_ = new double[n_];
+	// /* allocate the surface footprints (Mag) */
+	// xfnm_ = new double[n_];
+	// yfnm_ = new double[n_];
+	// zfnm_ = new double[n_];
 	
 	
-	xfsm_ = new double[n_];
-	yfsm_ = new double[n_];
-	zfsm_ = new double[n_];
+	// xfsm_ = new double[n_];
+	// yfsm_ = new double[n_];
+	// zfsm_ = new double[n_];
 	
-	/* allocate ionospheric footprints (Mag) */
-	xinm_ = new double[n_];
-	yinm_ = new double[n_];
-	zinm_ = new double[n_];
-	xism_ = new double[n_];
-	yism_ = new double[n_];
-	zism_ = new double[n_];
+	// /* allocate ionospheric footprints (Mag) */
+	// xinm_ = new double[n_];
+	// yinm_ = new double[n_];
+	// zinm_ = new double[n_];
+	// xism_ = new double[n_];
+	// yism_ = new double[n_];
+	// zism_ = new double[n_];
 	
-	/* and "equatorial" footprints" (Mag) */	
-	xfem_ = new double[n_];
-	yfem_ = new double[n_];
-	zfem_ = new double[n_];
+	// /* and "equatorial" footprints" (Mag) */	
+	// xfem_ = new double[n_];
+	// yfem_ = new double[n_];
+	// zfem_ = new double[n_];
 
 	allocEqFP_ = true;
 
-	double rho, latn, lats, lonn, lons, lone, Lshell, FlLen;
-	double mlatn, mlats, mlonn, mlons, mlone;
-	double latni, latsi, lonni, lonsi;
-	double mlatni, mlatsi, mlonni, mlonsi;
+	// double rho, latn, lats, lonn, lons, lone, Lshell, FlLen;
+	// double mlatn, mlats, mlonn, mlons, mlone;
+	// double latni, latsi, lonni, lonsi;
+	// double mlatni, mlatsi, mlonni, mlonsi;
 
-	int i, j, imaxR;
-	for (i=0;i<n_;i++) {
-		printf("Footprint %d of %d\n",i+1,n_);
+	// int i, j, imaxR;
+	// for (i=0;i<n_;i++) {
+	// 	printf("Footprint %d of %d\n",i+1,n_);
 
-		/* initialize with NAN */
-		xfn3_[i] = NAN;
-		yfn3_[i] = NAN;
-		zfn3_[i] = NAN;
+	// 	/* initialize with NAN */
+	// 	xfn3_[i] = NAN;
+	// 	yfn3_[i] = NAN;
+	// 	zfn3_[i] = NAN;
 
-		xfs3_[i] = NAN;
-		yfs3_[i] = NAN;
-		zfs3_[i] = NAN;
+	// 	xfs3_[i] = NAN;
+	// 	yfs3_[i] = NAN;
+	// 	zfs3_[i] = NAN;
 
-		xin3_[i] = NAN;
-		yin3_[i] = NAN;
-		zin3_[i] = NAN;
+	// 	xin3_[i] = NAN;
+	// 	yin3_[i] = NAN;
+	// 	zin3_[i] = NAN;
 
-		xis3_[i] = NAN;
-		yis3_[i] = NAN;
-		zis3_[i] = NAN;
+	// 	xis3_[i] = NAN;
+	// 	yis3_[i] = NAN;
+	// 	zis3_[i] = NAN;
 
-		xfnm_[i] = NAN;
-		yfnm_[i] = NAN;
-		zfnm_[i] = NAN;
+	// 	xfnm_[i] = NAN;
+	// 	yfnm_[i] = NAN;
+	// 	zfnm_[i] = NAN;
 
-		xfsm_[i] = NAN;
-		yfsm_[i] = NAN;
-		zfsm_[i] = NAN;
+	// 	xfsm_[i] = NAN;
+	// 	yfsm_[i] = NAN;
+	// 	zfsm_[i] = NAN;
 
-		xinm_[i] = NAN;
-		yinm_[i] = NAN;
-		zinm_[i] = NAN;
+	// 	xinm_[i] = NAN;
+	// 	yinm_[i] = NAN;
+	// 	zinm_[i] = NAN;
 
-		xism_[i] = NAN;
-		yism_[i] = NAN;
-		zism_[i] = NAN;
+	// 	xism_[i] = NAN;
+	// 	yism_[i] = NAN;
+	// 	zism_[i] = NAN;
 
-		xfe3_[i] = NAN;
-		yfe3_[i] = NAN;
-		zfe3_[i] = NAN;
+	// 	xfe3_[i] = NAN;
+	// 	yfe3_[i] = NAN;
+	// 	zfe3_[i] = NAN;
 
-		xfem_[i] = NAN;
-		yfem_[i] = NAN;
-		zfem_[i] = NAN;
-
-
-
-		/* calculate the surface footprints */
-		if (SurfaceIsSphere_) {
-			printf("Sphere Surface\n");
-			//footprints(nstep_[i],x_[i],y_[i],z_[i],rs_,rs_,xt_,xp_,
-			//			&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
-		} else {
-			printf("Spheroid surface\n");
-			//footprints(nstep_[i],x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
-			//			&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
-			//printf("S %f %f %f %f %f %f\n",xfn3_[i],yfn3_[i],zfn3_[i],xfs3_[i],yfs3_[i],zfs3_[i]);
-		}
-
-		/* calculate the surface footprints */
-		if (IonosphereIsSphere_) {
-			printf("Sphere Ionosphere\n");
-			//footprints(nstep_[i],x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
-			//			&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
-			//printf("I %f\n",xin3_[i]);
-			//printf("I %f\n",yin3_[i]);
-			//printf("I %f\n",zin3_[i]);
-			//printf("I %f\n",xis3_[i]);
-			//printf("I %f\n",yis3_[i]);
-			//printf("I %f\n",zis3_[i]);
-
-		} else {
-			printf("Spheroid Ionosphere\n");
-			//footprints(nstep_[i],x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
-			//			&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
-		}
-
-		if (!isnan(xfn3_[i]) && !isnan(xfs3_[i])) {
-			printf("Equator\n");
-			//eqfootprints(nstep_[i],x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
-			FlLen = S_[i][nstep_[i]];
-		} else {
-			Lshell = NAN;
-			lone = NAN;
-			FlLen = NAN;
-		}
+	// 	xfem_[i] = NAN;
+	// 	yfem_[i] = NAN;
+	// 	zfem_[i] = NAN;
 
 
-		/* convert to magnetic coordinates */
-		if (!isnan(xfn3_[i])) {
-			printf("Mag Conversion North\n");
-			//SIIItoMag(xfn3_[i],yfn3_[i],zfn3_[i],xt_,xp_,&xfnm_[i],&yfnm_[i],&zfnm_[i]);
 
-		 	//rho = sqrt(xfn3_[i]*xfn3_[i] + yfn3_[i]*yfn3_[i]);
+	// 	/* calculate the surface footprints */
+	// 	if (SurfaceIsSphere_) {
+	// 		printf("Sphere Surface\n");
+	// 		//footprints(nstep_[i],x_[i],y_[i],z_[i],rs_,rs_,xt_,xp_,
+	// 		//			&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
+	// 	} else {
+	// 		printf("Spheroid surface\n");
+	// 		//footprints(nstep_[i],x_[i],y_[i],z_[i],as_,bs_,xt_,xp_,
+	// 		//			&xfn3_[i],&yfn3_[i],&zfn3_[i],&xfs3_[i],&yfs3_[i],&zfs3_[i]);
+	// 		//printf("S %f %f %f %f %f %f\n",xfn3_[i],yfn3_[i],zfn3_[i],xfs3_[i],yfs3_[i],zfs3_[i]);
+	// 	}
+
+	// 	/* calculate the surface footprints */
+	// 	if (IonosphereIsSphere_) {
+	// 		printf("Sphere Ionosphere\n");
+	// 		//footprints(nstep_[i],x_[i],y_[i],z_[i],ri_,ri_,xt_,xp_,
+	// 		//			&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
+	// 		//printf("I %f\n",xin3_[i]);
+	// 		//printf("I %f\n",yin3_[i]);
+	// 		//printf("I %f\n",zin3_[i]);
+	// 		//printf("I %f\n",xis3_[i]);
+	// 		//printf("I %f\n",yis3_[i]);
+	// 		//printf("I %f\n",zis3_[i]);
+
+	// 	} else {
+	// 		printf("Spheroid Ionosphere\n");
+	// 		//footprints(nstep_[i],x_[i],y_[i],z_[i],ai_,bi_,xt_,xp_,
+	// 		//			&xin3_[i],&yin3_[i],&zin3_[i],&xis3_[i],&yis3_[i],&zis3_[i]);
+	// 	}
+
+	// 	if (!isnan(xfn3_[i]) && !isnan(xfs3_[i])) {
+	// 		printf("Equator\n");
+	// 		//eqfootprints(nstep_[i],x_[i],y_[i],z_[i],&xfe3_[i],&yfe3_[i],&zfe3_[i],&Lshell,&lone);
+	// 		FlLen = S_[i][nstep_[i]];
+	// 	} else {
+	// 		Lshell = NAN;
+	// 		lone = NAN;
+	// 		FlLen = NAN;
+	// 	}
+
+
+	// 	/* convert to magnetic coordinates */
+	// 	if (!isnan(xfn3_[i])) {
+	// 		printf("Mag Conversion North\n");
+	// 		//SIIItoMag(xfn3_[i],yfn3_[i],zfn3_[i],xt_,xp_,&xfnm_[i],&yfnm_[i],&zfnm_[i]);
+
+	// 	 	//rho = sqrt(xfn3_[i]*xfn3_[i] + yfn3_[i]*yfn3_[i]);
 			
-		 	//latn = rad2deg*atan2(zfn3_[i],rho);
-		 	//lonn = rad2deg*atan2(yfn3_[i],xfn3_[i]);
-		 	//printf("%f %f %f\n",zfn3_[i],rho,latn);
-			//printf("%f %f %f\n",yfn3_[i],xfn3_[i],lonn);
-			//rho = sqrt(xfnm_[i]*xfnm_[i] + yfnm_[i]*yfnm_[i]);
-		 	//mlatn = rad2deg*atan2(zfnm_[i],rho);
-		 	//mlonn = rad2deg*atan2(yfnm_[i],xfnm_[i]);
-			//printf("%f %f %f\n",zfnm_[i],rho,mlatn);
-			//printf("%f %f %f\n",yfnm_[i],xfnm_[i],mlonn);
-		} else {
-			latn = NAN;
-			lonn = NAN;
+	// 	 	//latn = rad2deg*atan2(zfn3_[i],rho);
+	// 	 	//lonn = rad2deg*atan2(yfn3_[i],xfn3_[i]);
+	// 	 	//printf("%f %f %f\n",zfn3_[i],rho,latn);
+	// 		//printf("%f %f %f\n",yfn3_[i],xfn3_[i],lonn);
+	// 		//rho = sqrt(xfnm_[i]*xfnm_[i] + yfnm_[i]*yfnm_[i]);
+	// 	 	//mlatn = rad2deg*atan2(zfnm_[i],rho);
+	// 	 	//mlonn = rad2deg*atan2(yfnm_[i],xfnm_[i]);
+	// 		//printf("%f %f %f\n",zfnm_[i],rho,mlatn);
+	// 		//printf("%f %f %f\n",yfnm_[i],xfnm_[i],mlonn);
+	// 	} else {
+	// 		latn = NAN;
+	// 		lonn = NAN;
 
-			mlatn = NAN;
-			mlonn = NAN;
+	// 		mlatn = NAN;
+	// 		mlonn = NAN;
 
-		}
-		if (!isnan(xin3_[i])) {
-			//SIIItoMag(xin3_[i],yin3_[i],zin3_[i],xt_,xp_,&xinm_[i],&yinm_[i],&zinm_[i]);
+	// 	}
+	// 	if (!isnan(xin3_[i])) {
+	// 		//SIIItoMag(xin3_[i],yin3_[i],zin3_[i],xt_,xp_,&xinm_[i],&yinm_[i],&zinm_[i]);
 
-		 	//rho = sqrt(xin3_[i]*xin3_[i] + yin3_[i]*yin3_[i]);
-		 	//latni = rad2deg*atan2(zin3_[i],rho);
-		 	//lonni = rad2deg*atan2(yin3_[i],xin3_[i]);
-		 	//printf("%f %f %f\n",zin3_[i],rho,latni);
-			//printf("%f %f %f\n",yin3_[i],xin3_[i],lonni);
+	// 	 	//rho = sqrt(xin3_[i]*xin3_[i] + yin3_[i]*yin3_[i]);
+	// 	 	//latni = rad2deg*atan2(zin3_[i],rho);
+	// 	 	//lonni = rad2deg*atan2(yin3_[i],xin3_[i]);
+	// 	 	//printf("%f %f %f\n",zin3_[i],rho,latni);
+	// 		//printf("%f %f %f\n",yin3_[i],xin3_[i],lonni);
 		 	
-			//rho = sqrt(xinm_[i]*xinm_[i] + yinm_[i]*yinm_[i]);
-		 	//mlatni = rad2deg*atan2(zinm_[i],rho);
-		 	//mlonni = rad2deg*atan2(yinm_[i],xinm_[i]);
-			//printf("%f %f %f\n",zinm_[i],rho,mlatni);
-			//printf("%f %f %f\n",yinm_[i],xinm_[i],mlonni);
-		} else {
-			latni = NAN;
-			lonni = NAN;
+	// 		//rho = sqrt(xinm_[i]*xinm_[i] + yinm_[i]*yinm_[i]);
+	// 	 	//mlatni = rad2deg*atan2(zinm_[i],rho);
+	// 	 	//mlonni = rad2deg*atan2(yinm_[i],xinm_[i]);
+	// 		//printf("%f %f %f\n",zinm_[i],rho,mlatni);
+	// 		//printf("%f %f %f\n",yinm_[i],xinm_[i],mlonni);
+	// 	} else {
+	// 		latni = NAN;
+	// 		lonni = NAN;
 
-			mlatni = NAN;
-			mlonni = NAN;
-		}
-		if (!isnan(xfs3_[i])) {
-			//SIIItoMag(xfs3_[i],yfs3_[i],zfs3_[i],xt_,xp_,&xfsm_[i],&yfsm_[i],&zfsm_[i]);
+	// 		mlatni = NAN;
+	// 		mlonni = NAN;
+	// 	}
+	// 	if (!isnan(xfs3_[i])) {
+	// 		//SIIItoMag(xfs3_[i],yfs3_[i],zfs3_[i],xt_,xp_,&xfsm_[i],&yfsm_[i],&zfsm_[i]);
 
-		 	//rho = sqrt(xfs3_[i]*xfs3_[i] + yfs3_[i]*yfs3_[i]);
-		 	//lats = rad2deg*atan2(zfs3_[i],rho);
-		 	//lons = rad2deg*atan2(yfs3_[i],xfs3_[i]);
+	// 	 	//rho = sqrt(xfs3_[i]*xfs3_[i] + yfs3_[i]*yfs3_[i]);
+	// 	 	//lats = rad2deg*atan2(zfs3_[i],rho);
+	// 	 	//lons = rad2deg*atan2(yfs3_[i],xfs3_[i]);
 		 	
-			//rho = sqrt(xfsm_[i]*xfsm_[i] + yfsm_[i]*yfsm_[i]);
-		 	//mlats = rad2deg*atan2(zfsm_[i],rho);
-		 	//mlons = rad2deg*atan2(yfsm_[i],xfsm_[i]);
+	// 		//rho = sqrt(xfsm_[i]*xfsm_[i] + yfsm_[i]*yfsm_[i]);
+	// 	 	//mlats = rad2deg*atan2(zfsm_[i],rho);
+	// 	 	//mlons = rad2deg*atan2(yfsm_[i],xfsm_[i]);
 
-		} else {
-			lats = NAN;
-			lons = NAN;
+	// 	} else {
+	// 		lats = NAN;
+	// 		lons = NAN;
 
-			mlats = NAN;
-			mlons = NAN;
-		}
-		if (!isnan(xis3_[i])) {
-			//SIIItoMag(xis3_[i],yis3_[i],zis3_[i],xt_,xp_,&xism_[i],&yism_[i],&zism_[i]);
+	// 		mlats = NAN;
+	// 		mlons = NAN;
+	// 	}
+	// 	if (!isnan(xis3_[i])) {
+	// 		//SIIItoMag(xis3_[i],yis3_[i],zis3_[i],xt_,xp_,&xism_[i],&yism_[i],&zism_[i]);
 
-		 	//rho = sqrt(xis3_[i]*xis3_[i] + yis3_[i]*yis3_[i]);
-		 	//latsi = rad2deg*atan2(zis3_[i],rho);
-		 	//lonsi = rad2deg*atan2(yis3_[i],xis3_[i]);
+	// 	 	//rho = sqrt(xis3_[i]*xis3_[i] + yis3_[i]*yis3_[i]);
+	// 	 	//latsi = rad2deg*atan2(zis3_[i],rho);
+	// 	 	//lonsi = rad2deg*atan2(yis3_[i],xis3_[i]);
 		 	
-			//rho = sqrt(xism_[i]*xism_[i] + yism_[i]*yism_[i]);
-		 	//mlatsi = rad2deg*atan2(zism_[i],rho);
-		 	//mlonsi = rad2deg*atan2(yism_[i],xism_[i]);
-		} else {
+	// 		//rho = sqrt(xism_[i]*xism_[i] + yism_[i]*yism_[i]);
+	// 	 	//mlatsi = rad2deg*atan2(zism_[i],rho);
+	// 	 	//mlonsi = rad2deg*atan2(yism_[i],xism_[i]);
+	// 	} else {
 
-			latsi = NAN;
-			lonsi = NAN;
+	// 		latsi = NAN;
+	// 		lonsi = NAN;
 
-			mlatsi = NAN;
-			mlonsi = NAN;
-		}
-		if (!isnan(xfe3_[i])) {
-			//SIIItoMag(xfe3_[i],yfe3_[i],zfe3_[i],xt_,xp_,&xfem_[i],&yfem_[i],&zfem_[i]);
-			//mlone = rad2deg*atan2(yfem_[i],xfem_[i]);
-		}
+	// 		mlatsi = NAN;
+	// 		mlonsi = NAN;
+	// 	}
+	// 	if (!isnan(xfe3_[i])) {
+	// 		//SIIItoMag(xfe3_[i],yfe3_[i],zfe3_[i],xt_,xp_,&xfem_[i],&yfem_[i],&zfem_[i]);
+	// 		//mlone = rad2deg*atan2(yfem_[i],xfem_[i]);
+	// 	}
 
 
-		/* calculate the equatorial footprints */
+	// 	/* calculate the equatorial footprints */
 
-		// /* north footprint */
-		// if ((TraceDir_ == 0) || (TraceDir_ == 1)) {
-		// 	xfn_[i] = x_[i][0];
-		// 	yfn_[i] = y_[i][0];
-		// 	zfn_[i] = z_[i][0];
+	// 	// /* north footprint */
+	// 	// if ((TraceDir_ == 0) || (TraceDir_ == 1)) {
+	// 	// 	xfn_[i] = x_[i][0];
+	// 	// 	yfn_[i] = y_[i][0];
+	// 	// 	zfn_[i] = z_[i][0];
 			
-		// 	/* latitude (not co-lat)  and longitude - in degrees*/
-		// 	rho = sqrt(xfn_[i]*xfn_[i] + yfn_[i]*yfn_[i]);
-		// 	latn = rad2deg*atan2(zfn_[i],rho);
-		// 	lonn = rad2deg*atan2(yfn_[i],xfn_[i]);
-		// } else {
-		// 	latn = NAN;
-		// 	lonn = NAN;
-		// }
+	// 	// 	/* latitude (not co-lat)  and longitude - in degrees*/
+	// 	// 	rho = sqrt(xfn_[i]*xfn_[i] + yfn_[i]*yfn_[i]);
+	// 	// 	latn = rad2deg*atan2(zfn_[i],rho);
+	// 	// 	lonn = rad2deg*atan2(yfn_[i],xfn_[i]);
+	// 	// } else {
+	// 	// 	latn = NAN;
+	// 	// 	lonn = NAN;
+	// 	// }
 		
-		// /* south footprint */
-		// if ((TraceDir_ == 0) || (TraceDir_ == -1)) {
-		// 	xfs_[i] = x_[i][nstep_[i]-1];
-		// 	yfs_[i] = y_[i][nstep_[i]-1];
-		// 	zfs_[i] = z_[i][nstep_[i]-1];
+	// 	// /* south footprint */
+	// 	// if ((TraceDir_ == 0) || (TraceDir_ == -1)) {
+	// 	// 	xfs_[i] = x_[i][nstep_[i]-1];
+	// 	// 	yfs_[i] = y_[i][nstep_[i]-1];
+	// 	// 	zfs_[i] = z_[i][nstep_[i]-1];
 			
-		// 	/* latitude (not co-lat)  and longitude - in degrees*/
-		// 	rho = sqrt(xfs_[i]*xfs_[i] + yfs_[i]*yfs_[i]);
-		// 	lats = rad2deg*atan2(zfs_[i],rho);
-		// 	lons = rad2deg*atan2(yfs_[i],xfs_[i]);
-		// } else {
-		// 	lats = NAN;
-		// 	lons = NAN;
-		// }				
+	// 	// 	/* latitude (not co-lat)  and longitude - in degrees*/
+	// 	// 	rho = sqrt(xfs_[i]*xfs_[i] + yfs_[i]*yfs_[i]);
+	// 	// 	lats = rad2deg*atan2(zfs_[i],rho);
+	// 	// 	lons = rad2deg*atan2(yfs_[i],xfs_[i]);
+	// 	// } else {
+	// 	// 	lats = NAN;
+	// 	// 	lons = NAN;
+	// 	// }				
 		
-		// /* equatorial (sort of, axtually at Rmax) footprint */
-		// if (TraceDir_ == 0) {
-		// 	/* find the furthest point along the field line */
-		// 	imaxR = -1;
-		// 	Lshell = 0.0;
-		// 	for (j=0;j<nstep_[i];j++) {
-		// 		if (R_[i][j] > Lshell) {
-		// 			Lshell = R_[i][j];
-		// 			imaxR = j;
-		// 		}
-		// 	}
+	// 	// /* equatorial (sort of, axtually at Rmax) footprint */
+	// 	// if (TraceDir_ == 0) {
+	// 	// 	/* find the furthest point along the field line */
+	// 	// 	imaxR = -1;
+	// 	// 	Lshell = 0.0;
+	// 	// 	for (j=0;j<nstep_[i];j++) {
+	// 	// 		if (R_[i][j] > Lshell) {
+	// 	// 			Lshell = R_[i][j];
+	// 	// 			imaxR = j;
+	// 	// 		}
+	// 	// 	}
 			
-		// 	xfe_[i] = x_[i][imaxR];
-		// 	yfe_[i] = y_[i][imaxR];
-		// 	zfe_[i] = z_[i][imaxR];
+	// 	// 	xfe_[i] = x_[i][imaxR];
+	// 	// 	yfe_[i] = y_[i][imaxR];
+	// 	// 	zfe_[i] = z_[i][imaxR];
 			
-		// 	/* latitude (not co-lat)  and longitude - in degrees*/
-		// 	lone = rad2deg*atan2(yfe_[i],xfe_[i]);
+	// 	// 	/* latitude (not co-lat)  and longitude - in degrees*/
+	// 	// 	lone = rad2deg*atan2(yfe_[i],xfe_[i]);
 			
-		// 	/* field length */
-		// 	FlLen = S_[i][nstep_[i]];
-		// } else {
-		// 	Lshell = NAN;
-		// 	lone = NAN;
-		// 	FlLen = NAN;
-		// }	
-		FP_[i][0] = latn;
-		FP_[i][1] = lonn;
-		FP_[i][2] = lats;
-		FP_[i][3] = lons;
-		FP_[i][4] = latni;
-		FP_[i][5] = lonni;
-		FP_[i][6] = latsi;
-		FP_[i][7] = lonsi;
-		FP_[i][8] = lone;
-		FP_[i][9] = mlatn;
-		FP_[i][10] = mlonn;
-		FP_[i][11] = mlats;
-		FP_[i][12] = mlons;
-		FP_[i][13] = mlatni;
-		FP_[i][14] = mlonni;
-		FP_[i][15] = mlatsi;
-		FP_[i][16] = mlonsi;
-		FP_[i][17] = mlone;
-		FP_[i][18] = Lshell;
-		FP_[i][19] = FlLen;
-	}
+	// 	// 	/* field length */
+	// 	// 	FlLen = S_[i][nstep_[i]];
+	// 	// } else {
+	// 	// 	Lshell = NAN;
+	// 	// 	lone = NAN;
+	// 	// 	FlLen = NAN;
+	// 	// }	
+	// 	FP_[i][0] = latn;
+	// 	FP_[i][1] = lonn;
+	// 	FP_[i][2] = lats;
+	// 	FP_[i][3] = lons;
+	// 	FP_[i][4] = latni;
+	// 	FP_[i][5] = lonni;
+	// 	FP_[i][6] = latsi;
+	// 	FP_[i][7] = lonsi;
+	// 	FP_[i][8] = lone;
+	// 	FP_[i][9] = mlatn;
+	// 	FP_[i][10] = mlonn;
+	// 	FP_[i][11] = mlats;
+	// 	FP_[i][12] = mlons;
+	// 	FP_[i][13] = mlatni;
+	// 	FP_[i][14] = mlonni;
+	// 	FP_[i][15] = mlatsi;
+	// 	FP_[i][16] = mlonsi;
+	// 	FP_[i][17] = mlone;
+	// 	FP_[i][18] = Lshell;
+	// 	FP_[i][19] = FlLen;
+	// }
 	hasFootprints_ = true;
 }
 
