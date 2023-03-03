@@ -56,10 +56,9 @@ int main() {
 	T.CalculateHalpha();
 	
 	printf("Trace s and h_alpha\n");
-	int i;
 	printf("C++ Test Complete\n");
 
-
+	
 
 	
 }

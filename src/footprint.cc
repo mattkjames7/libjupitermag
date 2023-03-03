@@ -11,7 +11,7 @@ void calculateFootprints(int n, double *x, double *y, double *z,
 
 	/* work out whether each footprint is north or south */
 	int begns, endns, indmxr;
-	_nsends(n,x,y,z,xt,xp,begfp,endfp,&begns,&endns,&indmxr)
+	_nsends(n,x,y,z,xt,xp,begfp,endfp,&begns,&endns,&indmxr);
 
 	/* get the beginning footprint */
 	double xb, yb, zb;
@@ -51,6 +51,7 @@ void _fillfp(FPstr *fp, double xt, double xp) {
 	SIIItoMag(fp->xs3,fp->ys3,fp->zs3,xt,xp,&(fp->xsm),&(fp->ysm),&(fp->zsm));
 
 	/* calculate lats and lons */
+	double rn, rs;
 	rn = sqrt(fp->xn3*fp->xn3 + fp->yn3*fp->yn3 + fp->zn3*fp->zn3);
 	rs = sqrt(fp->xs3*fp->xs3 + fp->ys3*fp->ys3 + fp->zs3*fp->zs3);
 	
@@ -110,7 +111,7 @@ void _getendfp(	int n, double *x, double *y, double *z,
 	}
 }
 
-bool _posisfp(x,y,z,a,b) {
+bool _posisfp(double x, double y, double z, double a, double b) {
 	/* determine whether a position (the end of a trace)
 	 * is a footprint by whether is is below the surface*/
 
@@ -123,13 +124,13 @@ bool _posisfp(x,y,z,a,b) {
 	return r <= rp;
 }
 
-int _maxR(n,x,y,z) {
+int _maxR(double n, double *x, double *y, double *z) {
 	/* find the index of the maximum in R*/
 	double rmx = -1.0;
 	double r;
 	int imx = -1;
 	int i;
-	for (i=0;<n;i++) {
+	for (i=0;i<n;i++) {
 		r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);
 		if (r > rmx) {
 			rmx = r;
@@ -143,7 +144,7 @@ int _maxR(n,x,y,z) {
 void _nsends(int n, double *x, double *y, double *z,
 			double xt, double xp,
 			bool begfp, bool endfp,
-			int *begns, int *endns, int indmxr) {
+			int *begns, int *endns, int *indmxr) {
 	/* find the maximum r index */
 	indmxr[0] = _maxR(n,x,y,z);
 	
@@ -186,7 +187,7 @@ void _nsends(int n, double *x, double *y, double *z,
 				endns[0] = -1;
 			}
 		}
-	}	 virtual hard drive image
+	}	 
 
 
 
@@ -253,14 +254,8 @@ void footprints(int n, double *x, double *y, double *z,
 
 		/* find the maximum r index */
 		rp = sqrt(x[0]*x[0] + y[0]*y[0] + z[0]*z[0]);
-		for (i=1;i<n;i++) {	begfp = false;
-
-			r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);		i0 = n - 1;
-		if (begfp) {
-			i1 = indmxr;
-		} else {
-			i1 = 0;
-		}
+		for (i=1;i<n;i++) {	
+			r = sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);		
 			if (r > rp) {
 				rp = r;
 				indmxr = i;
@@ -417,7 +412,7 @@ void interpCrossing(double x0, double y0, double z0,
 
 }
 
-void findFootprint(	doubl virtual hard drive imagee *x, double *y, double *z,
+void findFootprint(	double *x, double *y, double *z,
 					int starti, int endi, 
 					double a, double b,
 					double *xfp, double *yfp, double *zfp) {

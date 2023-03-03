@@ -1,12 +1,12 @@
 # CFLAGS for CC
 ifdef DEBUG
-	CFLAGS=-lm -std=c++17 -Wextra -g 
+	CFLAGS=-lm -std=c++17 -Wextra -ggdb3  -no-pie 
 else 
 	CFLAGS=-lm -std=c++17 -Wextra 
 endif
 
 # Compiler
-CCo=g++ -fPIC -c $(CFLAGS)
+CCo=g++ -fPIC -c $(CFLAGS) 
 CC=g++ -fPIC $(CFLAGS)
 CCWo=x86_64-w64-mingw32-g++-win32 -c $(CFLAGS)
 CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)

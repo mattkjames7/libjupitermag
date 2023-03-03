@@ -60,6 +60,34 @@ typedef struct EqFPstr {
 	double fllen;
 } EqFPstr;
 
+
+void _fillfp(FPstr *fp, double xt, double xp);
+
+
+void _getbegfp(	int n, double *x, double *y, double *z,
+				bool begfp, bool endfp, int indmxr,
+				double a, double b,
+				double *xfp, double *yfp, double *zfp);
+
+void _getendfp(	int n, double *x, double *y, double *z,
+				bool begfp, bool endfp, int indmxr,
+				double a, double b,
+				double *xfp, double *yfp, double *zfp);
+
+bool _posisfp(double x, double y, double z, double a, double b);
+
+int _maxR(double n, double *x, double *y, double *z);
+
+void _nsends(int n, double *x, double *y, double *z,
+			double xt, double xp,
+			bool begfp, bool endfp,
+			int *begns, int *endns, int *indmxr);
+
+double _fllen(int n, double *x, double *y, double *z) ;
+
+void calculateEquatorialFootprints(int n, double *x, double *y, double *z, 
+						double xt, double xp, EqFPstr *efp);
+
 void calculateFootprints(int n, double *x, double *y, double *z,
 							double a, double b, double xt, double xp,
 							FPstr *fp);

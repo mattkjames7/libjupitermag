@@ -17,7 +17,7 @@ int main () {
 	/* model names */
 	const char *IntFunc = "jrm33";
 	int nExt = 1;
-	char *ExtFuncs = (char*) malloc(nExt*sizeof(char));
+	char *ExtFuncs = (char*) malloc(32*sizeof(char));
 	strcpy(ExtFuncs,"con2020");
 
 	/* trace configuration */
@@ -55,5 +55,17 @@ int main () {
 			Delta,Verbose,TraceDir,nstep,&x,&y,&z,&Bx,&By,&Bz,&R,&S,&Rnorm,&FP,nalpha,alpha,halpha);
 
 	printf("C Test Complete\n");
+
+	free(ExtFuncs);
+	free(x);
+	free(y);
+	free(z);
+	free(Bx);
+	free(By);
+	free(Bz);
+	free(R);
+	free(S);
+	free(Rnorm);
+	free(FP);
 
 }

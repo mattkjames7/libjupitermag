@@ -9,8 +9,8 @@
 #include "footprint.h"
 #include "coordconv.h"
 
-const double deg2rad = M_PI/180.0;
-const double rad2deg = 180.0/M_PI;
+//const double deg2rad = M_PI/180.0;
+//const double rad2deg = 180.0/M_PI;
 
 
 
@@ -182,7 +182,7 @@ class Trace {
 		/* booleans to tell the object what has been done */
 		bool inputPos_;
 		bool tracedField_,allocTrace_;
-		bool hasFootprints_,allocFootprints_;
+		bool hasFootprints_,allocFootprints_,allocFootprintStr_;
 		bool allocEqFP_;
 		bool hasDist_,allocDist_;
 		bool hasRnorm_,allocRnorm_;

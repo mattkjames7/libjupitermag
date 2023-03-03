@@ -15,6 +15,7 @@ Trace::Trace(std::vector<FieldFuncPtr> Funcs) {
 	allocTrace_ = false;
 	hasFootprints_ = false;
 	allocFootprints_ = false;
+	allocFootprintStr_ = false;
 	hasDist_ = false;
 	allocDist_ = false;
 	hasRnorm_= false;
@@ -79,6 +80,11 @@ Trace::~Trace() {
 		}
 		delete[] FP_;
 	}
+	if (allocFootprintStr_) {
+		delete[] fpi_;
+		delete[] fps_;
+	}
+
 
 	/* field line distance */
 	if (allocDist_) {
@@ -116,7 +122,7 @@ Trace::~Trace() {
 
 	/* footprint/endpoints */
 	if (allocEqFP_) {
-
+		delete[] fpe_;
 	}
 }
 
@@ -996,6 +1002,36 @@ void Trace::_CalculateTraceFP() {
 	// zfem_ = new double[n_];
 
 	allocEqFP_ = true;
+	allocFootprintStr_ = true;
+
+	fpi_ = new FPstr[n_];
+	fps_ = new FPstr[n_];
+	fpe_ = new EqFPstr[n_];
+
+	double as,bs,ai,bi;
+	if (IonosphereIsSphere_) {
+		ai = ri_;
+		bi = ri_;
+	} else {
+		ai = ai_;
+		bi = bi_;
+	}
+	if (SurfaceIsSphere_) {
+		as = rs_;
+		bs = rs_;
+	} else {
+		as = as_;
+		bs = bs_;
+	}
+
+	int i;
+	for (i=0;i<n_;i++) {	
+		calculateFootprints(nstep_[i],x_[i],y_[i],z_[i],ai,bi,xt_,xp_,&fpi_[i]);
+		calculateFootprints(nstep_[i],x_[i],y_[i],z_[i],as,bs,xt_,xp_,&fps_[i]);
+		if (isfinite(fps_[i].mlats) && isfinite(fps_[i].mlatn)) {
+			calculateEquatorialFootprints(nstep_[i],x_[i],y_[i],z_[i],xt_,xp_,&fpe_[i]);
+		}
+	}
 
 	// double rho, latn, lats, lonn, lons, lone, Lshell, FlLen;
 	// double mlatn, mlats, mlonn, mlons, mlone;

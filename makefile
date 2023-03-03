@@ -1,9 +1,9 @@
 # CFLAGS for CC
 ifdef DEBUG
-	CFLAGS=-lm -std=c++17 -Wextra -g
+	CFLAGS=-lm -std=c++17 -Wextra -ggdb3 -no-pie 
 else 
 	CFLAGS=-lm -std=c++17 -Wextra
-endif
+endif 
 
 
 # Compilers - the mingw ones allow us to compile for Windows using Linux
