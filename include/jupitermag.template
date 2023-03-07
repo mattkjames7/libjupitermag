@@ -1,0 +1,24 @@
+#ifndef __LIBJUPITERMAG_H__
+#define __LIBJUPITERMAG_H__
+#define _USE_MATH_DEFINES
+
+#ifdef __cplusplus
+	#include <algorithm>
+	#include <map>
+	#include <math.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <string>
+	#include <vector>
+#else
+	#include <math.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <stdbool.h>
+#endif
+
+typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
+
+

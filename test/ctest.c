@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <jupitermagc.h>
+#include <jupitermag.h>
 
 int main () {
 	

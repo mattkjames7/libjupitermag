@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "footprint.h"
 #include "coordconv.h"
 
 const double deg2rad = M_PI/180.0;

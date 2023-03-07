@@ -1,235 +1,176 @@
 import numpy as np
 import os
 
-headerfiles = [ 'src/libjupitermag.h',
-                'src/trace.h',
-                'src/model.h',
-                'src/traceclosestpos.h',
-                'lib/libcon2020/include/con2020.h',
-                'lib/libspline/include/spline.h',
-                'lib/libinternalfield/include/internalfield.h']
+headerfiles = [ 'src/coordconv.h',
+				'src/footprint.h',
+				'lib/libspline/include/spline.h',
+				'src/interptraceclosestpos.h',
+				'lib/libcon2020/include/con2020.h',
+				'lib/libinternalfield/include/internalfield.h',
+				'src/model.h',
+				'src/trace.h',
+				'src/libjupitermag.h']
 
 def ReadFile(fname):
-    '''
-    Simply read in the lines from an ASCII file
+	'''
+	Simply read in the lines from an ASCII file
 
-    Input
-    =====
-    fname : str
-        Name of the file to read
+	Input
+	=====
+	fname : str
+		Name of the file to read
 
-    Returns
-    =======
-    lines : np.array
-        Array of strings - one for each line of the file.
+	Returns
+	=======
+	lines : np.array
+		Array of strings - one for each line of the file.
 
-    '''
+	'''
 
-    with open(fname,'r') as f:
-        lines = f.readlines()
+	with open(fname,'r') as f:
+		lines = f.readlines()
 
-    return np.array(lines)
+	return np.array(lines)
 
-def HeaderDef(fname):
-    '''
-    Return the string used as header define
+def _RemoveDirectives(lines):
+	'''
+	Remove compiler directives and includes
+	'''
+	lines = np.array(lines)
+	nl = lines.size
+
+	use = np.ones(nl,dtype='bool')
+	for i in range(0,nl):
+		if lines[i].strip().startswith('#'):
+			use[i] = False
+
+	use = np.where(use)
+
+	return lines[use]
+
+def _SplitHeaderDefs(lines):
+	'''
+	split code into C and C++ code
+
+	'''
+	lines = np.array(lines)
+	ltype = np.zeros(lines.size,dtype='int')
+	isC = False
+	for i in range(0,lines.size):
+
+		if isC and lines[i].strip() == '}':
+			isC = False
+			ltype[i] = 0
+		elif isC:
+			ltype[i] = 1
+		else:
+			ltype[i] = 2
+		if 'extern "C"' in lines[i].strip():
+			isC = True
+			ltype[i] = 0
+
+	usec = np.where(ltype == 1)[0]
+	usecc = np.where(ltype == 2)[0]
+
+	c = lines[usec]
+	cc = lines[usecc]
+
+	return c,cc
+
+def _ReadHeader(fname):
+	'''
+	This will read a header file in and  remove
+	any compiler directives and split into C/C++
+	
+	'''
+
+	lines = ReadFile(fname)
 
 
-    '''
-    bn = os.path.basename(fname)
-    n,e = bn.split('.')
-    out = '__{:s}_{:s}__'.format(n.upper(),e.upper())
-    return out
+	hasextC = False
+	for l in lines:
+		if 'extern "C"' in l:
+			hasextC = True
+			break
 
-def ExtractHeaderLines(fname):
-    '''
-    Exctract the lines we want in our 
-    new header file.
+	code = _RemoveDirectives(lines)
 
-    Inputs
-    ======
-    fname : str
-        Name of the header file
+	if hasextC:
+		c,cc = _SplitHeaderDefs(code)
+	else:
+		c = []
+		cc = code
 
-    Returns
-    =======
-    include : np.array
-        List of include lines
-    defines : np.array
-        List of defines
-    externs : np.array
-        List of extern prototypes
-    others : np.array
-        List of everything else to include
-    
+	return c,cc
 
-    '''
+def GenerateHeader():
 
 
-    lines = ReadFile(fname)
+	#get the template file first
+	top = ReadFile('include/jupitermag.template')
+	
+	#add version 
+	ver = Version()
 
-    #remove header define etc
-    remstr = [HeaderDef(fname),'#ifndef','#endif']
-    keep = np.ones(lines.size,dtype='bool')
-    for i,l in enumerate(lines):
-        for r in remstr:
-            if r in l:
-                keep[i] = False
-                break
-    lines = lines[keep]
+	top = np.append(top,np.array(ver))
+
+	#a few more lines
+	extc = np.array(['#ifdef __cplusplus\n','extern "C" {\n','#endif\n'])
+	top = np.append(top,extc)
 
 
-    #extract include lines first
-    isinclude = np.zeros(lines.size,dtype='bool')
 
-    for i,l in enumerate(lines):
-        if l.startswith('#include'):
-            isinclude[i] = True
+	c = []
+	cc = []
 
-    include = lines[isinclude]
-    lines = lines[isinclude == False]
 
-    #extract defines
-    isdefine = np.zeros(lines.size,dtype='bool')
-    keep = []
-    for i,l in enumerate(lines):
-        if l.startswith('#define'):
-            isdefine[i] = True
-        else:
-            keep.append(i)
-    keep = np.array(keep)
-    defines = lines[isdefine]
-    lines = lines[keep]
+	for f in headerfiles:
+		fc,fcc = _ReadHeader(f)
 
-    #locate extern C 
-    br_cnt = 0
-    externs = []
-    keep = []
-    for i,l in enumerate(lines):
-        if 'extern "C"' in l:
-            br_cnt = 1
-            externs.append(l)
-            continue
-        if br_cnt > 0:
-            br_cnt += l.count('{')
-            br_cnt -= l.count('}')
-            externs.append(l)
-        else:
-            keep.append(i)
-    keep = np.array(keep)
-    lines = lines[keep]
-    externs = np.array(externs)[1:-1]
+		if len(fc) > 0:
+			c = c + fc.tolist()
+		if len(fcc) > 0:
+			cc = cc + fcc.tolist()
+	
+	cc = np.array(cc)
+	keep = np.ones(cc.size,dtype='bool')
+	for i in range(0,cc.size):
+		if 'typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);' in cc[i]:
+			keep[i] = False
+	use = np.where(keep)[0]
+	cc = cc[use]
 
-    #remove extra empty lines
-    isempty = np.zeros(lines.size,dtype='bool')
-    for i,l in enumerate(lines):
-        if len(l.strip()) == 0:
-            isempty[i] = True
-    remove = np.append(isempty[:-1] & isempty[1:],False)
-    keep = np.where(remove == False)[0]
-    others = lines[keep]
+	cpp = '#ifdef __cplusplus\n}\n'
 
-    return include,defines,externs,others
-    
+	bottom = '''
+#endif
+#endif
+	'''
+	print('Saving header file: include/jupitermag.h')
+	f = open('include/jupitermag.h','w')
+	f.writelines(top)
+	f.writelines(c)
+	f.write(cpp)
+	f.writelines(cc)
+	f.write(bottom)
+	f.close()
+
+	
+	
 def Version():
 
-    with open('VERSION','r') as f:
-        line = f.readline()
-    
-    line = line.strip()
-    mj,mn,pa = line.split('.') 
-
-    out = [ '#define LIBJUPITERMAG_VERSION_MAJOR '+mj+'\n',
-            '#define LIBJUPITERMAG_VERSION_MINOR '+mn+'\n',
-            '#define LIBJUPITERMAG_VERSION_PATCH '+pa+'\n',]
-    return out
-
-def ListFiles(start,ReturnNames=False):
-	'''
-	Should list the files that exist within a folder.
-	'''
+	with open('VERSION','r') as f:
+		line = f.readline()
 	
-	FileOut = []
-	NameOut = []
-	for root,dirs,files in os.walk(start,topdown=False,followlinks=True):
-		for name in files:
-			FileOut.append(root+'/'+name)
-			NameOut.append(name)
-	
-	FileOut = np.array(FileOut)
-	NameOut = np.array(NameOut)
-	
-	if ReturnNames:
-		return FileOut,NameOut
-	else:
-		return FileOut
+	line = line.strip()
+	mj,mn,pa = line.split('.') 
 
+	out = [ '#define LIBJUPITERMAG_VERSION_MAJOR '+mj+'\n',
+			'#define LIBJUPITERMAG_VERSION_MINOR '+mn+'\n',
+			'#define LIBJUPITERMAG_VERSION_PATCH '+pa+'\n',]
+	return out
 
-
-def CombineHeaders():
-
-
-
-    # read everything in
-    include = np.array([])
-    defines = np.array([])
-    externs = np.array([])
-    others = np.array([])
-    for hf in headerfiles:
-        i,d,e,o = ExtractHeaderLines(hf)
-        include = np.append(include,i)
-        defines = np.append(defines,d)
-        externs = np.append(externs,e)
-        others = np.append(others,o)
-
-    #remove duplicates
-    include = np.unique(include)
-    defines = np.unique(defines)
-
-    #list the names of headers
-    files = ListFiles('.')
-    hbn = []
-    for f in files:
-        _,ext = os.path.splitext(f)
-        if ext in ['.h','.hpp']:
-            hbn.append(os.path.basename(f))
-
-    #remove unwanted bits from the includes
-    keep = np.ones(include.size,dtype='bool')
-    for i,inc in enumerate(include):
-        for h in hbn:
-            if h in inc:
-                keep[i] = False
-                break
-    include = include[keep]
-
-    #frame the externs
-    externs = np.append('extern "C" {\n',externs)
-    externs = np.append(externs,'}\n')
-
-    #get the current version
-    ver = Version()
-
-    #combine everything
-    out = np.array(['#ifndef __LIBJUPITERMAG_H__\n',
-                    '#define __LIBJUPITERMAG_H__\n'])
-    out = np.append(out,include)
-    out = np.append(out,'\n')
-    out = np.append(out,ver)
-    out = np.append(out,'\n')
-    out = np.append(out,defines)
-    out = np.append(out,'\n')
-    out = np.append(out,externs)
-    out = np.append(out,'\n')
-    out = np.append(out,others)
-    out = np.append(out,'#endif\n')
-
-
-    #create the output file
-    with open('include/jupitermag.h','w') as f:
-        f.writelines(out)
-        print('Saved header file')
 
 if __name__ == '__main__':
 
-    CombineHeaders()
+	GenerateHeader()

@@ -78,7 +78,6 @@ test:
 
 install:
 	cp -v include/jupitermag.h $(PREFIX)/include
-	cp -v include/jupitermagc.h $(PREFIX)/include
 	cp -v lib/libjupitermag/$(LIBFILE) $(PREFIX)/lib
 	chmod 0775 $(PREFIX)/lib/$(LIBFILE)
 ifeq ($(OS),Linux)
@@ -87,7 +86,6 @@ endif
 
 uninstall:
 	rm -v $(PREFIX)/include/jupitermag.h
-	rm -v $(PREFIX)/include/jupitermagc.h
 	rm -v $(PREFIX)/lib/$(LIBFILE)
 ifeq ($(OS),Linux)
 	ldconfig
