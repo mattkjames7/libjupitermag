@@ -41,9 +41,9 @@ void FillFPOutputArray(int n, FPstr *fpi, FPstr *fps, EqFPstr *fpe, double **FP)
 		FP[i][25] = fpe[i].y3;
 		FP[i][26] = fpe[i].z3;
 
-		FP[i][27] = fpe[i].x3;
-		FP[i][28] = fpe[i].y3;
-		FP[i][29] = fpe[i].z3;
+		FP[i][27] = fpe[i].xm;
+		FP[i][28] = fpe[i].ym;
+		FP[i][29] = fpe[i].zm;
 
 		FP[i][30] = fpi[i].lonn;
 		FP[i][31] = fpi[i].latn;
