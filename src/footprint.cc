@@ -1,6 +1,83 @@
 #include "footprint.h"
 
 
+void FillFPOutputArray(int n, FPstr *fpi, FPstr *fps, EqFPstr *fpe, double **FP) {
+
+	int i;
+	for (i=0;i<n;i++) {
+		FP[i][0] = fpi[i].xn3;
+		FP[i][1] = fpi[i].yn3;
+		FP[i][2] = fpi[i].zn3;
+
+		FP[i][3] = fpi[i].xs3;
+		FP[i][4] = fpi[i].ys3;
+		FP[i][5] = fpi[i].zs3;
+
+		FP[i][6] = fpi[i].xnm;
+		FP[i][7] = fpi[i].ynm;
+		FP[i][8] = fpi[i].znm;
+
+		FP[i][9] = fpi[i].xsm;
+		FP[i][10] = fpi[i].ysm;
+		FP[i][11] = fpi[i].zsm;
+
+		FP[i][12] = fps[i].xn3;
+		FP[i][13] = fps[i].yn3;
+		FP[i][14] = fps[i].zn3;
+
+		FP[i][15] = fps[i].xs3;
+		FP[i][16] = fps[i].ys3;
+		FP[i][17] = fps[i].zs3;
+
+		FP[i][18] = fps[i].xnm;
+		FP[i][19] = fps[i].ynm;
+		FP[i][20] = fps[i].znm;
+
+		FP[i][21] = fps[i].xsm;
+		FP[i][22] = fps[i].ysm;
+		FP[i][23] = fps[i].zsm;
+
+		FP[i][24] = fpe[i].x3;
+		FP[i][25] = fpe[i].y3;
+		FP[i][26] = fpe[i].z3;
+
+		FP[i][27] = fpe[i].x3;
+		FP[i][28] = fpe[i].y3;
+		FP[i][29] = fpe[i].z3;
+
+		FP[i][30] = fpi[i].lonn;
+		FP[i][31] = fpi[i].latn;
+
+		FP[i][32] = fpi[i].mlonn;
+		FP[i][33] = fpi[i].mlatn;
+
+		FP[i][34] = fpi[i].lons;
+		FP[i][35] = fpi[i].lats;
+
+		FP[i][36] = fpi[i].mlons;
+		FP[i][37] = fpi[i].mlats;
+
+		FP[i][38] = fps[i].lonn;
+		FP[i][39] = fps[i].latn;
+
+		FP[i][40] = fps[i].mlonn;
+		FP[i][41] = fps[i].mlatn;
+
+		FP[i][42] = fps[i].lons;
+		FP[i][43] = fps[i].lats;
+
+		FP[i][44] = fps[i].mlons;
+		FP[i][45] = fps[i].mlats;
+
+		FP[i][46] = fpe[i].lshell;
+		FP[i][47] = fpe[i].mlone;
+		FP[i][48] = fpe[i].fllen;
+
+	}
+
+
+}
+
 void calculateFootprints(int n, double *x, double *y, double *z,
 							double a, double b, double xt, double xp,
 							FPstr *fp) {
@@ -214,8 +291,7 @@ void footprints(int n, double *x, double *y, double *z,
 
 	/* determine whether each end is a footprint */
 	double r,t,rp,tp,rhop,zp;
-	printf("xyz 0 : %f %f %f\n",x[0],y[0],z[0]);
-	printf("xyz 1 : %f %f %f\n",x[n-1],y[n-1],z[n-1]);
+
 	r = sqrt(x[0]*x[0] + y[0]*y[0] + z[0]*z[0]);
 	t = asin(x[0]/r);
 	rhop = a*cos(t);
@@ -441,7 +517,6 @@ void findFootprint(	double *x, double *y, double *z,
 	t0 = asin(z[starti]/r0);
 	if (dir == 1) {
 		for (i=starti;i<endi;i++) {
-			printf("i: %d\n",i);
 			if (isCrossing(x[i],y[i],z[i],x[i+dir],y[i+dir],z[i+dir],a,b)) {
 				i0 = i;
 				i1 = i + dir;
@@ -450,7 +525,6 @@ void findFootprint(	double *x, double *y, double *z,
 		}
 	} else {
 		for (i=starti;i>endi;i--) {
-			printf("i: %d\n",i);
 			if (isCrossing(x[i],y[i],z[i],x[i-1],y[i-1],z[i-1],a,b)) {
 				i0 = i;
 				i1 = i + dir;
@@ -466,13 +540,10 @@ void findFootprint(	double *x, double *y, double *z,
 		*zfp = NAN;
 		return;		
 	}
-	printf("%f %f %f \n",x[i0],y[i0],z[i0]);
-	printf("%f %f %f \n",x[i1],y[i1],z[i1]);
-	printf("%f %f \n",a,b);
+
 	
 	/* interpolate to find the footprint */
 	interpCrossing(x[i0],y[i0],z[i0],x[i1],y[i1],z[i1],a,b,xfp,yfp,zfp);
-	printf("%f %f %f \n",*xfp,*yfp,*zfp);
 }
 
 void eqfootprints(	int n, double *x, double *y, double *z,

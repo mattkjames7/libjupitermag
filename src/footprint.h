@@ -61,6 +61,8 @@ typedef struct EqFPstr {
 } EqFPstr;
 
 
+void FillFPOutputArray(int n, FPstr *fpi, FPstr *fps, EqFPstr *fpe, double **FP);
+
 void _fillfp(FPstr *fp, double xt, double xp);
 
 

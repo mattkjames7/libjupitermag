@@ -40,7 +40,7 @@ endif
 all: obj internal con2020 spline lib
 
 internal:
-	cd lib/libinternalfield; make obj
+	cd lib/libinternalfield; make header obj
 
 con2020:
 	cd lib/libcon2020; make obj

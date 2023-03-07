@@ -32,8 +32,7 @@ void SIIItoMag(	double x3, double y3, double z3,
 
 	double xtmp = x3*cosxp + y3*sinxp;
 	*xm = xtmp*cosxt + z3*sinxt;
-	*ym = y3*cosxp - xtmp*sinxp;
-	*zm = x3*sinxt - z3*cosxt;
+	*ym = y3*cosxp - x3*sinxp;
+	*zm = z3*cosxt - xtmp*sinxt;
 	 
-
 }

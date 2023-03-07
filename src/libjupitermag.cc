@@ -56,12 +56,12 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	if (TraceDir == 0) {
 		T.CalculateTraceDist(S);
 		T.CalculateTraceFP(FP);
-		//T.CalculateTraceRnorm(Rnorm);
+		T.CalculateTraceRnorm(Rnorm);
 	}
 
 	/* halpha */
 	if ((nalpha > 0) && (TraceDir == 0)) {
-		//T.CalculateHalpha(halpha);
+		T.CalculateHalpha(halpha);
 	}
 
 	return true;
