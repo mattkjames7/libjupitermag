@@ -1,6 +1,6 @@
 # CFLAGS for CC
 ifdef DEBUG
-	CFLAGS=-lm -std=c++17 -Wextra -ggdb3  -no-pie 
+	CFLAGS=-lm -std=c++17 -Wextra -ggdb3  -no-pie -static-libasan
 else 
 	CFLAGS=-lm -std=c++17 -Wextra 
 endif
@@ -28,23 +28,16 @@ all: obj lib
 .PHONY: all lib clean
 
 obj:
-	$(CCo) model.cc -o $(BUILDDIR)/model.o  -static-libasan
-	$(CCo) trace.cc -o $(BUILDDIR)/trace.o  -static-libasan
-	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o -static-libasan
-	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o -static-libasan
-	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o -static-libasan
+	$(CCo) model.cc -o $(BUILDDIR)/model.o  
+	$(CCo) trace.cc -o $(BUILDDIR)/trace.o  
+	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o 
+	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o
+	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o 
 	
 lib:
 	
 	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
-			-o ../lib/libjupitermag/$(LIBFILE) -static-libasan
-
-test:
-	$(CC) test.cc *.o \
-			con2020/*.o \
-			spline/*.o \
-			-o test	-Wl,-rpath='$$ORIGIN/libinternalfield' -L ./libinternalfield -linternalfield  -static-libasan
-
+			-o ../lib/$(LIBFILE) 
 
 winobj:
 #	cd con2020;	make windows
@@ -52,9 +45,11 @@ winobj:
 	$(CCWo) model.cc -o $(BUILDDIR)/model.o
 	$(CCWo) trace.cc -o $(BUILDDIR)/trace.o
 	$(CCWo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o	
+	$(CCWo) footprint.cc -o $(BUILDDIR)/footprint.o
+	$(CCWo) coordconv.cc -o $(BUILDDIR)/coordconv.o 
 
 winlib:
-	$(CCW) -shared libjupitermag.cc $(BUILDDIR)/*.o -o ../lib/libjupitermag/libjupitermag.dll
+	$(CCW) -shared libjupitermag.cc $(BUILDDIR)/*.o -o ../lib/libjupitermag.dll
 
 
 

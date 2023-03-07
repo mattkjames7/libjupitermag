@@ -53,7 +53,6 @@ obj:
 	cd src; make obj
 
 lib:
-	$(MD) lib/libjupitermag
 	cd src; make lib
 
 header:
@@ -78,7 +77,7 @@ test:
 
 install:
 	cp -v include/jupitermag.h $(PREFIX)/include
-	cp -v lib/libjupitermag/$(LIBFILE) $(PREFIX)/lib
+	cp -v lib/$(LIBFILE) $(PREFIX)/lib
 	chmod 0775 $(PREFIX)/lib/$(LIBFILE)
 ifeq ($(OS),Linux)
 	ldconfig
