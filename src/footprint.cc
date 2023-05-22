@@ -132,10 +132,10 @@ void _fillfp(FPstr *fp, double xt, double xp) {
 	rn = sqrt(fp->xn3*fp->xn3 + fp->yn3*fp->yn3 + fp->zn3*fp->zn3);
 	rs = sqrt(fp->xs3*fp->xs3 + fp->ys3*fp->ys3 + fp->zs3*fp->zs3);
 	
-	fp->latn = sin(fp->zn3/rn)*rad2deg;
-	fp->lats = sin(fp->zs3/rs)*rad2deg;
-	fp->mlatn = sin(fp->znm/rn)*rad2deg;
-	fp->mlats = sin(fp->zsm/rs)*rad2deg;
+	fp->latn = asin(fp->zn3/rn)*rad2deg;
+	fp->lats = asin(fp->zs3/rs)*rad2deg;
+	fp->mlatn = asin(fp->znm/rn)*rad2deg;
+	fp->mlats = asin(fp->zsm/rs)*rad2deg;
 
 	fp->lonn = atan2(fp->yn3,fp->xn3)*rad2deg;
 	fp->lons = atan2(fp->ys3,fp->xs3)*rad2deg;
