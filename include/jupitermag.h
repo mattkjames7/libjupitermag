@@ -23,12 +23,12 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
-#define LIBJUPITERMAG_VERSION_MINOR 2
-#define LIBJUPITERMAG_VERSION_PATCH 1
+#define LIBJUPITERMAG_VERSION_MINOR 3
+#define LIBJUPITERMAG_VERSION_PATCH 0
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void spline(int n0, double *x0, double *y0, 
+		void spline(int n0, double *x0, double *y0, 
 				int n1, double *x1, double *y1);
 	
 /***************************************************************
@@ -651,32 +651,32 @@ const double rad2deg = 180.0/M_PI;
 
 typedef struct FPstr {
 	/* SIII North */
-	double xn3; 
+	double xn3;
 	double yn3;
 	double zn3;
 	/* SIII South */
-	double xs3; 
+	double xs3;
 	double ys3;
 	double zs3;
 	/* MAG North */
-	double xnm; 
+	double xnm;
 	double ynm;
 	double znm;
 	/* MAG South */
-	double xsm; 
+	double xsm;
 	double ysm;
 	double zsm;
 
-	/* SIII North */	
+	/* SIII North */
 	double lonn;
 	double latn;
-	/* MAG North */	
+	/* MAG North */
 	double mlonn;
 	double mlatn;
-	/* SIII South */	
+	/* SIII South */
 	double lons;
 	double lats;
-	/* MAG South */	
+	/* MAG South */
 	double mlons;
 	double mlats;
 
@@ -684,12 +684,12 @@ typedef struct FPstr {
 
 typedef struct EqFPstr {
 	/* SIII coords */
-	double x3; 
+	double x3;
 	double y3;
 	double z3;
 
 	/* MAG coords */
-	double xm; 
+	double xm;
 	double ym;
 	double zm;
 
@@ -726,14 +726,14 @@ void _nsends(int n, double *x, double *y, double *z,
 
 double _fllen(int n, double *x, double *y, double *z) ;
 
-void calculateEquatorialFootprints(int n, double *x, double *y, double *z, 
+void calculateEquatorialFootprints(int n, double *x, double *y, double *z,
 						double xt, double xp, EqFPstr *efp);
 
 void calculateFootprints(int n, double *x, double *y, double *z,
 							double a, double b, double xt, double xp,
 							FPstr *fp);
 
-void footprints(int n, double *x, double *y, double *z, 
+void footprints(int n, double *x, double *y, double *z,
 				double a, double b, double xt, double xp,
 				double *xfn, double *yfn, double *zfn,
 				double *xfs, double *yfs, double *zfs);
@@ -749,16 +749,18 @@ bool isCrossing(double x0, double y0, double z0,
 void interpCrossing(double x0, double y0, double z0,
 					double x1, double y1, double z1,
 					double a, double b,
-					double *xfp, double *yfp, double *zfp);				
+					double *xfp, double *yfp, double *zfp);
 
 void findFootprint(	double *x, double *y, double *z,
-					int starti, int endi, 
+					int starti, int endi,
 					double a, double b,
 					double *xfp, double *yfp, double *zfp);
 
 void eqfootprints(	int n, double *x, double *y, double *z,
-					double *xfe, double *yfe, double *zfe, 
+					double *xfe, double *yfe, double *zfe,
 					double *L, double *Lon);
+
+
 
 
 
@@ -779,7 +781,7 @@ class Spline {
 		bool del_;
 };
 
-
+	
 
 
 /* needed this to fix compilation using mingw32 for some reason*/
@@ -1107,6 +1109,9 @@ class Con2020 {
 		void AnalyticField(double,double,double,double*,double*);
 		void AnalyticFieldSmooth(double,double,double,double*,double*);
 
+		/* expose the model function pointer*/
+		ModelFunc _Model;
+
 	private:
 		/* model parameters */
 		double mui_,irho_,r0_,r1_,d_,xt_,xp_,disctilt_,discshift_;
@@ -1179,7 +1184,7 @@ class Con2020 {
 		/* Functions to update function pointers */
 		void _SetIOFunctions();
 		void _SetModelFunctions();
-		ModelFunc _Model;
+		
 							
 		/* Azimuthal field */
 		AzimFunc _AzimuthalField;
