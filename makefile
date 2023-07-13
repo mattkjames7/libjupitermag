@@ -97,3 +97,4 @@ clean:
 	-rm -v build/*.o
 	-rmdir -v build
 	cd test; make clean
+	rm -v lib/$(LIBFILE)
