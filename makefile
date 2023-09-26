@@ -94,7 +94,6 @@ clean:
 	cd lib/libinternalfield; make clean
 	cd lib/libcon2020; make clean
 	cd lib/libspline; make clean
-	-rm -v build/*.o
-	-rmdir -v build
+	-rm -vfr build
 	cd test; make clean
 	rm -v lib/$(LIBFILE)
