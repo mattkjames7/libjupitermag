@@ -24,7 +24,7 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
 #define LIBJUPITERMAG_VERSION_MINOR 3
-#define LIBJUPITERMAG_VERSION_PATCH 0
+#define LIBJUPITERMAG_VERSION_PATCH 1
 #ifdef __cplusplus
 extern "C" {
 #endif
