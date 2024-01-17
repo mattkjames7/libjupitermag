@@ -22,10 +22,16 @@ else
 	LIBFILE=libjupitermag.dylib
 endif
 
-all: obj lib
+all: header obj lib
 
 
-.PHONY: all lib clean
+.PHONY: all lib clean header
+
+header:
+	$(CC) trimstring.cc generateheader.cc -o generateheader
+	./generateheader
+	-rm generateheader
+
 
 obj:
 	$(CCo) model.cc -o $(BUILDDIR)/model.o  

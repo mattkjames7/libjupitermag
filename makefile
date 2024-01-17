@@ -37,16 +37,19 @@ endif
 
 .PHONY: all lib clean header test internal con2020 spline obj install uninstall  windows
 
-all: obj internal con2020 spline lib
+all: internal con2020 spline
+	$(MD) $(BUILDDIR)
+	$(MD) lib
+	cd src; make all
 
 internal:
 	cd lib/libinternalfield; make header obj
 
 con2020:
-	cd lib/libcon2020; make obj
+	cd lib/libcon2020; make header obj
 
 spline:
-	cd lib/libspline; make obj
+	cd lib/libspline; make header obj
 
 obj:
 	$(MD) $(BUILDDIR)
@@ -56,11 +59,12 @@ lib:
 	cd src; make lib
 
 header:
-ifneq (,$(shell which python3))
-	python3 generateheader.py
-else
-	@echo "python3 command doesn't appear to exist - skipping header regeneration..."
-endif
+	cd src; make header
+# ifneq (,$(shell which python3))
+# 	python3 generateheader.py
+# else
+# 	@echo "python3 command doesn't appear to exist - skipping header regeneration..."
+# endif
 
 windows:
 #this should build the library for Windows using mingw
