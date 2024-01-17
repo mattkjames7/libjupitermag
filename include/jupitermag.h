@@ -1,3 +1,4 @@
+
 #ifndef __LIBJUPITERMAG_H__
 #define __LIBJUPITERMAG_H__
 #define _USE_MATH_DEFINES
@@ -23,14 +24,47 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
-#define LIBJUPITERMAG_VERSION_MINOR 3
-#define LIBJUPITERMAG_VERSION_PATCH 1
+#define LIBJUPITERMAG_VERSION_MINOR 4
+#define LIBJUPITERMAG_VERSION_PATCH 0
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-		void spline(int n0, double *x0, double *y0, 
+	void spline(int n0, double *x0, double *y0, 
 				int n1, double *x1, double *y1);
+	/* these wrappers can be used to get the magnetic field vectors */
+	void Con2020FieldArray(int n, double *p0, double *p1, double *p2,
+					double *B0, double *B1, double *B2);
 	
+	void Con2020Field(double p0, double p1, double p2,
+			double *B0, double *B1, double *B2);
+
+
+	void GetCon2020Params(double *mui, double *irho, double *r0, double *r1,
+					double *d, double *xt, double *xp, char *eqtype,
+					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut, 
+					bool *smooth, double *DeltaRho, double *DeltaZ,
+					double *g, char *azfunc, double *wO_open, double *wO_om,
+					double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc);
+						
+	
+	void SetCon2020Params(double mui, double irho, double r0, double r1,
+					double d, double xt, double xp, const char *eqtype,
+					bool Edwards, bool ErrChk, bool CartIn, bool CartOut, 
+					bool smooth, double DeltaRho, double DeltaZ,
+					double g, const char *azfunc, double wO_open, double wO_om,
+					double thetamm, double dthetamm, double thetaoc, double dthetaoc);
+
+	void Con2020AnalyticField(	int n, double a, 
+							double *rho, double *z, 
+							double *Brho, double *Bz);
+
+	void Con2020AnalyticFieldSmooth(	int n, double a, 
+							double *rho, double *z, 
+							double *Brho, double *Bz);
+
+
 /***************************************************************
 *
 *   NAME : ScalarPotentialSmallRho(rho,z,a,mui2,D)
@@ -301,36 +335,6 @@ extern "C" {
 							double wO_open, double wO_om,
 							double thetamm, double dthetamm,
 							double thetaoc, double dthetaoc );
-	/* these wrappers can be used to get the magnetic field vectors */
-	void Con2020FieldArray(int n, double *p0, double *p1, double *p2,
-					double *B0, double *B1, double *B2);
-	
-	void Con2020Field(double p0, double p1, double p2,
-			double *B0, double *B1, double *B2);
-
-
-	void GetCon2020Params(double *mui, double *irho, double *r0, double *r1,
-					double *d, double *xt, double *xp, char *eqtype,
-					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut, 
-					bool *smooth, double *DeltaRho, double *DeltaZ,
-					double *g, char *azfunc, double *wO_open, double *wO_om,
-					double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc);
-						
-	
-	void SetCon2020Params(double mui, double irho, double r0, double r1,
-					double d, double xt, double xp, const char *eqtype,
-					bool Edwards, bool ErrChk, bool CartIn, bool CartOut, 
-					bool smooth, double DeltaRho, double DeltaZ,
-					double g, const char *azfunc, double wO_open, double wO_om,
-					double thetamm, double dthetamm, double thetaoc, double dthetaoc);
-
-	void Con2020AnalyticField(	int n, double a, 
-							double *rho, double *z, 
-							double *Brho, double *Bz);
-
-	void Con2020AnalyticFieldSmooth(	int n, double a, 
-							double *rho, double *z, 
-							double *Brho, double *Bz);
 
 /***********************************************************************
  * NAME : getModelFieldPointer(Model)
@@ -348,7 +352,9 @@ extern "C" {
  **********************************************************************/
 	modelFieldPtr getModelFieldPtr(const char *Model);
 
-/* functions to directly call each model for a single Cartesian vector (this will be used for tracing) */
+
+/* functions to directly call each model for a single Cartesian vector 
+    (these will be used for tracing) */
 
 /***********************************************************************
  * NAME : XXXXXField(x,y,z,Bx,By,Bz)
@@ -367,174 +373,174 @@ extern "C" {
  *		double	*Bz			z component of the field (nT).
  * 
  **********************************************************************/
-	void gsfc15evsField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void vip4Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void v117evField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void gsfc15evField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void gsfc13evField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void vipalField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void jpl15evsField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void u17evField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void jrm09Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void o6Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void o4Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void shaField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void p11aField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void jrm33Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void vit4Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void isaacField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void jpl15evField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
 	void spvField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void soiField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void v2Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void cassini3Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void cassini5Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void z3Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void burton2009Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void v1Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void cassini11Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void cassini5Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void soiField(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void p1184Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void burton2009Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void v1Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void cassini3Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void v2Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void p11asField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void kivelson2002bField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void kivelson2002aField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void kivelson2002cField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void weber2022dipField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void weber2022quadField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void mh2014Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void cain2003Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void langlais2019Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void gao2021Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1935Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2005Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2000Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1950Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void igrf1960Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1985Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void igrf1935Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void igrf1945Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1965Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1905Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2010Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2020Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1910Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1990Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2015Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void igrf1925Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf2025Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1970Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1930Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1920Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1955Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1995Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1900Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void igrf1910Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1905Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void igrf1980Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void igrf1990Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf2015Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void igrf1940Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void igrf1975Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void igrf1930Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf2005Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf2020Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf2010Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void igrf1915Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void nmohField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void igrf2000Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1950Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1970Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1965Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1920Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf2025Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1985Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1975Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1955Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1900Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void igrf1995Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void gsfco8fullField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void gsfco8Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void thebault2018m3Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010qts04Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void uno2009svdField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2012Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void thebault2018m1Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010dts04Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010qField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010dField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010qshaField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010dshaField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void ness1975Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void nmohField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void kivelson2002aField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void weber2022quadField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void kivelson2002bField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void kivelson2002cField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void weber2022dipField(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void uno2009Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void anderson2010rField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void thebault2018m2Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
-	void ah5Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void uno2009svdField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010qts04Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010dshaField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2012Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010dts04Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010qshaField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void ness1975Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void thebault2018m1Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010rField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010dField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void anderson2010qField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void thebault2018m3Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void gao2021Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void cain2003Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void mh2014Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void langlais2019Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void gsfcq3fullField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
 	void gsfcq3Field(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void ah5Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	void umohField(double x, double y, double z,
-				double *Bx, double *By, double *Bz);
+				double *bx, double *by, double *bz);
+	void jrm33Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void vit4Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void isaacField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void vipalField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void vip4Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void jpl15evsField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void p11aField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void jrm09Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void jpl15evField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void o4Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void o6Field(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void shaField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void u17evField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void gsfc15evField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void gsfc13evField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void gsfc15evsField(double x, double y, double z,
+				double *bx, double *by, double *bz);
+	void v117evField(double x, double y, double z,
+				double *bx, double *by, double *bz);
 	/* these wrappers can be used to get the magnetic field vectors */
 
 	/***********************************************************************
@@ -636,6 +642,7 @@ extern "C" {
 					int nalpha, double *alpha, double *halpha);
 #ifdef __cplusplus
 }
+
 
 void MagtoSIII(	double xm, double ym, double zm, 
 				double xt, double xp,
@@ -763,9 +770,12 @@ void eqfootprints(	int n, double *x, double *y, double *z,
 
 
 
+extern "C" {
+}
 
 
-
+extern "C" {
+}
 
 
 class Spline {
@@ -781,10 +791,10 @@ class Spline {
 		bool del_;
 };
 
-	
 
 
 /* needed this to fix compilation using mingw32 for some reason*/
+    #define M_PI 3.14159265358979323846
 
 
 void interptraceClosestPos(	int n, double *x, double *y, double *z,
@@ -812,13 +822,16 @@ void OptimizePos(	double x, double y, double z,
 
 
 
+	#include <algorithm>
+	#include <string>
+	#include <string.h>
+	#include <stdbool.h>
 
 
 
+extern "C" {
+}
 
-double polyeval(double x, double *c, int d);
-
-double pol1eval(double x, double *c, int d);
 
 /***********************************************************************
  * NAME : j0(x)
@@ -929,93 +942,6 @@ void j1(int n, double *x, double multx, double *j);
 
 template <typename T> T clip(T x, T mn, T mx) {
 	return std::min(mx,std::max(x,mn));
-}
-
-
-
-
-
-template <typename T> T sgn(T x) {
-	return (x > 0) - (x < 0);
-}
-
-
-double trap(int n, double *x, double *y);
-double trapc(int n, double dx, double *y);
-
-
-/***********************************************************************
- * NAME : smoothd(z,dz,d)
- * 
- * DESCRIPTION : Smooth fucntion for crossing the current sheet 
- * (replaces the last bit of equation 12 in Edwards et al 2000).
- * 
- * INPUTS : 
- * 		double z	z-coordinate in dipole coordinate system (Rj)
- * 		double dz	Scale of the transition to use (Rj)
- * 		double d	Half thickness of the current sheet.
- * 
- * RETURNS : 
- * 		double out	Smoothed function across the current sheet.
- * 
- * ********************************************************************/
-double smoothd(double z, double dz, double d);
-
-
-/***************************************************************
-*
-*   NAME : FluxCan(rho,z,r0,r1,mui2,D,deltarho,deltaz)
-*
-*   DESCRIPTION : Calculate the flux contribution from the 
-* 		CAN current sheet (using Edwards et al. 2001 equations).
-*
-*   INPUTS : 
-*       double  rho     Cylindrical rho coordinate (in disc 
-*                       coordinate system, Rj)
-*       double  z       z-coordinate, Rj
-*       double  r0       inner edge of semi-infinite current 
-*                       sheet, Rj
-*		double 	r1		inner edge of the outer portion of the 
-*						current sheet to be subtracted
-*       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
-*       double D        Current sheet half-thickness, Rj
-*       double deltarho Scale length to smoothly transition from
-*                       small to large rho approx
-*       double deltaz   Scale length over which to smooth 4th
-*                        term of the equation
-*
-***************************************************************/
-double FluxCan(	double rho,double z, double r0, double r1,
-				double mui2, double D, 
-				double deltarho, double deltaz) {
-
-	double A0 = ScalarPotential(rho,z,r0,mui2,D,deltarho,deltaz);
-	double A1 = ScalarPotential(rho,z,r1,mui2,D,deltarho,deltaz);
-
-	/* according to Edwards et al., 2001 the flux is simply
-	rho times the scalar potential */
-	double F = rho*(A0 - A1);
-
-	return F;
-}
-
-/***************************************************************
-*
-*   NAME : FluxDip(r,theta,g)
-*
-*   DESCRIPTION : Calculate the flux cfunction for a dipole
-*
-*   INPUTS : 
-*       double  r 		radial coordinate, Rj
-*       double  theta   Colatitude, Rads
-*       double  g		Magnetic dipole coefficient, nT
-*
-***************************************************************/
-double FluxDip(double r, double theta, double g) {
-
-	double sint = sin(theta);
-	double F = (g*sint*sint)/r;
-	return F;
 }
 
 
@@ -1230,121 +1156,221 @@ class Con2020 {
 /* we want to initialize the model objects with its parameters */
 extern Con2020 con2020;
 
+extern "C" {
+}
 
-	
+double polyeval(double x, double *c, int d);
+
+double pol1eval(double x, double *c, int d);
+
+
+/***********************************************************************
+ * NAME : smoothd(z,dz,d)
+ * 
+ * DESCRIPTION : Smooth fucntion for crossing the current sheet 
+ * (replaces the last bit of equation 12 in Edwards et al 2000).
+ * 
+ * INPUTS : 
+ * 		double z	z-coordinate in dipole coordinate system (Rj)
+ * 		double dz	Scale of the transition to use (Rj)
+ * 		double d	Half thickness of the current sheet.
+ * 
+ * RETURNS : 
+ * 		double out	Smoothed function across the current sheet.
+ * 
+ * ********************************************************************/
+double smoothd(double z, double dz, double d);
+
+
+
+double trap(int n, double *x, double *y);
+double trapc(int n, double dx, double *y);
+
+/***************************************************************
+*
+*   NAME : FluxCan(rho,z,r0,r1,mui2,D,deltarho,deltaz)
+*
+*   DESCRIPTION : Calculate the flux contribution from the 
+* 		CAN current sheet (using Edwards et al. 2001 equations).
+*
+*   INPUTS : 
+*       double  rho     Cylindrical rho coordinate (in disc 
+*                       coordinate system, Rj)
+*       double  z       z-coordinate, Rj
+*       double  r0       inner edge of semi-infinite current 
+*                       sheet, Rj
+*		double 	r1		inner edge of the outer portion of the 
+*						current sheet to be subtracted
+*       double mui2     mu_0 I_0 /2 parameter (default 139.6 nT)
+*       double D        Current sheet half-thickness, Rj
+*       double deltarho Scale length to smoothly transition from
+*                       small to large rho approx
+*       double deltaz   Scale length over which to smooth 4th
+*                        term of the equation
+*
+***************************************************************/
+double FluxCan(	double rho,double z, double r0, double r1,
+				double mui2, double D, 
+				double deltarho, double deltaz) {
+
+	double A0 = ScalarPotential(rho,z,r0,mui2,D,deltarho,deltaz);
+	double A1 = ScalarPotential(rho,z,r1,mui2,D,deltarho,deltaz);
+
+	/* according to Edwards et al., 2001 the flux is simply
+	rho times the scalar potential */
+	double F = rho*(A0 - A1);
+
+	return F;
+}
+
+/***************************************************************
+*
+*   NAME : FluxDip(r,theta,g)
+*
+*   DESCRIPTION : Calculate the flux cfunction for a dipole
+*
+*   INPUTS : 
+*       double  r 		radial coordinate, Rj
+*       double  theta   Colatitude, Rads
+*       double  g		Magnetic dipole coefficient, nT
+*
+***************************************************************/
+double FluxDip(double r, double theta, double g) {
+
+	double sint = sin(theta);
+	double F = (g*sint*sint)/r;
+	return F;
+}
+
+
+
+template <typename T> T sgn(T x) {
+	return (x > 0) - (x < 0);
+}
+
+extern "C" {
+}
+
+
+extern "C" {
+}
+
 
 
 
 /* this is used in both C and C++*/
 
+extern "C" {
+}
 
 
-/* structure for storing the coefficients in memory (replaces binary stuff) */
-typedef struct coeffStruct {
-    const int len;    
+
+typedef struct {
+    const std::string name;
+    const std::string body;
+    const int len;
     const int nmax;
     const int ndef;
     const double rscale;
-    const int *n;
-    const int *m;
-    const double *g;
-    const double *h;
+    const std::vector<int> n;
+    const std::vector<int> m;
+    const std::vector<double> g;
+    const std::vector<double> h;
 } coeffStruct;
 
 typedef coeffStruct& (*coeffStructFunc)();
 
-
 /* list of model names */
 std::vector<std::string> getModelNames();
 
-/* model coefficient arrays */
-extern coeffStruct& _model_coeff_gsfc15evs();
-extern coeffStruct& _model_coeff_vip4();
-extern coeffStruct& _model_coeff_v117ev();
-extern coeffStruct& _model_coeff_gsfc15ev();
-extern coeffStruct& _model_coeff_gsfc13ev();
-extern coeffStruct& _model_coeff_vipal();
-extern coeffStruct& _model_coeff_jpl15evs();
-extern coeffStruct& _model_coeff_u17ev();
-extern coeffStruct& _model_coeff_jrm09();
-extern coeffStruct& _model_coeff_o6();
-extern coeffStruct& _model_coeff_o4();
-extern coeffStruct& _model_coeff_sha();
-extern coeffStruct& _model_coeff_p11a();
-extern coeffStruct& _model_coeff_jrm33();
-extern coeffStruct& _model_coeff_vit4();
-extern coeffStruct& _model_coeff_isaac();
-extern coeffStruct& _model_coeff_jpl15ev();
-extern coeffStruct& _model_coeff_spv();
-extern coeffStruct& _model_coeff_soi();
-extern coeffStruct& _model_coeff_v2();
-extern coeffStruct& _model_coeff_cassini3();
-extern coeffStruct& _model_coeff_cassini5();
-extern coeffStruct& _model_coeff_z3();
-extern coeffStruct& _model_coeff_burton2009();
-extern coeffStruct& _model_coeff_v1();
-extern coeffStruct& _model_coeff_cassini11();
-extern coeffStruct& _model_coeff_p1184();
-extern coeffStruct& _model_coeff_p11as();
-extern coeffStruct& _model_coeff_kivelson2002b();
-extern coeffStruct& _model_coeff_kivelson2002a();
-extern coeffStruct& _model_coeff_kivelson2002c();
-extern coeffStruct& _model_coeff_weber2022dip();
-extern coeffStruct& _model_coeff_weber2022quad();
-extern coeffStruct& _model_coeff_mh2014();
-extern coeffStruct& _model_coeff_cain2003();
-extern coeffStruct& _model_coeff_langlais2019();
-extern coeffStruct& _model_coeff_gao2021();
-extern coeffStruct& _model_coeff_igrf1935();
-extern coeffStruct& _model_coeff_igrf2005();
-extern coeffStruct& _model_coeff_igrf2000();
-extern coeffStruct& _model_coeff_igrf1950();
-extern coeffStruct& _model_coeff_igrf1960();
-extern coeffStruct& _model_coeff_igrf1985();
-extern coeffStruct& _model_coeff_igrf1945();
-extern coeffStruct& _model_coeff_igrf1965();
-extern coeffStruct& _model_coeff_igrf1905();
-extern coeffStruct& _model_coeff_igrf2010();
-extern coeffStruct& _model_coeff_igrf2020();
-extern coeffStruct& _model_coeff_igrf1910();
-extern coeffStruct& _model_coeff_igrf1990();
-extern coeffStruct& _model_coeff_igrf2015();
-extern coeffStruct& _model_coeff_igrf1925();
-extern coeffStruct& _model_coeff_igrf2025();
-extern coeffStruct& _model_coeff_igrf1970();
-extern coeffStruct& _model_coeff_igrf1930();
-extern coeffStruct& _model_coeff_igrf1920();
-extern coeffStruct& _model_coeff_igrf1955();
-extern coeffStruct& _model_coeff_igrf1995();
-extern coeffStruct& _model_coeff_igrf1900();
-extern coeffStruct& _model_coeff_igrf1980();
-extern coeffStruct& _model_coeff_igrf1940();
-extern coeffStruct& _model_coeff_igrf1975();
-extern coeffStruct& _model_coeff_igrf1915();
-extern coeffStruct& _model_coeff_nmoh();
-extern coeffStruct& _model_coeff_gsfco8full();
-extern coeffStruct& _model_coeff_gsfco8();
-extern coeffStruct& _model_coeff_thebault2018m3();
-extern coeffStruct& _model_coeff_anderson2010qts04();
-extern coeffStruct& _model_coeff_uno2009svd();
-extern coeffStruct& _model_coeff_anderson2012();
-extern coeffStruct& _model_coeff_thebault2018m1();
-extern coeffStruct& _model_coeff_anderson2010dts04();
-extern coeffStruct& _model_coeff_anderson2010q();
-extern coeffStruct& _model_coeff_anderson2010d();
-extern coeffStruct& _model_coeff_anderson2010qsha();
-extern coeffStruct& _model_coeff_anderson2010dsha();
-extern coeffStruct& _model_coeff_ness1975();
-extern coeffStruct& _model_coeff_uno2009();
-extern coeffStruct& _model_coeff_anderson2010r();
-extern coeffStruct& _model_coeff_thebault2018m2();
-extern coeffStruct& _model_coeff_ah5();
-extern coeffStruct& _model_coeff_gsfcq3full();
-extern coeffStruct& _model_coeff_gsfcq3();
-extern coeffStruct& _model_coeff_umoh();
+/* functions to return model coefficients */extern coeffStruct& _model_coeffspv();
+extern coeffStruct& _model_coeffz3();
+extern coeffStruct& _model_coeffcassini11();
+extern coeffStruct& _model_coeffcassini5();
+extern coeffStruct& _model_coeffsoi();
+extern coeffStruct& _model_coeffp1184();
+extern coeffStruct& _model_coeffburton2009();
+extern coeffStruct& _model_coeffv1();
+extern coeffStruct& _model_coeffcassini3();
+extern coeffStruct& _model_coeffv2();
+extern coeffStruct& _model_coeffp11as();
+extern coeffStruct& _model_coeffigrf1960();
+extern coeffStruct& _model_coeffigrf1935();
+extern coeffStruct& _model_coeffigrf1945();
+extern coeffStruct& _model_coeffigrf1925();
+extern coeffStruct& _model_coeffigrf1910();
+extern coeffStruct& _model_coeffigrf1905();
+extern coeffStruct& _model_coeffigrf1980();
+extern coeffStruct& _model_coeffigrf1990();
+extern coeffStruct& _model_coeffigrf2015();
+extern coeffStruct& _model_coeffigrf1940();
+extern coeffStruct& _model_coeffigrf1930();
+extern coeffStruct& _model_coeffigrf2005();
+extern coeffStruct& _model_coeffigrf2020();
+extern coeffStruct& _model_coeffigrf2010();
+extern coeffStruct& _model_coeffigrf1915();
+extern coeffStruct& _model_coeffigrf2000();
+extern coeffStruct& _model_coeffigrf1950();
+extern coeffStruct& _model_coeffigrf1970();
+extern coeffStruct& _model_coeffigrf1965();
+extern coeffStruct& _model_coeffigrf1920();
+extern coeffStruct& _model_coeffigrf2025();
+extern coeffStruct& _model_coeffigrf1985();
+extern coeffStruct& _model_coeffigrf1975();
+extern coeffStruct& _model_coeffigrf1955();
+extern coeffStruct& _model_coeffigrf1900();
+extern coeffStruct& _model_coeffigrf1995();
+extern coeffStruct& _model_coeffgsfco8full();
+extern coeffStruct& _model_coeffgsfco8();
+extern coeffStruct& _model_coeffnmoh();
+extern coeffStruct& _model_coeffkivelson2002a();
+extern coeffStruct& _model_coeffweber2022quad();
+extern coeffStruct& _model_coeffkivelson2002b();
+extern coeffStruct& _model_coeffkivelson2002c();
+extern coeffStruct& _model_coeffweber2022dip();
+extern coeffStruct& _model_coeffuno2009();
+extern coeffStruct& _model_coeffthebault2018m2();
+extern coeffStruct& _model_coeffuno2009svd();
+extern coeffStruct& _model_coeffanderson2010qts04();
+extern coeffStruct& _model_coeffanderson2010dsha();
+extern coeffStruct& _model_coeffanderson2012();
+extern coeffStruct& _model_coeffanderson2010dts04();
+extern coeffStruct& _model_coeffanderson2010qsha();
+extern coeffStruct& _model_coeffness1975();
+extern coeffStruct& _model_coeffthebault2018m1();
+extern coeffStruct& _model_coeffanderson2010r();
+extern coeffStruct& _model_coeffanderson2010d();
+extern coeffStruct& _model_coeffanderson2010q();
+extern coeffStruct& _model_coeffthebault2018m3();
+extern coeffStruct& _model_coeffgao2021();
+extern coeffStruct& _model_coeffcain2003();
+extern coeffStruct& _model_coeffmh2014();
+extern coeffStruct& _model_coefflanglais2019();
+extern coeffStruct& _model_coeffgsfcq3full();
+extern coeffStruct& _model_coeffgsfcq3();
+extern coeffStruct& _model_coeffah5();
+extern coeffStruct& _model_coeffumoh();
+extern coeffStruct& _model_coeffjrm33();
+extern coeffStruct& _model_coeffvit4();
+extern coeffStruct& _model_coeffisaac();
+extern coeffStruct& _model_coeffvipal();
+extern coeffStruct& _model_coeffvip4();
+extern coeffStruct& _model_coeffjpl15evs();
+extern coeffStruct& _model_coeffp11a();
+extern coeffStruct& _model_coeffjrm09();
+extern coeffStruct& _model_coeffjpl15ev();
+extern coeffStruct& _model_coeffo4();
+extern coeffStruct& _model_coeffo6();
+extern coeffStruct& _model_coeffsha();
+extern coeffStruct& _model_coeffu17ev();
+extern coeffStruct& _model_coeffgsfc15ev();
+extern coeffStruct& _model_coeffgsfc13ev();
+extern coeffStruct& _model_coeffgsfc15evs();
+extern coeffStruct& _model_coeffv117ev();
 
 /* map model names to the structure containing the coefficients */
 std::map<std::string,coeffStructFunc> getCoeffMap();
+
 
 /***********************************************************************
  * NAME : getModelCoeffStruct(Model)
@@ -1375,7 +1401,6 @@ coeffStructFunc getModelCoeffStruct(std::string Model);
  *
  **********************************************************************/
 coeffStructFunc getModelCoeffStruct(const char *Model);
-
 
 
 
@@ -1418,6 +1443,12 @@ class Internal {
 		/* set current degree */
 		void SetDegree(int n);
 		int GetDegree();
+
+		/* returning some internal stuff for testing */
+		std::vector<struct schmidtcoeffs> getSchmidtCoeffs();
+		std::vector<std::vector<double>> getSnm();
+		std::vector<std::vector<double>> getg();
+		std::vector<std::vector<double>> geth();
 
 		
 	private:
@@ -1482,92 +1513,95 @@ class Internal {
 };
 
 
+    
 
-/* models! */
-extern Internal& gsfc15evs();
-extern Internal& vip4();
-extern Internal& v117ev();
-extern Internal& gsfc15ev();
-extern Internal& gsfc13ev();
-extern Internal& vipal();
-extern Internal& jpl15evs();
-extern Internal& u17ev();
-extern Internal& jrm09();
-extern Internal& o6();
-extern Internal& o4();
-extern Internal& sha();
-extern Internal& p11a();
+
+extern Internal& spv();
+extern Internal& z3();
+extern Internal& cassini11();
+extern Internal& cassini5();
+extern Internal& soi();
+extern Internal& p1184();
+extern Internal& burton2009();
+extern Internal& v1();
+extern Internal& cassini3();
+extern Internal& v2();
+extern Internal& p11as();
+extern Internal& igrf1960();
+extern Internal& igrf1935();
+extern Internal& igrf1945();
+extern Internal& igrf1925();
+extern Internal& igrf1910();
+extern Internal& igrf1905();
+extern Internal& igrf1980();
+extern Internal& igrf1990();
+extern Internal& igrf2015();
+extern Internal& igrf1940();
+extern Internal& igrf1930();
+extern Internal& igrf2005();
+extern Internal& igrf2020();
+extern Internal& igrf2010();
+extern Internal& igrf1915();
+extern Internal& igrf2000();
+extern Internal& igrf1950();
+extern Internal& igrf1970();
+extern Internal& igrf1965();
+extern Internal& igrf1920();
+extern Internal& igrf2025();
+extern Internal& igrf1985();
+extern Internal& igrf1975();
+extern Internal& igrf1955();
+extern Internal& igrf1900();
+extern Internal& igrf1995();
+extern Internal& gsfco8full();
+extern Internal& gsfco8();
+extern Internal& nmoh();
+extern Internal& kivelson2002a();
+extern Internal& weber2022quad();
+extern Internal& kivelson2002b();
+extern Internal& kivelson2002c();
+extern Internal& weber2022dip();
+extern Internal& uno2009();
+extern Internal& thebault2018m2();
+extern Internal& uno2009svd();
+extern Internal& anderson2010qts04();
+extern Internal& anderson2010dsha();
+extern Internal& anderson2012();
+extern Internal& anderson2010dts04();
+extern Internal& anderson2010qsha();
+extern Internal& ness1975();
+extern Internal& thebault2018m1();
+extern Internal& anderson2010r();
+extern Internal& anderson2010d();
+extern Internal& anderson2010q();
+extern Internal& thebault2018m3();
+extern Internal& gao2021();
+extern Internal& cain2003();
+extern Internal& mh2014();
+extern Internal& langlais2019();
+extern Internal& gsfcq3full();
+extern Internal& gsfcq3();
+extern Internal& ah5();
+extern Internal& umoh();
 extern Internal& jrm33();
 extern Internal& vit4();
 extern Internal& isaac();
+extern Internal& vipal();
+extern Internal& vip4();
+extern Internal& jpl15evs();
+extern Internal& p11a();
+extern Internal& jrm09();
 extern Internal& jpl15ev();
-extern Internal& spv();
-extern Internal& soi();
-extern Internal& v2();
-extern Internal& cassini3();
-extern Internal& cassini5();
-extern Internal& z3();
-extern Internal& burton2009();
-extern Internal& v1();
-extern Internal& cassini11();
-extern Internal& p1184();
-extern Internal& p11as();
-extern Internal& kivelson2002b();
-extern Internal& kivelson2002a();
-extern Internal& kivelson2002c();
-extern Internal& weber2022dip();
-extern Internal& weber2022quad();
-extern Internal& mh2014();
-extern Internal& cain2003();
-extern Internal& langlais2019();
-extern Internal& gao2021();
-extern Internal& igrf1935();
-extern Internal& igrf2005();
-extern Internal& igrf2000();
-extern Internal& igrf1950();
-extern Internal& igrf1960();
-extern Internal& igrf1985();
-extern Internal& igrf1945();
-extern Internal& igrf1965();
-extern Internal& igrf1905();
-extern Internal& igrf2010();
-extern Internal& igrf2020();
-extern Internal& igrf1910();
-extern Internal& igrf1990();
-extern Internal& igrf2015();
-extern Internal& igrf1925();
-extern Internal& igrf2025();
-extern Internal& igrf1970();
-extern Internal& igrf1930();
-extern Internal& igrf1920();
-extern Internal& igrf1955();
-extern Internal& igrf1995();
-extern Internal& igrf1900();
-extern Internal& igrf1980();
-extern Internal& igrf1940();
-extern Internal& igrf1975();
-extern Internal& igrf1915();
-extern Internal& nmoh();
-extern Internal& gsfco8full();
-extern Internal& gsfco8();
-extern Internal& thebault2018m3();
-extern Internal& anderson2010qts04();
-extern Internal& uno2009svd();
-extern Internal& anderson2012();
-extern Internal& thebault2018m1();
-extern Internal& anderson2010dts04();
-extern Internal& anderson2010q();
-extern Internal& anderson2010d();
-extern Internal& anderson2010qsha();
-extern Internal& anderson2010dsha();
-extern Internal& ness1975();
-extern Internal& uno2009();
-extern Internal& anderson2010r();
-extern Internal& thebault2018m2();
-extern Internal& ah5();
-extern Internal& gsfcq3full();
-extern Internal& gsfcq3();
-extern Internal& umoh();
+extern Internal& o4();
+extern Internal& o6();
+extern Internal& sha();
+extern Internal& u17ev();
+extern Internal& gsfc15ev();
+extern Internal& gsfc13ev();
+extern Internal& gsfc15evs();
+extern Internal& v117ev();
+
+
 
 
 /* map the model names to their model object pointers */
@@ -1637,6 +1671,8 @@ std::map<std::string,modelFieldPtr> getModelFieldPtrMap();
  **********************************************************************/
 modelFieldPtr getModelFieldPtr(std::string Model);
 
+extern "C" {
+}
 
 
 /* based upon https://www.lonecpluspluscoder.com/2015/08/13/an-elegant-way-to-extract-keys-from-a-c-map/ */
@@ -1731,7 +1767,11 @@ class InternalModel {
 /* we want to initialize the model objects witht heir parameters */
 InternalModel getInternalModel();
 
+extern "C" {
+}
 
+extern "C" {
+}
 
 //const double deg2rad = M_PI/180.0;
 //const double rad2deg = 180.0/M_PI;
@@ -1930,7 +1970,7 @@ class Trace {
 
 
 
-
+extern "C" {
+}
 #endif
 #endif
-	

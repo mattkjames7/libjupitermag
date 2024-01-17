@@ -201,7 +201,7 @@ void saveLibHeader(std::filesystem::path srcPath) {
     std::string headerCode = generateLibHeader();
 
     std::filesystem::path headerPath = srcPath.parent_path();
-    headerPath /= "include/jupitermag.test.h";
+    headerPath /= "include/jupitermag.h";
     std::cout << "Saving library header: " << std::endl;
     std::cout << "\t" << headerPath << std::endl;
     std::ofstream file(headerPath);
