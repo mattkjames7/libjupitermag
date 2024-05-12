@@ -29,11 +29,17 @@ else
 	MD=mkdir -p
 endif
 
-
+#install paths
 ifeq ($(PREFIX),)
-#install path
 	PREFIX=/usr/local
 endif
+ifeq ($(PREFIX_INC),)
+	PREFIX_INC=$(PREFIX)/include
+endif
+ifeq ($(PREFIX_LIB),)
+	PREFIX_LIB=$(PREFIX)/lib
+endif
+
 
 .PHONY: all lib clean header test internal con2020 spline obj install uninstall  windows
 
@@ -80,18 +86,18 @@ test:
 	cd test; make all
 
 install:
-	cp -v include/jupitermag.h $(PREFIX)/include
-	cp -v lib/$(LIBFILE) $(PREFIX)/lib
-	chmod 0775 $(PREFIX)/lib/$(LIBFILE)
+	cp -v include/jupitermag.h $(PREFIX_INC)
+	cp -v lib/$(LIBFILE) $(PREFIX_LIB)
+	chmod 0775 $(PREFIX_LIB)/$(LIBFILE)
 ifeq ($(OS),Linux)
-	ldconfig
+	-ldconfig
 endif
 
 uninstall:
-	rm -v $(PREFIX)/include/jupitermag.h
-	rm -v $(PREFIX)/lib/$(LIBFILE)
+	rm -v $(PREFIX_INC)/jupitermag.h
+	rm -v $(PREFIX_LIB)/$(LIBFILE)
 ifeq ($(OS),Linux)
-	ldconfig
+	-ldconfig
 endif
 
 clean:
