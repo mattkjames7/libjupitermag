@@ -18,6 +18,7 @@ ifeq ($(OS),Windows_NT)
 #windows stuff here
 	MD=mkdir
 	LIBFILE=libjupitermag.dll
+	ARCFILE=jupitermag.lib
 else
 #linux and mac here
 	OS=$(shell uname -s)
@@ -26,6 +27,7 @@ else
 	else
 		LIBFILE=libjupitermag.dylib
 	endif
+	ARCFILE=libjupitermag.a
 	MD=mkdir -p
 endif
 
@@ -88,6 +90,7 @@ test:
 install:
 	cp -v include/jupitermag.h $(PREFIX_INC)
 	cp -v lib/$(LIBFILE) $(PREFIX_LIB)
+	cp -v lib/$(ARCFILE) $(PREFIX_LIB)
 	chmod 0775 $(PREFIX_LIB)/$(LIBFILE)
 ifeq ($(OS),Linux)
 	-ldconfig
