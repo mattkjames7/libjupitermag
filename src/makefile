@@ -18,8 +18,10 @@ endif
 OS=$(shell uname -s)
 ifeq ($(OS),Linux)
 	LIBFILE=libjupitermag.so
+	ARCFILE=libjupitermag.a
 else
 	LIBFILE=libjupitermag.dylib
+	ARCFILE=libjupitermag.a
 endif
 
 all: header obj lib
@@ -39,11 +41,12 @@ obj:
 	$(CCo) interptraceclosestpos.cc -o $(BUILDDIR)/interptraceclosestpos.o 
 	$(CCo) footprint.cc -o $(BUILDDIR)/footprint.o
 	$(CCo) coordconv.cc -o $(BUILDDIR)/coordconv.o 
+	$(CCo) libjupitermag.cc -o $(BUILDDIR)/libjupitermag.o
 	
 lib:
-	
-	$(CC) -shared libjupitermag.cc $(BUILDDIR)/*.o \
-			-o ../lib/$(LIBFILE) 
+	ar -crs ../lib/$(ARCFILE) $(BUILDDIR)/*.o
+	$(CC) -shared $(BUILDDIR)/*.o -o ../lib/$(LIBFILE)
+
 
 winobj:
 #	cd con2020;	make windows
