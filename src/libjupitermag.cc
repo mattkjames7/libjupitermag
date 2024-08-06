@@ -6,6 +6,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 				int MaxLen, double MaxStep, double InitStep,
 				double MinStep, double ErrMax, double Delta,
 				bool Verbose, int TraceDir,
+				double as, double bs, double ai, double bi,
 				int *nstep,
 				double **x, double **y, double **z,
 				double **Bx, double **By, double **Bz,
@@ -38,7 +39,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	/* initialise the trace object */
 	Trace T(Funcs);
 
-	/* add the starting posiutions fo the traces */
+	/* add the starting positions fo the traces */
 	T.InputPos(n,x0,y0,z0);
 
 	/* configure the trace parameters */
