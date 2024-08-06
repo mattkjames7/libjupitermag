@@ -61,9 +61,10 @@ class Trace {
 		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**,int**);
 		void TraceField();
 		void StepVector(double,double,double,double,double*,double*,double*);
-		bool ContinueTrace(double,double,double,double*);
+		BoolIntTuple ContinueTrace(double,double,double,double*);
 		void Step(double,double,double,double*,double*,double*,double*,double*,double*,double*);
 		void ReverseElements(int, double*);
+		void ReverseElements(int, int*);
 		void RKMTrace(	double,double,double,int*,double*,
 						double*,double*,double*,double*,double*,double*,int*);
 		void FixFootprints(	int,double*,double*,double*,double*,

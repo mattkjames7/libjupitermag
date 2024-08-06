@@ -103,5 +103,6 @@ int main () {
 	free(S);
 	free(Rnorm);
 	free(FP);
+	free(traceRegion);
 
 }

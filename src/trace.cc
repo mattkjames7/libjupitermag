@@ -62,6 +62,7 @@ Trace::~Trace() {
 			delete[] by_[i];
 			delete[] bz_[i];
 			delete[] R_[i];
+			delete[] traceRegion_[i];
 		}
 		delete[] x_;
 		delete[] y_;
@@ -71,6 +72,7 @@ Trace::~Trace() {
 		delete[] bz_;
 		delete[] R_;
 		delete[] nstep_;
+		delete[] traceRegion_;
 	}
 
 	/* field line footprints */
@@ -623,6 +625,17 @@ void Trace::ReverseElements(int n, double *x) {
 	}
 }
 
+void Trace::ReverseElements(int n, int *x) {
+	int i;
+	int tmp;
+	for (i=0;i<(n/2);i++) {
+		tmp = x[i];
+		x[i] = x[n-i-1];
+		x[n-i-1] = tmp;
+	}
+}
+
+
 void Trace::RKMTrace(	double x0, double y0, double z0,
 						int *nstep, double *R,
 						double *x, double *y, double *z,
@@ -668,10 +681,11 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 	ReverseElements(nstep[0],By);
 	ReverseElements(nstep[0],Bz);
 	ReverseElements(nstep[0],R);
-	ReverseElements(nstep[0],traceRegion)
+	ReverseElements(nstep[0],traceRegion);
 	
 	/* trace in the opposite direction */
-	cont = ContinueTrace(x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&R[nstep[0]-1]);
+	bit = ContinueTrace(x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&R[nstep[0]-1]);
+	cont = std::get<0>(bit);
 	if ((TraceDir_ == -1) || (TraceDir_ == 0)) {
 		/* hopefully this will go in the direction fo the field vectors
 		 * towards the southern hemisphere */
@@ -835,7 +849,7 @@ void Trace::TraceField() {
 	by_ = new double*[n_];					
 	bz_ = new double*[n_];
 	R_ = new double*[n_];
-	traceRegion_ = new double*[n_];
+	traceRegion_ = new int*[n_];
 	int i;
 	for (i=0;i<n_;i++) {
 		x_[i] = new double[MaxLen_];					
@@ -845,7 +859,7 @@ void Trace::TraceField() {
 		by_[i] = new double[MaxLen_];					
 		bz_[i] = new double[MaxLen_];		
 		R_[i] = new double[MaxLen_];	
-		traceRegion_[i] = new double[MaxLen_];	
+		traceRegion_[i] = new int[MaxLen_];	
 	}		
 	allocTrace_ = true;
 	
