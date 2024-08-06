@@ -5,6 +5,7 @@
 #include <vector>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <tuple>
 #include "interptraceclosestpos.h"
 #include "footprint.h"
 #include "coordconv.h"
@@ -17,7 +18,7 @@
 /* this will be used for all of the model wrapper functions (configure model first) */
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
-
+typedef std::tuple<bool,int> BoolIntTuple;
 
 class Trace {
 	
@@ -139,6 +140,16 @@ class Trace {
 	
 		/* trace fields */
 		double **bx_, **by_, **bz_;
+
+		/* trace region - mostly to say whether the trace is:
+		* above both surface and ionosphere = 2
+		* above surface, below ionosphere = 1
+		* below surface, below ionosphere = 0
+		* below surface, above ionosphere = -1
+		* (that last one might happen if somebody does something odd with the
+		* shapes of the surface)
+		* */
+		double **traceRegion_;
 
 		/* magnetic z-axis tilt (xt) and longitude of tilt (xp)*/
 		double xt_;
