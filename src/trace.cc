@@ -627,7 +627,7 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 						int *nstep, double *R,
 						double *x, double *y, double *z,
 						double *Bx, double *By, double *Bz,
-						double *traceRegion) {
+						int *traceRegion) {
 
 	/* intialize the trace */
 	nstep[0] = 1;
@@ -805,7 +805,7 @@ void Trace::FixFootprints(	int nstep, double *R,
 
 void Trace::TraceField(	int *nstep,
 						double **x, double **y, double **z, double **R,
-						double **bx, double **by, double **bz, double **traceRegion) {
+						double **bx, double **by, double **bz, int **traceRegion) {
 	
 	/* link the pointers within the object to those supplied by this 
 	 * function					*/

@@ -58,14 +58,14 @@ class Trace {
 		void SetTraceBoundDefaults();
 
 		/* tracing */
-		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**);
+		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**,int**);
 		void TraceField();
 		void StepVector(double,double,double,double,double*,double*,double*);
 		bool ContinueTrace(double,double,double,double*);
 		void Step(double,double,double,double*,double*,double*,double*,double*,double*,double*);
 		void ReverseElements(int, double*);
 		void RKMTrace(	double,double,double,int*,double*,
-						double*,double*,double*,double*,double*,double*);
+						double*,double*,double*,double*,double*,double*,int*);
 		void FixFootprints(	int,double*,double*,double*,double*,
 							double*,double*,double*);
 						
@@ -149,7 +149,7 @@ class Trace {
 		* (that last one might happen if somebody does something odd with the
 		* shapes of the surface)
 		* */
-		double **traceRegion_;
+		int **traceRegion_;
 
 		/* magnetic z-axis tilt (xt) and longitude of tilt (xp)*/
 		double xt_;

@@ -11,7 +11,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 				double **x, double **y, double **z,
 				double **Bx, double **By, double **Bz,
 				double **R, double **S, double **Rnorm, 
-				double **traceRegion, double **FP,
+				int **traceRegion, double **FP,
 				int nalpha, double *alpha, double *halpha) {
 	
 	/* before calling this wrapper function, any field models used should

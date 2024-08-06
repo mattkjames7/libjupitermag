@@ -21,7 +21,7 @@ extern "C" {
 				double **x, double **y, double **z,
 				double **Bx, double **By, double **Bz,
 				double **R, double **S, double **Rnorm, 
-				double **traceRegion, double **FP,
+				int **traceRegion, double **FP,
 				int nalpha, double *alpha, double *halpha);
 }
 #endif
