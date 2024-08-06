@@ -68,7 +68,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	}
 
 	/* Trace */
-	T.TraceField(nstep,x,y,z,R,Bx,By,Bz);
+	T.TraceField(nstep,x,y,z,R,Bx,By,Bz,traceRegion);
 
 	/* trace distance, footprints, Rnorm */
 	if (TraceDir == 0) {
