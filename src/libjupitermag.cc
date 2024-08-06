@@ -45,6 +45,22 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	/* configure the trace parameters */
 	T.SetTraceCFG(MaxLen,MaxStep,InitStep,MinStep,ErrMax,Delta,Verbose,TraceDir);
 
+	/* set up the surfaces */
+	if (ai == bi) {
+		T.SetIonosphereIsSphere(true);
+		T.SetIonosphereSphereR(ai);
+	} else {
+		T.SetIonosphereIsSphere(false);
+		T.SetIonosphereSpheroidR(ai,bi);
+	}
+	if (as == bs) {
+		T.SetSurfaceIsSphere(true);
+		T.SetSurfaceSphereR(as);
+	} else {
+		T.SetSurfaceIsSphere(false);
+		T.SetSurfaceSpheroidR(as,bs);
+	}
+
 	/* set up the alpha calculation */
 	if (nalpha > 0) {
 		T.SetAlpha(nalpha,alpha);
