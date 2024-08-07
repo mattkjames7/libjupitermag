@@ -207,7 +207,7 @@ void Trace::SetAlpha(int nalpha, double *alpha) {
 Trace Trace::TracePosition(int i, double x, double y, double z) {
 	/* return a new trace object at the supplied position using the
 	 * parameters at time i */
-	printf("Creating parallel trace\n");
+
 	Trace T(Funcs_);
 	
 	/* input position and time - I am pretty certain that the midpoints
@@ -500,15 +500,43 @@ BoolIntTuple Trace::ContinueTrace(double x, double y, double z, double *R) {
 
 	/* work out region */
 	int region;
-	if ((R[0] > Rj) && (R[0] > Ri)) {
-		region = 2;
-	} else if ((R[0] > Rj) && (R[0] <= Ri)) {
-		region = 1;
-	} else if ((R[0] <= Rj) && (R[0] <= Ri)) {
-		region = 0;
+	if (Rj <= Ri) {
+		/* this is normal - ionosphere should be higher up than the surface */
+		if (R[0] > Ri) {
+			/* we are above the ionosphere */
+			region = 2;
+		} else if (R[0] < Rj) {
+			/* we are below the surface */
+			region = 0;
+		} else {
+			/* we must be between the surface and the ionosphere */
+			region = 1;
+		}
 	} else {
-		region = -1;
+		/* not normal, but may be the result of using a spherical ionosphere 
+		* and an oblate-spheroid surface... */
+		if (R[0] > Rj) {
+			/* we are above both surface and ionosphere - definitely magnetosphere*/
+			region = 2;
+		} else if (R[0] < Ri) {
+			/* below both surface and the ionosphere */
+			region = 0;
+		} else {
+			/* here be dragons */
+			region = -1;
+		}
 	}
+
+	// if ((R[0] > Rj) && (R[0] > Ri)) {
+	// 	region = 2;
+	// } else if ((R[0] > Rj) && (R[0] <= Ri)) {
+	// 	region = 1;
+	// } else if ((R[0] <= Rj) && (R[0] <= Ri)) {
+	// 	region = 0;
+	// } else {
+	// 	region = -1;
+	// }
+
 
 
 	/* stop the trace if we go below rmin */
