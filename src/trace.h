@@ -5,6 +5,7 @@
 #include <vector>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <tuple>
 #include "interptraceclosestpos.h"
 #include "footprint.h"
 #include "coordconv.h"
@@ -17,7 +18,7 @@
 /* this will be used for all of the model wrapper functions (configure model first) */
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
-
+typedef std::tuple<bool,int> BoolIntTuple;
 
 class Trace {
 	
@@ -57,14 +58,15 @@ class Trace {
 		void SetTraceBoundDefaults();
 
 		/* tracing */
-		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**);
+		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**,int**);
 		void TraceField();
 		void StepVector(double,double,double,double,double*,double*,double*);
-		bool ContinueTrace(double,double,double,double*);
+		BoolIntTuple ContinueTrace(double,double,double,double*);
 		void Step(double,double,double,double*,double*,double*,double*,double*,double*,double*);
 		void ReverseElements(int, double*);
+		void ReverseElements(int, int*);
 		void RKMTrace(	double,double,double,int*,double*,
-						double*,double*,double*,double*,double*,double*);
+						double*,double*,double*,double*,double*,double*,int*);
 		void FixFootprints(	int,double*,double*,double*,double*,
 							double*,double*,double*);
 						
@@ -139,6 +141,16 @@ class Trace {
 	
 		/* trace fields */
 		double **bx_, **by_, **bz_;
+
+		/* trace region - mostly to say whether the trace is:
+		* above both surface and ionosphere = 2
+		* above surface, below ionosphere = 1
+		* below surface, below ionosphere = 0
+		* below surface, above ionosphere = -1
+		* (that last one might happen if somebody does something odd with the
+		* shapes of the surface)
+		* */
+		int **traceRegion_;
 
 		/* magnetic z-axis tilt (xt) and longitude of tilt (xp)*/
 		double xt_;

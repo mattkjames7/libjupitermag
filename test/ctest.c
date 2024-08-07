@@ -40,6 +40,8 @@ int main () {
 	double *By = (double *) malloc(MaxLen*sizeof(double));
 	double *Bz = (double *) malloc(MaxLen*sizeof(double));
 
+	int *traceRegion = (int *) malloc(MaxLen*sizeof(int));
+
 	double *R = (double *) malloc(MaxLen*sizeof(double));
 	double *S = (double *) malloc(MaxLen*sizeof(double));
 	double *Rnorm = (double *) malloc(MaxLen*sizeof(double));
@@ -50,9 +52,12 @@ int main () {
 	double alpha[] = {0.0,90.0};
 	double halpha[nalpha*n*MaxLen];
 
+	/* define radii */
+	double as = 1.0, bs = 0.93513, ai = 0.94212, bi = 0.94212;
+
 	/* call the trace wrapper */
 	TraceField(n,&x0,&y0,&z0,IntFunc,nExt,&ExtFuncs,MaxLen,MaxStep,InitStep,MinStep,ErrMax,
-			Delta,Verbose,TraceDir,nstep,&x,&y,&z,&Bx,&By,&Bz,&R,&S,&Rnorm,&FP,nalpha,alpha,halpha);
+			Delta,Verbose,TraceDir,as,bs,ai,bi,nstep,&x,&y,&z,&Bx,&By,&Bz,&R,&S,&Rnorm,&traceRegion,&FP,nalpha,alpha,halpha);
 	printf("Trace Done...\n");
 	printf("**** North Ionospheric FP ****\n");
 	printf("lat: %f lon %f\n",FP[31],FP[30]);
@@ -98,5 +103,6 @@ int main () {
 	free(S);
 	free(Rnorm);
 	free(FP);
+	free(traceRegion);
 
 }

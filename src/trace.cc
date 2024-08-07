@@ -62,6 +62,7 @@ Trace::~Trace() {
 			delete[] by_[i];
 			delete[] bz_[i];
 			delete[] R_[i];
+			delete[] traceRegion_[i];
 		}
 		delete[] x_;
 		delete[] y_;
@@ -71,6 +72,7 @@ Trace::~Trace() {
 		delete[] bz_;
 		delete[] R_;
 		delete[] nstep_;
+		delete[] traceRegion_;
 	}
 
 	/* field line footprints */
@@ -205,7 +207,7 @@ void Trace::SetAlpha(int nalpha, double *alpha) {
 Trace Trace::TracePosition(int i, double x, double y, double z) {
 	/* return a new trace object at the supplied position using the
 	 * parameters at time i */
-	printf("Creating parallel trace\n");
+
 	Trace T(Funcs_);
 	
 	/* input position and time - I am pretty certain that the midpoints
@@ -454,19 +456,19 @@ void Trace::StepVector(	double x, double y, double z, double step3,
 						
 }
 
-bool Trace::ContinueTrace(double x, double y, double z, double *R) {
+BoolIntTuple Trace::ContinueTrace(double x, double y, double z, double *R) {
 	
 	R[0] = sqrt(x*x + y*y + z*z);
 	
 	/* check if we have gone too far away (this is arbitrary, I know...)*/
 	if (R[0] >= MaxR_) {
-		return false;
+		return std::make_tuple(false,-2);
 	}
 
 	/* check that input is actually finite */
 	if (!isfinite(R[0])) {
 		printf("Invalid value detected\n");
-		return false;
+		return std::make_tuple(false,-2);
 	}
 	
 	/* figure out some latitudes (t) */
@@ -496,12 +498,53 @@ bool Trace::ContinueTrace(double x, double y, double z, double *R) {
 	/* work out the minimum value, below which we stop */	
 	double rmin = std::min(Rj,Ri)*RMultiplier_;
 
+	/* work out region */
+	int region;
+	if (Rj <= Ri) {
+		/* this is normal - ionosphere should be higher up than the surface */
+		if (R[0] > Ri) {
+			/* we are above the ionosphere */
+			region = 2;
+		} else if (R[0] < Rj) {
+			/* we are below the surface */
+			region = 0;
+		} else {
+			/* we must be between the surface and the ionosphere */
+			region = 1;
+		}
+	} else {
+		/* not normal, but may be the result of using a spherical ionosphere 
+		* and an oblate-spheroid surface... */
+		if (R[0] > Rj) {
+			/* we are above both surface and ionosphere - definitely magnetosphere*/
+			region = 2;
+		} else if (R[0] < Ri) {
+			/* below both surface and the ionosphere */
+			region = 0;
+		} else {
+			/* here be dragons */
+			region = -1;
+		}
+	}
+
+	// if ((R[0] > Rj) && (R[0] > Ri)) {
+	// 	region = 2;
+	// } else if ((R[0] > Rj) && (R[0] <= Ri)) {
+	// 	region = 1;
+	// } else if ((R[0] <= Rj) && (R[0] <= Ri)) {
+	// 	region = 0;
+	// } else {
+	// 	region = -1;
+	// }
+
+
+
 	/* stop the trace if we go below rmin */
 	if (R[0] < rmin) {
-		return false;
+		return std::make_tuple(false,region);
 	}
-	
-	return true;
+
+	return std::make_tuple(true,region);
 	
 }
 
@@ -527,6 +570,7 @@ void Trace::Step(	double x0, double y0, double z0,
 	bool cont;
 	bool adjstep = false;
 	bool repeat = true;	
+	BoolIntTuple bit;
 	
 	while (repeat) {
 		/* this bit repeats until we get a desired step size */
@@ -557,7 +601,8 @@ void Trace::Step(	double x0, double y0, double z0,
 		xn = x0 + 0.5*(rx1 + 4*rx4 + rx5);
 		yn = y0 + 0.5*(ry1 + 4*ry4 + ry5);
 		zn = z0 + 0.5*(rz1 + 4*rz4 + rz5);	
-		cont = ContinueTrace(xn,yn,zn,&Rn);
+		bit = ContinueTrace(xn,yn,zn,&Rn);
+		cont = std::get<0>(bit);
 		if ((!cont) && (fabs(step[0]) > MinStep_)) {
 			step[0] = 0.5*step[0];
 			if (fabs(step[0]) < MinStep_) {
@@ -608,10 +653,22 @@ void Trace::ReverseElements(int n, double *x) {
 	}
 }
 
+void Trace::ReverseElements(int n, int *x) {
+	int i;
+	int tmp;
+	for (i=0;i<(n/2);i++) {
+		tmp = x[i];
+		x[i] = x[n-i-1];
+		x[n-i-1] = tmp;
+	}
+}
+
+
 void Trace::RKMTrace(	double x0, double y0, double z0,
 						int *nstep, double *R,
 						double *x, double *y, double *z,
-						double *Bx, double *By, double *Bz) {
+						double *Bx, double *By, double *Bz,
+						int *traceRegion) {
 
 	/* intialize the trace */
 	nstep[0] = 1;
@@ -621,7 +678,11 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 	Field(x0,y0,z0,&Bx[0],&By[0],&Bz[0]);
 
 	double step;
-	bool cont = ContinueTrace(x[0],y[0],z[0],&R[0]);
+	BoolIntTuple bit;
+	bit = ContinueTrace(x[0],y[0],z[0],&R[0]);
+	bool cont = std::get<0>(bit);
+	int region = std::get<1>(bit);
+	traceRegion[0] = region;
 	
 	/* trace in one direction */
 	if ((TraceDir_ == 1) || (TraceDir_ == 0)) {
@@ -632,7 +693,10 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 			Step(	x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&step,
 					&x[nstep[0]],&y[nstep[0]],&z[nstep[0]],
 					&Bx[nstep[0]],&By[nstep[0]],&Bz[nstep[0]]);
-			cont = ContinueTrace(x[nstep[0]],y[nstep[0]],z[nstep[0]],&R[nstep[0]]);
+			bit = ContinueTrace(x[nstep[0]],y[nstep[0]],z[nstep[0]],&R[nstep[0]]);
+			cont = std::get<0>(bit);
+			region = std::get<1>(bit);
+			traceRegion[nstep[0]] = region;
 			nstep[0]++;
 		}
 	}
@@ -645,9 +709,11 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 	ReverseElements(nstep[0],By);
 	ReverseElements(nstep[0],Bz);
 	ReverseElements(nstep[0],R);
+	ReverseElements(nstep[0],traceRegion);
 	
 	/* trace in the opposite direction */
-	cont = ContinueTrace(x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&R[nstep[0]-1]);
+	bit = ContinueTrace(x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&R[nstep[0]-1]);
+	cont = std::get<0>(bit);
 	if ((TraceDir_ == -1) || (TraceDir_ == 0)) {
 		/* hopefully this will go in the direction fo the field vectors
 		 * towards the southern hemisphere */
@@ -656,7 +722,10 @@ void Trace::RKMTrace(	double x0, double y0, double z0,
 			Step(	x[nstep[0]-1],y[nstep[0]-1],z[nstep[0]-1],&step,
 					&x[nstep[0]],&y[nstep[0]],&z[nstep[0]],
 					&Bx[nstep[0]],&By[nstep[0]],&Bz[nstep[0]]);
-			cont = ContinueTrace(x[nstep[0]],y[nstep[0]],z[nstep[0]],&R[nstep[0]]);
+			bit = ContinueTrace(x[nstep[0]],y[nstep[0]],z[nstep[0]],&R[nstep[0]]);
+			cont = std::get<0>(bit);
+			region = std::get<1>(bit);
+			traceRegion[nstep[0]] = region;
 			nstep[0]++;
 		}
 	}
@@ -778,7 +847,7 @@ void Trace::FixFootprints(	int nstep, double *R,
 
 void Trace::TraceField(	int *nstep,
 						double **x, double **y, double **z, double **R,
-						double **bx, double **by, double **bz) {
+						double **bx, double **by, double **bz, int **traceRegion) {
 	
 	/* link the pointers within the object to those supplied by this 
 	 * function					*/
@@ -790,6 +859,7 @@ void Trace::TraceField(	int *nstep,
 	by_ = by;					
 	bz_ = bz;	
 	R_ = R;	
+	traceRegion_ = traceRegion;
 
 	/* call the tracing code */
 	_TraceField();
@@ -807,6 +877,7 @@ void Trace::TraceField() {
 	by_ = new double*[n_];					
 	bz_ = new double*[n_];
 	R_ = new double*[n_];
+	traceRegion_ = new int*[n_];
 	int i;
 	for (i=0;i<n_;i++) {
 		x_[i] = new double[MaxLen_];					
@@ -815,7 +886,8 @@ void Trace::TraceField() {
 		bx_[i] = new double[MaxLen_];					
 		by_[i] = new double[MaxLen_];					
 		bz_[i] = new double[MaxLen_];		
-		R_[i] = new double[MaxLen_];		
+		R_[i] = new double[MaxLen_];	
+		traceRegion_[i] = new int[MaxLen_];	
 	}		
 	allocTrace_ = true;
 	
@@ -848,7 +920,7 @@ void Trace::_TraceField() {
 
 
 		/* perform trace */
-		RKMTrace(x0_[i],y0_[i],z0_[i],&nstep_[i],R_[i],x_[i],y_[i],z_[i],bx_[i],by_[i],bz_[i]);
+		RKMTrace(x0_[i],y0_[i],z0_[i],&nstep_[i],R_[i],x_[i],y_[i],z_[i],bx_[i],by_[i],bz_[i],traceRegion_[i]);
 		
 		
 	}	

@@ -6,10 +6,12 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 				int MaxLen, double MaxStep, double InitStep,
 				double MinStep, double ErrMax, double Delta,
 				bool Verbose, int TraceDir,
+				double as, double bs, double ai, double bi,
 				int *nstep,
 				double **x, double **y, double **z,
 				double **Bx, double **By, double **Bz,
-				double **R, double **S, double **Rnorm, double **FP,
+				double **R, double **S, double **Rnorm, 
+				int **traceRegion, double **FP,
 				int nalpha, double *alpha, double *halpha) {
 	
 	/* before calling this wrapper function, any field models used should
@@ -38,11 +40,27 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	/* initialise the trace object */
 	Trace T(Funcs);
 
-	/* add the starting posiutions fo the traces */
+	/* add the starting positions fo the traces */
 	T.InputPos(n,x0,y0,z0);
 
 	/* configure the trace parameters */
 	T.SetTraceCFG(MaxLen,MaxStep,InitStep,MinStep,ErrMax,Delta,Verbose,TraceDir);
+
+	/* set up the surfaces */
+	if (ai == bi) {
+		T.SetIonosphereIsSphere(true);
+		T.SetIonosphereSphereR(ai);
+	} else {
+		T.SetIonosphereIsSphere(false);
+		T.SetIonosphereSpheroidR(ai,bi);
+	}
+	if (as == bs) {
+		T.SetSurfaceIsSphere(true);
+		T.SetSurfaceSphereR(as);
+	} else {
+		T.SetSurfaceIsSphere(false);
+		T.SetSurfaceSpheroidR(as,bs);
+	}
 
 	/* set up the alpha calculation */
 	if (nalpha > 0) {
@@ -50,7 +68,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	}
 
 	/* Trace */
-	T.TraceField(nstep,x,y,z,R,Bx,By,Bz);
+	T.TraceField(nstep,x,y,z,R,Bx,By,Bz,traceRegion);
 
 	/* trace distance, footprints, Rnorm */
 	if (TraceDir == 0) {

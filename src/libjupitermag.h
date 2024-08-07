@@ -12,14 +12,16 @@
 
 extern "C" {
 	bool TraceField(int n, double *x0, double *y0, double *z0,
-					const char *IntFunc, int nExt, char **ExtFunc,
-					int MaxLen, double MaxStep, double InitStep,
-					double MinStep, double ErrMax, double Delta,
-					bool Verbose, int TraceDir,
-					int *nstep,
-					double **x, double **y, double **z,
-					double **Bx, double **By, double **Bz,
-					double **R, double **S, double **Rnorm, double **FP,
-					int nalpha, double *alpha, double *halpha);
+				const char *IntFunc, int nExt, char **ExtFunc,
+				int MaxLen, double MaxStep, double InitStep,
+				double MinStep, double ErrMax, double Delta,
+				bool Verbose, int TraceDir,
+				double as, double bs, double ai, double bi,
+				int *nstep,
+				double **x, double **y, double **z,
+				double **Bx, double **By, double **Bz,
+				double **R, double **S, double **Rnorm, 
+				int **traceRegion, double **FP,
+				int nalpha, double *alpha, double *halpha);
 }
 #endif

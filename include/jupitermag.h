@@ -24,8 +24,8 @@ typedef void (*modelFieldPtr)(double,double,double,double*,double*,double*);
 
 
 #define LIBJUPITERMAG_VERSION_MAJOR 1
-#define LIBJUPITERMAG_VERSION_MINOR 4
-#define LIBJUPITERMAG_VERSION_PATCH 1
+#define LIBJUPITERMAG_VERSION_MINOR 5
+#define LIBJUPITERMAG_VERSION_PATCH 0
 
 
 #ifdef __cplusplus
@@ -631,15 +631,17 @@ extern "C" {
 							bool CartIn, bool CartOut,
 							double *B0, double *B1, double *B2);
 	bool TraceField(int n, double *x0, double *y0, double *z0,
-					const char *IntFunc, int nExt, char **ExtFunc,
-					int MaxLen, double MaxStep, double InitStep,
-					double MinStep, double ErrMax, double Delta,
-					bool Verbose, int TraceDir,
-					int *nstep,
-					double **x, double **y, double **z,
-					double **Bx, double **By, double **Bz,
-					double **R, double **S, double **Rnorm, double **FP,
-					int nalpha, double *alpha, double *halpha);
+				const char *IntFunc, int nExt, char **ExtFunc,
+				int MaxLen, double MaxStep, double InitStep,
+				double MinStep, double ErrMax, double Delta,
+				bool Verbose, int TraceDir,
+				double as, double bs, double ai, double bi,
+				int *nstep,
+				double **x, double **y, double **z,
+				double **Bx, double **By, double **Bz,
+				double **R, double **S, double **Rnorm, 
+				int **traceRegion, double **FP,
+				int nalpha, double *alpha, double *halpha);
 #ifdef __cplusplus
 }
 
@@ -1781,7 +1783,7 @@ extern "C" {
 /* this will be used for all of the model wrapper functions (configure model first) */
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
-
+typedef std::tuple<bool,int> BoolIntTuple;
 
 class Trace {
 	
@@ -1821,14 +1823,15 @@ class Trace {
 		void SetTraceBoundDefaults();
 
 		/* tracing */
-		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**);
+		void TraceField(int*,double**,double**,double**,double**,double**,double**,double**,int**);
 		void TraceField();
 		void StepVector(double,double,double,double,double*,double*,double*);
-		bool ContinueTrace(double,double,double,double*);
+		BoolIntTuple ContinueTrace(double,double,double,double*);
 		void Step(double,double,double,double*,double*,double*,double*,double*,double*,double*);
 		void ReverseElements(int, double*);
+		void ReverseElements(int, int*);
 		void RKMTrace(	double,double,double,int*,double*,
-						double*,double*,double*,double*,double*,double*);
+						double*,double*,double*,double*,double*,double*,int*);
 		void FixFootprints(	int,double*,double*,double*,double*,
 							double*,double*,double*);
 						
@@ -1903,6 +1906,16 @@ class Trace {
 	
 		/* trace fields */
 		double **bx_, **by_, **bz_;
+
+		/* trace region - mostly to say whether the trace is:
+		* above both surface and ionosphere = 2
+		* above surface, below ionosphere = 1
+		* below surface, below ionosphere = 0
+		* below surface, above ionosphere = -1
+		* (that last one might happen if somebody does something odd with the
+		* shapes of the surface)
+		* */
+		int **traceRegion_;
 
 		/* magnetic z-axis tilt (xt) and longitude of tilt (xp)*/
 		double xt_;
