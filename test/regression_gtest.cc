@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -151,6 +152,104 @@ std::vector<std::array<double, 3>> RegressionPoints() {
         {30.0, 0.0, 15.0},
         {40.0, 5.0, -20.0},
     };
+}
+
+void RunTraceWithDir(const std::vector<std::array<double, 3>> &starts, int traceDir,
+                     std::vector<int> *nstepOut, std::vector<double *> *sOut,
+                     std::vector<double *> *rnormOut,
+                     std::vector<double *> *fpOut) {
+    const int n = static_cast<int>(starts.size());
+    const int maxLen = 1000;
+
+    std::vector<double> x0(n), y0(n), z0(n);
+    for (int i = 0; i < n; i++) {
+        x0[i] = starts[i][0];
+        y0[i] = starts[i][1];
+        z0[i] = starts[i][2];
+    }
+
+    const char *internal = "jrm33";
+    int nExt = 1;
+    char extName[] = "Con2020";
+    char *externalNames[1] = {extName};
+
+    std::vector<int> nstep(n);
+    std::vector<double *> x(n), y(n), z(n), bx(n), by(n), bz(n), r(n), s(n),
+        rnorm(n), fp(n);
+    std::vector<int *> traceRegion(n);
+
+    const double sentinel = std::numeric_limits<double>::quiet_NaN();
+
+    for (int i = 0; i < n; i++) {
+        x[i] = new double[maxLen];
+        y[i] = new double[maxLen];
+        z[i] = new double[maxLen];
+        bx[i] = new double[maxLen];
+        by[i] = new double[maxLen];
+        bz[i] = new double[maxLen];
+        r[i] = new double[maxLen];
+        s[i] = new double[maxLen];
+        rnorm[i] = new double[maxLen];
+        traceRegion[i] = new int[maxLen];
+        fp[i] = new double[49];
+
+        for (int j = 0; j < maxLen; j++) {
+            s[i][j] = sentinel;
+            rnorm[i][j] = sentinel;
+        }
+        for (int j = 0; j < 49; j++) {
+            fp[i][j] = sentinel;
+        }
+    }
+
+    const bool ok = TraceField(n, x0.data(), y0.data(), z0.data(), internal, nExt,
+                               externalNames, maxLen, 1.0, 0.5, 0.001, 1e-4,
+                               0.05, false, traceDir, 1.0, 0.93513, 0.94212,
+                               0.94212, nstep.data(), x.data(), y.data(),
+                               z.data(), bx.data(), by.data(), bz.data(),
+                               r.data(), s.data(), rnorm.data(), traceRegion.data(),
+                               fp.data(), 0, nullptr, nullptr);
+    EXPECT_TRUE(ok);
+
+    if (nstepOut != nullptr) {
+        *nstepOut = nstep;
+    }
+    if (sOut != nullptr) {
+        *sOut = s;
+    }
+    if (rnormOut != nullptr) {
+        *rnormOut = rnorm;
+    }
+    if (fpOut != nullptr) {
+        *fpOut = fp;
+    }
+
+    for (int i = 0; i < n; i++) {
+        delete[] x[i];
+        delete[] y[i];
+        delete[] z[i];
+        delete[] bx[i];
+        delete[] by[i];
+        delete[] bz[i];
+        delete[] r[i];
+        delete[] traceRegion[i];
+    }
+
+    if (sOut == nullptr) {
+        for (int i = 0; i < n; i++) {
+            delete[] s[i];
+        }
+    }
+    if (rnormOut == nullptr) {
+        for (int i = 0; i < n; i++) {
+            delete[] rnorm[i];
+        }
+    }
+    if (fpOut == nullptr) {
+        for (int i = 0; i < n; i++) {
+            delete[] fp[i];
+        }
+    }
 }
 
 using Footprint49 = std::array<double, 49>;
@@ -690,4 +789,105 @@ TEST(Regressions, EdgeBehaviorAndInvalidModelPointer) {
             EXPECT_TRUE(std::isfinite(b2));
         }
     }
+}
+
+TEST(Regressions, AllModelsSmokeAtSafePoint) {
+    ConfigureModelsForBaseline();
+
+    const std::vector<std::string> modelNames = {
+        "jrm33", "jrm09", "vip4", "vipal", "vit4", "o4", "o6",
+        "gsfc15ev", "gsfc15evs", "gsfc13ev", "u17ev", "sha", "v117ev",
+        "jpl15ev", "jpl15evs", "p11a", "isaac"};
+
+    const double x = 10.0;
+    const double y = 0.0;
+    const double z = 0.0;
+
+    for (const auto &name : modelNames) {
+        modelFieldPtr ptr = getModelFieldPtr(name.c_str());
+        ASSERT_NE(nullptr, ptr) << name;
+
+        double bx = 0.0, by = 0.0, bz = 0.0;
+        ptr(x, y, z, &bx, &by, &bz);
+        EXPECT_FALSE(std::isinf(bx)) << name;
+        EXPECT_FALSE(std::isinf(by)) << name;
+        EXPECT_FALSE(std::isinf(bz)) << name;
+    }
+}
+
+TEST(Regressions, InputArraysNotModified) {
+    ConfigureModelsForBaseline();
+
+    const auto points = RegressionPoints();
+    const int n = static_cast<int>(points.size());
+
+    std::vector<double> p0(n), p1(n), p2(n);
+    for (int i = 0; i < n; i++) {
+        p0[i] = points[i][0];
+        p1[i] = points[i][1];
+        p2[i] = points[i][2];
+    }
+
+    const auto p0Orig = p0;
+    const auto p1Orig = p1;
+    const auto p2Orig = p2;
+
+    std::vector<double> o0(n), o1(n), o2(n);
+    InternalField(n, p0.data(), p1.data(), p2.data(), o0.data(), o1.data(),
+                  o2.data());
+    EXPECT_EQ(p0Orig, p0);
+    EXPECT_EQ(p1Orig, p1);
+    EXPECT_EQ(p2Orig, p2);
+
+    Con2020FieldArray(n, p0.data(), p1.data(), p2.data(), o0.data(), o1.data(),
+                      o2.data());
+    EXPECT_EQ(p0Orig, p0);
+    EXPECT_EQ(p1Orig, p1);
+    EXPECT_EQ(p2Orig, p2);
+
+    ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "jrm33", "Con2020",
+                    true, true, o0.data(), o1.data(), o2.data());
+    EXPECT_EQ(p0Orig, p0);
+    EXPECT_EQ(p1Orig, p1);
+    EXPECT_EQ(p2Orig, p2);
+}
+
+TEST(Regressions, TraceWrapperTraceDirContracts) {
+    ConfigureModelsForBaseline();
+
+    const std::vector<std::array<double, 3>> starts = {{5.0, 0.0, 0.0}};
+
+    std::vector<int> nstep;
+    std::vector<double *> s;
+    std::vector<double *> rnorm;
+    std::vector<double *> fp;
+
+    RunTraceWithDir(starts, -1, &nstep, &s, &rnorm, &fp);
+    ASSERT_EQ(1, static_cast<int>(nstep.size()));
+    EXPECT_GT(nstep[0], 0);
+    EXPECT_TRUE(std::isnan(s[0][0]));
+    EXPECT_TRUE(std::isnan(rnorm[0][0]));
+    EXPECT_TRUE(std::isnan(fp[0][0]));
+    delete[] s[0];
+    delete[] rnorm[0];
+    delete[] fp[0];
+
+    RunTraceWithDir(starts, 1, &nstep, &s, &rnorm, &fp);
+    ASSERT_EQ(1, static_cast<int>(nstep.size()));
+    EXPECT_GT(nstep[0], 0);
+    EXPECT_TRUE(std::isnan(s[0][0]));
+    EXPECT_TRUE(std::isnan(rnorm[0][0]));
+    EXPECT_TRUE(std::isnan(fp[0][0]));
+    delete[] s[0];
+    delete[] rnorm[0];
+    delete[] fp[0];
+
+    RunTraceWithDir(starts, 0, &nstep, &s, &rnorm, &fp);
+    ASSERT_EQ(1, static_cast<int>(nstep.size()));
+    EXPECT_GT(nstep[0], 0);
+    EXPECT_FALSE(std::isnan(s[0][0]));
+    EXPECT_FALSE(std::isnan(fp[0][0]));
+    delete[] s[0];
+    delete[] rnorm[0];
+    delete[] fp[0];
 }

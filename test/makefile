@@ -9,6 +9,7 @@ CCW=x86_64-w64-mingw32-g++-win32 $(CFLAGS)
 GTEST_DIR=external/googletest
 GTEST_REPO=https://github.com/google/googletest.git
 GTEST_TAG=v1.14.0
+GTEST_SHARDS?=2
 
 ifeq ($(OS),Windows_NT)
 	LDFLAGS=-L ../lib -ljupitermag
@@ -45,7 +46,7 @@ setup-gtest:
 		echo "googletest already exists in $(GTEST_DIR)"; \
 	fi
 
-gtest: setup-gtest
+regression_gtest: setup-gtest
 	$(CC) -I ../include \
 		-I $(GTEST_DIR)/googletest/include \
 		-I $(GTEST_DIR)/googletest \
@@ -53,4 +54,13 @@ gtest: setup-gtest
 		$(GTEST_DIR)/googletest/src/gtest-all.cc \
 		$(GTEST_DIR)/googletest/src/gtest_main.cc \
 		-o regression_gtest $(LDFLAGS) -pthread
+
+gtest: regression_gtest
 	./regression_gtest
+
+gtest-parallel: regression_gtest
+	@echo "Running gtest in $(GTEST_SHARDS) shards"
+	@for i in $$(seq 0 $$(( $(GTEST_SHARDS) - 1 ))); do \
+		GTEST_TOTAL_SHARDS=$(GTEST_SHARDS) GTEST_SHARD_INDEX=$$i ./regression_gtest & \
+	done; \
+	wait
