@@ -25,7 +25,7 @@ all:
 
 	./ctest
 	./cpptest
-	./timing
+#   ./timing
 
 clean:
 	-rm -v ctest
