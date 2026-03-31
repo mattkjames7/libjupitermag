@@ -57,6 +57,12 @@ bool TraceField(int n, double *x0, double *y0, double *z0, const char *IntFunc,
                 double *alpha, double *halpha);
 }
 
+void SIIItoMag(double x3, double y3, double z3, double xt, double xp,
+               double *xm, double *ym, double *zm);
+void MagtoSIII(double xm, double ym, double zm, double xt, double xp,
+               double *x3, double *y3, double *z3);
+double planetRadius(double x, double y, double z, double a, double b);
+
 namespace {
 
 constexpr double kDeg2Rad = M_PI / 180.0;
@@ -64,6 +70,8 @@ constexpr double kFieldAbsTol = 1e-6;
 constexpr double kFieldRelTol = 1e-6;
 constexpr double kTraceAbsTol = 1e-6;
 constexpr double kTraceRelTol = 1e-6;
+constexpr double kGeomAbsTol = 1e-5;
+constexpr double kGeomRelTol = 1e-5;
 
 bool NearlyEqual(double expected, double actual, double absTol, double relTol) {
     const double diff = std::fabs(expected - actual);
@@ -143,6 +151,92 @@ std::vector<std::array<double, 3>> RegressionPoints() {
         {30.0, 0.0, 15.0},
         {40.0, 5.0, -20.0},
     };
+}
+
+using Footprint49 = std::array<double, 49>;
+
+std::vector<Footprint49> RunTraceAndGetFootprints(
+    const std::vector<std::array<double, 3>> &starts) {
+    const int n = static_cast<int>(starts.size());
+    const int maxLen = 2000;
+
+    std::vector<double> x0(n), y0(n), z0(n);
+    for (int i = 0; i < n; i++) {
+        x0[i] = starts[i][0];
+        y0[i] = starts[i][1];
+        z0[i] = starts[i][2];
+    }
+
+    const char *internal = "jrm33";
+    int nExt = 1;
+    char extName[] = "Con2020";
+    char *externalNames[1] = {extName};
+
+    std::vector<int> nstep(n);
+    std::vector<double *> x(n), y(n), z(n), bx(n), by(n), bz(n), r(n), s(n),
+        rnorm(n), fp(n);
+    std::vector<int *> traceRegion(n);
+
+    for (int i = 0; i < n; i++) {
+        x[i] = new double[maxLen];
+        y[i] = new double[maxLen];
+        z[i] = new double[maxLen];
+        bx[i] = new double[maxLen];
+        by[i] = new double[maxLen];
+        bz[i] = new double[maxLen];
+        r[i] = new double[maxLen];
+        s[i] = new double[maxLen];
+        rnorm[i] = new double[maxLen];
+        traceRegion[i] = new int[maxLen];
+        fp[i] = new double[49];
+    }
+
+    const bool ok = TraceField(n, x0.data(), y0.data(), z0.data(), internal, nExt,
+                               externalNames, maxLen, 1.0, 0.5, 0.001, 1e-4,
+                               0.05, false, 0, 1.0, 0.93513, 0.94212, 0.94212,
+                               nstep.data(), x.data(), y.data(), z.data(),
+                               bx.data(), by.data(), bz.data(), r.data(),
+                               s.data(), rnorm.data(), traceRegion.data(),
+                               fp.data(), 0, nullptr, nullptr);
+
+    if (!ok) {
+        for (int i = 0; i < n; i++) {
+            delete[] x[i];
+            delete[] y[i];
+            delete[] z[i];
+            delete[] bx[i];
+            delete[] by[i];
+            delete[] bz[i];
+            delete[] r[i];
+            delete[] s[i];
+            delete[] rnorm[i];
+            delete[] traceRegion[i];
+            delete[] fp[i];
+        }
+        throw std::runtime_error("TraceField failed in RunTraceAndGetFootprints");
+    }
+
+    std::vector<Footprint49> out(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 49; j++) {
+            out[i][j] = fp[i][j];
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        delete[] x[i];
+        delete[] y[i];
+        delete[] z[i];
+        delete[] bx[i];
+        delete[] by[i];
+        delete[] bz[i];
+        delete[] r[i];
+        delete[] s[i];
+        delete[] rnorm[i];
+        delete[] traceRegion[i];
+        delete[] fp[i];
+    }
+    return out;
 }
 
 }  // namespace
@@ -385,53 +479,15 @@ TEST(Regressions, TraceFootprintBaselineCSV) {
     const auto rows = ReadNumericCSV(file, 29);
     ASSERT_FALSE(rows.empty());
 
-    const int n = static_cast<int>(rows.size());
-    const int maxLen = 2000;
-
-    std::vector<double> x0(n), y0(n), z0(n);
-    for (int i = 0; i < n; i++) {
-        x0[i] = rows[i][1];
-        y0[i] = rows[i][2];
-        z0[i] = rows[i][3];
+    std::vector<std::array<double, 3>> starts(rows.size());
+    for (size_t i = 0; i < rows.size(); i++) {
+        starts[i] = {rows[i][1], rows[i][2], rows[i][3]};
     }
+    const auto fps = RunTraceAndGetFootprints(starts);
 
-    const char *internal = "jrm33";
-    int nExt = 1;
-    char extName[] = "Con2020";
-    char *externalNames[1] = {extName};
-
-    std::vector<int> nstep(n);
-    std::vector<double *> x(n), y(n), z(n), bx(n), by(n), bz(n), r(n), s(n),
-        rnorm(n), fp(n);
-    std::vector<int *> traceRegion(n);
-
-    for (int i = 0; i < n; i++) {
-        x[i] = new double[maxLen];
-        y[i] = new double[maxLen];
-        z[i] = new double[maxLen];
-        bx[i] = new double[maxLen];
-        by[i] = new double[maxLen];
-        bz[i] = new double[maxLen];
-        r[i] = new double[maxLen];
-        s[i] = new double[maxLen];
-        rnorm[i] = new double[maxLen];
-        traceRegion[i] = new int[maxLen];
-        fp[i] = new double[49];
-    }
-
-    const bool ok = TraceField(n, x0.data(), y0.data(), z0.data(), internal, nExt,
-                               externalNames, maxLen, 1.0, 0.5, 0.001, 1e-4,
-                               0.05, false, 0, 1.0, 0.93513, 0.94212, 0.94212,
-                               nstep.data(), x.data(), y.data(), z.data(),
-                               bx.data(), by.data(), bz.data(), r.data(),
-                               s.data(), rnorm.data(), traceRegion.data(),
-                               fp.data(), 0, nullptr, nullptr);
-
-    ASSERT_TRUE(ok);
-
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < rows.size(); i++) {
         const auto &row = rows[i];
-        const double *traceFp = fp[i];
+        const auto &traceFp = fps[i];
 
         EXPECT_TRUE(NearlyEqual(row[4], traceFp[0], kTraceAbsTol, kTraceRelTol))
             << i;
@@ -489,18 +545,149 @@ TEST(Regressions, TraceFootprintBaselineCSV) {
         EXPECT_TRUE(NearlyEqual(row[28], traceFp[46], kTraceAbsTol, kTraceRelTol))
             << i;
     }
+}
 
-    for (int i = 0; i < n; i++) {
-        delete[] x[i];
-        delete[] y[i];
-        delete[] z[i];
-        delete[] bx[i];
-        delete[] by[i];
-        delete[] bz[i];
-        delete[] r[i];
-        delete[] s[i];
-        delete[] rnorm[i];
-        delete[] traceRegion[i];
-        delete[] fp[i];
+TEST(Regressions, CoordinateRoundTripSIIIAndMag) {
+    const std::vector<std::array<double, 3>> vectors = {
+        {1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0},
+        {3.0, -2.0, 5.0},
+        {-4.5, 1.3, 2.2},
+    };
+    const std::vector<std::array<double, 2>> angles = {
+        {0.0, 0.0},
+        {10.25 * kDeg2Rad, 163.62 * kDeg2Rad},
+        {5.0 * kDeg2Rad, 45.0 * kDeg2Rad},
+        {15.0 * kDeg2Rad, 270.0 * kDeg2Rad},
+    };
+
+    for (const auto &v : vectors) {
+        for (const auto &a : angles) {
+            double xm = 0.0, ym = 0.0, zm = 0.0;
+            double x3 = 0.0, y3 = 0.0, z3 = 0.0;
+            SIIItoMag(v[0], v[1], v[2], a[0], a[1], &xm, &ym, &zm);
+            MagtoSIII(xm, ym, zm, a[0], a[1], &x3, &y3, &z3);
+
+            EXPECT_TRUE(NearlyEqual(v[0], x3, kGeomAbsTol, kGeomRelTol));
+            EXPECT_TRUE(NearlyEqual(v[1], y3, kGeomAbsTol, kGeomRelTol));
+            EXPECT_TRUE(NearlyEqual(v[2], z3, kGeomAbsTol, kGeomRelTol));
+        }
+    }
+}
+
+TEST(Regressions, FootprintGeometryAndRanges) {
+    ConfigureModelsForBaseline();
+
+    const auto rows = ReadNumericCSV(TestDataDir() / "trace_summary.csv", 29);
+    ASSERT_FALSE(rows.empty());
+
+    const double as = 1.0;
+    const double bs = 0.93513;
+    const double ai = 0.94212;
+    const double bi = 0.94212;
+
+    for (size_t i = 0; i < rows.size(); i++) {
+        const auto &r = rows[i];
+
+        const double rin = std::sqrt(r[4] * r[4] + r[5] * r[5] + r[6] * r[6]);
+        const double ris = std::sqrt(r[7] * r[7] + r[8] * r[8] + r[9] * r[9]);
+        const double rsn = std::sqrt(r[10] * r[10] + r[11] * r[11] + r[12] * r[12]);
+        const double rss = std::sqrt(r[13] * r[13] + r[14] * r[14] + r[15] * r[15]);
+
+        EXPECT_TRUE(NearlyEqual(ai, rin, 2e-3, 2e-3)) << i;
+        EXPECT_TRUE(NearlyEqual(bi, ris, 2e-3, 2e-3)) << i;
+
+        const double sNorth =
+            ((r[10] * r[10] + r[11] * r[11]) / (as * as)) +
+            ((r[12] * r[12]) / (bs * bs));
+        const double sSouth =
+            ((r[13] * r[13] + r[14] * r[14]) / (as * as)) +
+            ((r[15] * r[15]) / (bs * bs));
+        EXPECT_TRUE(NearlyEqual(1.0, sNorth, 5e-3, 5e-3)) << i;
+        EXPECT_TRUE(NearlyEqual(1.0, sSouth, 5e-3, 5e-3)) << i;
+
+        for (int j = 19; j <= 26; j++) {
+            EXPECT_TRUE(std::isfinite(r[j])) << "row=" << i << " col=" << j;
+        }
+        EXPECT_GE(r[19], -90.0);
+        EXPECT_LE(r[19], 90.0);
+        EXPECT_GE(r[21], -90.0);
+        EXPECT_LE(r[21], 90.0);
+        EXPECT_GE(r[23], -90.0);
+        EXPECT_LE(r[23], 90.0);
+        EXPECT_GE(r[25], -90.0);
+        EXPECT_LE(r[25], 90.0);
+
+        EXPECT_GE(r[20], -180.0);
+        EXPECT_LE(r[20], 180.0);
+        EXPECT_GE(r[22], -180.0);
+        EXPECT_LE(r[22], 180.0);
+        EXPECT_GE(r[24], -180.0);
+        EXPECT_LE(r[24], 180.0);
+        EXPECT_GE(r[26], -180.0);
+        EXPECT_LE(r[26], 180.0);
+    }
+}
+
+TEST(Regressions, DeterministicFieldAndTraceFootprints) {
+    ConfigureModelsForBaseline();
+
+    const auto points = RegressionPoints();
+    for (const auto &p : points) {
+        double b0a = 0.0, b1a = 0.0, b2a = 0.0;
+        double b0b = 0.0, b1b = 0.0, b2b = 0.0;
+        ModelField(p[0], p[1], p[2], "jrm33", "Con2020", true, true, &b0a, &b1a,
+                   &b2a);
+        ModelField(p[0], p[1], p[2], "jrm33", "Con2020", true, true, &b0b, &b1b,
+                   &b2b);
+        EXPECT_TRUE(NearlyEqual(b0a, b0b, kFieldAbsTol, kFieldRelTol));
+        EXPECT_TRUE(NearlyEqual(b1a, b1b, kFieldAbsTol, kFieldRelTol));
+        EXPECT_TRUE(NearlyEqual(b2a, b2b, kFieldAbsTol, kFieldRelTol));
+    }
+
+    const std::vector<std::array<double, 3>> starts = {{5.0, 0.0, 0.0}};
+    const auto fpA = RunTraceAndGetFootprints(starts);
+    const auto fpB = RunTraceAndGetFootprints(starts);
+    ASSERT_EQ(fpA.size(), fpB.size());
+    for (size_t i = 0; i < fpA.size(); i++) {
+        for (int j = 0; j < 49; j++) {
+            EXPECT_TRUE(NearlyEqual(fpA[i][j], fpB[i][j], kTraceAbsTol,
+                                    kTraceRelTol))
+                << "row=" << i << " col=" << j;
+        }
+    }
+}
+
+TEST(Regressions, EdgeBehaviorAndInvalidModelPointer) {
+    ConfigureModelsForBaseline();
+
+    const modelFieldPtr invalid = getModelFieldPtr("definitely_not_a_model");
+    EXPECT_EQ(nullptr, invalid);
+
+    const std::vector<std::array<double, 3>> edgePoints = {
+        {0.0, 0.0, 0.0},
+        {1e-6, -1e-6, 1e-6},
+        {100.0, -100.0, 30.0},
+    };
+    for (size_t i = 0; i < edgePoints.size(); i++) {
+        const auto &p = edgePoints[i];
+        double b0 = 0.0, b1 = 0.0, b2 = 0.0;
+        ModelField(p[0], p[1], p[2], "none", "none", true, true, &b0, &b1, &b2);
+        EXPECT_TRUE(NearlyEqual(0.0, b0, kFieldAbsTol, kFieldRelTol));
+        EXPECT_TRUE(NearlyEqual(0.0, b1, kFieldAbsTol, kFieldRelTol));
+        EXPECT_TRUE(NearlyEqual(0.0, b2, kFieldAbsTol, kFieldRelTol));
+
+        ModelField(p[0], p[1], p[2], "jrm33", "Con2020", true, true, &b0, &b1,
+                   &b2);
+        EXPECT_FALSE(std::isinf(b0));
+        EXPECT_FALSE(std::isinf(b1));
+        EXPECT_FALSE(std::isinf(b2));
+
+        if (i == edgePoints.size() - 1) {
+            EXPECT_TRUE(std::isfinite(b0));
+            EXPECT_TRUE(std::isfinite(b1));
+            EXPECT_TRUE(std::isfinite(b2));
+        }
     }
 }
