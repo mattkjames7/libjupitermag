@@ -122,6 +122,19 @@ std::vector<std::vector<double>> ReadNumericCSV(const std::filesystem::path &fil
     return rows;
 }
 
+std::vector<std::string> ReadCSVHeader(const std::filesystem::path &file) {
+    std::ifstream in(file);
+    if (!in) {
+        throw std::runtime_error("Could not open: " + file.string());
+    }
+    std::string header;
+    std::getline(in, header);
+    if (header.empty()) {
+        throw std::runtime_error("Empty header in: " + file.string());
+    }
+    return SplitCSV(header);
+}
+
 void ConfigureModelsForBaseline() {
     char model[64] = {0};
     bool cartIn = true;
@@ -365,6 +378,32 @@ TEST(Regressions, InternalConfigRoundTrip) {
     EXPECT_EQ(requestedMaxDeg, gotMaxDeg);
 
     SetInternalCFG("jrm33", true, true, maxDeg);
+}
+
+TEST(Regressions, BaselineCSVSchema) {
+    const auto fieldHeader = ReadCSVHeader(TestDataDir() / "field_baseline.csv");
+    const std::vector<std::string> expectedFieldHeader = {
+        "x",          "y",          "z",          "internal_bx",
+        "internal_by", "internal_bz", "external_bx", "external_by",
+        "external_bz", "combined_bx", "combined_by", "combined_bz"};
+    EXPECT_EQ(expectedFieldHeader, fieldHeader);
+
+    const auto traceHeader = ReadCSVHeader(TestDataDir() / "trace_summary.csv");
+    const std::vector<std::string> expectedTraceHeader = {
+        "trace_index",     "start_x",        "start_y",        "start_z",
+        "ion_north_x",     "ion_north_y",    "ion_north_z",    "ion_south_x",
+        "ion_south_y",     "ion_south_z",    "surf_north_x",   "surf_north_y",
+        "surf_north_z",    "surf_south_x",   "surf_south_y",   "surf_south_z",
+        "eq_mag_x",        "eq_mag_y",       "eq_mag_z",       "ion_north_lat",
+        "ion_north_lon",   "ion_south_lat",  "ion_south_lon",  "surf_north_lat",
+        "surf_north_lon",  "surf_south_lat", "surf_south_lon", "eq_mlon",
+        "eq_lshell"};
+    EXPECT_EQ(expectedTraceHeader, traceHeader);
+
+    const auto fieldRows = ReadNumericCSV(TestDataDir() / "field_baseline.csv", 12);
+    const auto traceRows = ReadNumericCSV(TestDataDir() / "trace_summary.csv", 29);
+    EXPECT_FALSE(fieldRows.empty());
+    EXPECT_FALSE(traceRows.empty());
 }
 
 TEST(Regressions, Con2020ConfigRoundTrip) {
