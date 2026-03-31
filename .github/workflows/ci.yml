@@ -30,11 +30,6 @@ jobs:
       - name: Build library and linked components
         run: make
 
-      - name: Generate baseline data
-        run: |
-          cd test/savetestdata
-          make
-
       - name: Run regression tests
         run: |
           cd test
