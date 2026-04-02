@@ -31,10 +31,10 @@ This module forms part of the [JupiterMag](https://github.com/mattkjames7/Jupite
 
 ## Cloning and Building
 
-This module requires a few submodules to be fetched, so the following command should clone everything:
+Clone the repository:
 
 ```bash
-git clone --recurse-sumodules https://github.com/mattkjames7/libjupitermag.git
+git clone https://github.com/mattkjames7/libjupitermag.git
 ```
 
 This library can be built using either `make` (legacy workflow) or CMake.
@@ -51,14 +51,16 @@ cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build-cmake -j
 ```
 
-By default, CMake uses dependency sources in `lib/` (submodule workflow).
+Dependencies are fetched directly from Git using CMake FetchContent.
 
-To fetch dependencies directly from Git instead (no local submodule checkout required):
+To use a specific dependency revision or branch:
 
 ```bash
 cmake -S . -B build-cmake \
     -DCMAKE_BUILD_TYPE=Release \
-    -DLIBJUPITERMAG_USE_FETCHCONTENT=ON
+    -DLIBJUPITERMAG_LIBCON2020_GIT_TAG=<con2020-tag-or-sha> \
+    -DLIBJUPITERMAG_LIBSPLINE_GIT_TAG=<libspline-tag-or-sha> \
+    -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=<internalfield-tag-or-sha>
 cmake --build build-cmake -j
 ```
 

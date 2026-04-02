@@ -8,7 +8,6 @@ include(FetchContent)
 
 option(LIBJUPITERMAG_BUILD_TESTS "Build sample test executables" ON)
 option(LIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS "Build GoogleTest regression unit tests" ON)
-option(LIBJUPITERMAG_USE_FETCHCONTENT "Fetch dependencies with CMake instead of using local submodules" OFF)
 option(LIBJUPITERMAG_BUILD_TIMING_EXE "Build legacy timing executable" OFF)
 
 set(LIBJUPITERMAG_LIBCON2020_GIT_TAG "a55701a7c8a94aa5a2e2a15d6a77e8674539b3ff" CACHE STRING "Git tag/branch for libcon2020 when using FetchContent")
@@ -24,67 +23,46 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(LIBJUPITERMAG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(LIBJUPITERMAG_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-if(LIBJUPITERMAG_USE_FETCHCONTENT)
-    set(LIBINTERNALFIELD_BUILD_TESTS OFF CACHE BOOL "Disable libinternalfield tests in superbuild" FORCE)
+set(LIBINTERNALFIELD_BUILD_TESTS OFF CACHE BOOL "Disable libinternalfield tests in superbuild" FORCE)
 
-    FetchContent_Declare(
-        libcon2020
-        GIT_REPOSITORY https://github.com/mattkjames7/libcon2020.git
-        GIT_TAG ${LIBJUPITERMAG_LIBCON2020_GIT_TAG}
-    )
-    FetchContent_Declare(
-        libspline
-        GIT_REPOSITORY https://github.com/mattkjames7/libspline.git
-        GIT_TAG ${LIBJUPITERMAG_LIBSPLINE_GIT_TAG}
-    )
-    FetchContent_Declare(
-        libinternalfield
-        GIT_REPOSITORY https://github.com/mattkjames7/libinternalfield.git
-        GIT_TAG ${LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG}
-    )
+FetchContent_Declare(
+    libcon2020
+    GIT_REPOSITORY https://github.com/mattkjames7/libcon2020.git
+    GIT_TAG ${LIBJUPITERMAG_LIBCON2020_GIT_TAG}
+)
+FetchContent_Declare(
+    libspline
+    GIT_REPOSITORY https://github.com/mattkjames7/libspline.git
+    GIT_TAG ${LIBJUPITERMAG_LIBSPLINE_GIT_TAG}
+)
+FetchContent_Declare(
+    libinternalfield
+    GIT_REPOSITORY https://github.com/mattkjames7/libinternalfield.git
+    GIT_TAG ${LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG}
+)
 
-    FetchContent_GetProperties(libcon2020)
-    if(NOT libcon2020_POPULATED)
-        FetchContent_Populate(libcon2020)
-    endif()
-    add_subdirectory(${libcon2020_SOURCE_DIR}/src ${libcon2020_BINARY_DIR}/src EXCLUDE_FROM_ALL)
-
-    FetchContent_GetProperties(libspline)
-    if(NOT libspline_POPULATED)
-        FetchContent_Populate(libspline)
-    endif()
-    add_subdirectory(${libspline_SOURCE_DIR}/src ${libspline_BINARY_DIR}/src EXCLUDE_FROM_ALL)
-
-    FetchContent_GetProperties(libinternalfield)
-    if(NOT libinternalfield_POPULATED)
-        FetchContent_Populate(libinternalfield)
-    endif()
-    add_subdirectory(${libinternalfield_SOURCE_DIR} ${libinternalfield_BINARY_DIR} EXCLUDE_FROM_ALL)
-
-    set(LIBCON2020_ROOT ${libcon2020_SOURCE_DIR})
-    set(LIBSPLINE_ROOT ${libspline_SOURCE_DIR})
-    set(LIBINTERNALFIELD_ROOT ${libinternalfield_SOURCE_DIR})
-else()
-    set(LIBINTERNALFIELD_BUILD_TESTS OFF CACHE BOOL "Disable libinternalfield tests in superbuild" FORCE)
-
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/libcon2020/CMakeLists.txt")
-        message(FATAL_ERROR "Missing dependency at lib/libcon2020. Initialize submodules or set LIBJUPITERMAG_USE_FETCHCONTENT=ON.")
-    endif()
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/libspline/CMakeLists.txt")
-        message(FATAL_ERROR "Missing dependency at lib/libspline. Initialize submodules or set LIBJUPITERMAG_USE_FETCHCONTENT=ON.")
-    endif()
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/libinternalfield/CMakeLists.txt")
-        message(FATAL_ERROR "Missing dependency at lib/libinternalfield. Initialize submodules or set LIBJUPITERMAG_USE_FETCHCONTENT=ON.")
-    endif()
-
-    add_subdirectory(lib/libcon2020/src lib/libcon2020/build-cmake/src EXCLUDE_FROM_ALL)
-    add_subdirectory(lib/libspline/src lib/libspline/build-cmake/src EXCLUDE_FROM_ALL)
-    add_subdirectory(lib/libinternalfield lib/libinternalfield/build-cmake EXCLUDE_FROM_ALL)
-
-    set(LIBCON2020_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/lib/libcon2020)
-    set(LIBSPLINE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/lib/libspline)
-    set(LIBINTERNALFIELD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/lib/libinternalfield)
+FetchContent_GetProperties(libcon2020)
+if(NOT libcon2020_POPULATED)
+    FetchContent_Populate(libcon2020)
 endif()
+add_subdirectory(${libcon2020_SOURCE_DIR}/src ${libcon2020_BINARY_DIR}/src EXCLUDE_FROM_ALL)
+
+FetchContent_GetProperties(libspline)
+if(NOT libspline_POPULATED)
+    FetchContent_Populate(libspline)
+endif()
+add_subdirectory(${libspline_SOURCE_DIR}/src ${libspline_BINARY_DIR}/src EXCLUDE_FROM_ALL)
+
+FetchContent_GetProperties(libinternalfield)
+if(NOT libinternalfield_POPULATED)
+    FetchContent_Populate(libinternalfield)
+endif()
+add_subdirectory(${libinternalfield_SOURCE_DIR} ${libinternalfield_BINARY_DIR} EXCLUDE_FROM_ALL)
+
+set(LIBCON2020_ROOT ${libcon2020_SOURCE_DIR})
+set(LIBSPLINE_ROOT ${libspline_SOURCE_DIR})
+set(LIBINTERNALFIELD_ROOT ${libinternalfield_SOURCE_DIR})
+
 add_subdirectory(src)
 
 if(LIBJUPITERMAG_BUILD_TESTS)

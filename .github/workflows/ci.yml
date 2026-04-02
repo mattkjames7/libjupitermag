@@ -14,12 +14,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          submodules: recursive
 
       - name: Show tool versions
         run: |
@@ -31,6 +31,7 @@ jobs:
         run: |
           cmake -S . -B build-cmake \
             -DCMAKE_BUILD_TYPE=Release \
+            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
             -DLIBJUPITERMAG_BUILD_TESTS=ON \
             -DLIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS=ON
 
