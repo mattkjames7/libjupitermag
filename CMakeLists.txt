@@ -7,6 +7,7 @@ include(CTest)
 include(FetchContent)
 
 option(LIBJUPITERMAG_BUILD_TESTS "Build sample test executables" ON)
+option(LIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS "Build GoogleTest regression unit tests" ON)
 option(LIBJUPITERMAG_USE_FETCHCONTENT "Fetch dependencies with CMake instead of using local submodules" OFF)
 option(LIBJUPITERMAG_BUILD_TIMING_EXE "Build legacy timing executable" OFF)
 
@@ -84,71 +85,10 @@ else()
     set(LIBSPLINE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/lib/libspline)
     set(LIBINTERNALFIELD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/lib/libinternalfield)
 endif()
-
-set(LIBJUPITERMAG_SOURCES
-    src/model.cc
-    src/trace.cc
-    src/interptraceclosestpos.cc
-    src/footprint.cc
-    src/coordconv.cc
-    src/libjupitermag.cc
-)
-
-add_library(jupitermag_shared SHARED ${LIBJUPITERMAG_SOURCES})
-add_library(jupitermag_static STATIC ${LIBJUPITERMAG_SOURCES})
-
-set_target_properties(jupitermag_shared PROPERTIES OUTPUT_NAME jupitermag)
-set_target_properties(jupitermag_static PROPERTIES OUTPUT_NAME jupitermag)
-
-foreach(target jupitermag_shared jupitermag_static)
-    target_include_directories(${target}
-        PUBLIC
-            $<BUILD_INTERFACE:${LIBJUPITERMAG_INCLUDE_DIR}>
-            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        PRIVATE
-            ${LIBCON2020_ROOT}/include
-            ${LIBCON2020_ROOT}/src
-            ${LIBINTERNALFIELD_ROOT}/include
-            ${LIBSPLINE_ROOT}/include
-            ${LIBSPLINE_ROOT}/src
-            ${LIBJUPITERMAG_SRC_DIR}
-    )
-
-    target_compile_options(${target} PRIVATE -Wextra)
-
-    target_link_libraries(${target}
-        PUBLIC
-            con2020::con2020
-            internalfield
-            spline::spline
-            m
-    )
-endforeach()
+add_subdirectory(src)
 
 if(LIBJUPITERMAG_BUILD_TESTS)
-    add_executable(cpptest test/cpptest.cc)
-    target_link_libraries(cpptest PRIVATE jupitermag_shared)
-    target_include_directories(cpptest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
-
-    add_executable(ctest test/ctest.c)
-    set_target_properties(ctest PROPERTIES LINKER_LANGUAGE CXX)
-    target_link_libraries(ctest PRIVATE jupitermag_shared m)
-    target_include_directories(ctest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
-
-    if(LIBJUPITERMAG_BUILD_TIMING_EXE)
-        add_executable(timing test/timing.cc test/timing.h)
-        target_link_libraries(timing PRIVATE jupitermag_shared)
-        target_include_directories(timing PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
-    endif()
-
-    add_test(NAME ctest_sample COMMAND ctest)
-    add_test(NAME cpptest_sample COMMAND cpptest)
+    add_subdirectory(test)
 endif()
-
-install(TARGETS jupitermag_shared jupitermag_static
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
 
 install(FILES include/jupitermag.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
