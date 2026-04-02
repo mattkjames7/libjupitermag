@@ -27,9 +27,10 @@ void ModelField(double p0, double p1, double p2,
 	/* and the external field */
 	double Be0, Be1, Be2;
 	if (strcmp(external,"Con2020") == 0) {
-		con2020.SetCartIn(CartIn);
-		con2020.SetCartOut(CartOut);
-		con2020.Field(p0,p1,p2,&Be0,&Be1,&Be2);
+		con2020::Con2020 extModel;
+		extModel.SetCartIn(CartIn);
+		extModel.SetCartOut(CartOut);
+		extModel.Field(p0,p1,p2,&Be0,&Be1,&Be2);
 	} else {
 		Be0 = 0.0;
 		Be1 = 0.0;
@@ -75,9 +76,10 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 	double *Be1 = new double[n];
 	double *Be2 = new double[n];
 	if (strcmp(external,"Con2020") == 0) {
-		con2020.SetCartIn(CartIn);
-		con2020.SetCartOut(CartOut);
-		con2020.Field(n,p0,p1,p2,Be0,Be1,Be2);
+		con2020::Con2020 extModel;
+		extModel.SetCartIn(CartIn);
+		extModel.SetCartOut(CartOut);
+		extModel.Field(n,p0,p1,p2,Be0,Be1,Be2);
 	} else {
 		for (i=0;i<n;i++) {
 			Be0[i] = 0.0;

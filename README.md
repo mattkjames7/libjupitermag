@@ -37,7 +37,63 @@ This module requires a few submodules to be fetched, so the following command sh
 git clone --recurse-sumodules https://github.com/mattkjames7/libjupitermag.git
 ```
 
-This library requires `g++`, `make` and `ld` (Linux) or `libtool` (Mac) in order to be compiled. On Windows these tools can be provided by TDM-GCC.
+This library can be built using either `make` (legacy workflow) or CMake.
+
+For `make`, this library requires `g++`, `make` and `ld` (Linux) or `libtool` (Mac). On Windows these tools can be provided by TDM-GCC.
+
+For CMake, you will need CMake 3.16+ and a C/C++ compiler.
+
+### Build With CMake (Linux/macOS)
+
+```bash
+cd libjupitermag
+cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build-cmake -j
+```
+
+By default, CMake uses dependency sources in `lib/` (submodule workflow).
+
+To fetch dependencies directly from Git instead (no local submodule checkout required):
+
+```bash
+cmake -S . -B build-cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIBJUPITERMAG_USE_FETCHCONTENT=ON
+cmake --build build-cmake -j
+```
+
+Optional install step:
+
+```bash
+sudo cmake --install build-cmake
+```
+
+To change the install prefix:
+
+```bash
+cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build-cmake -j
+sudo cmake --install build-cmake
+```
+
+To build the sample test executables and run CTest:
+
+```bash
+cmake -S . -B build-cmake -DLIBJUPITERMAG_BUILD_TESTS=ON
+cmake --build build-cmake -j
+ctest --test-dir build-cmake -R "(ctest_sample|cpptest_sample)" --output-on-failure
+```
+
+Only `libjupitermag` sample tests are registered at the top level; dependency test suites are excluded.
+
+Optional: enable the legacy timing executable (off by default):
+
+```bash
+cmake -S . -B build-cmake -DLIBJUPITERMAG_BUILD_TIMING_EXE=ON
+cmake --build build-cmake --target timing -j
+```
+
+### Build With Make (Legacy)
 
 To build in Linux and Mac simply run
 

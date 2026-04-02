@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-#include "../lib/libinternalfield/include/internalfield.h"
-#include "../lib/libcon2020/include/con2020.h"
+#include "internalfield.h"
+#include "libcon2020.h"
 #endif
 
 extern "C" {

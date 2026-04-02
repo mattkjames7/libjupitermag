@@ -27,7 +27,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	int i;
 	for (i=0;i<nExt;i++) {
 		if (strcmp(ExtFunc[i],"Con2020") == 0) {
-			Funcs.push_back(Con2020Field);
+			Funcs.push_back(con2020::Con2020Field);
 		}
 	}
 
