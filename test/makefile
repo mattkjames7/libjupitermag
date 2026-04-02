@@ -10,6 +10,9 @@ GTEST_DIR=external/googletest
 GTEST_REPO=https://github.com/google/googletest.git
 GTEST_TAG=v1.14.0
 GTEST_SHARDS?=2
+REGRESSION_COMMON_SRC=unit/regression_common.cc
+REGRESSION_TEST_SRCS=$(wildcard unit/*_gtest.cc)
+REGRESSION_TEST_BINS=$(patsubst unit/%.cc,%,$(REGRESSION_TEST_SRCS))
 
 ifeq ($(OS),Windows_NT)
 	LDFLAGS=-L ../lib -ljupitermag
@@ -36,6 +39,7 @@ clean:
 	-rm -v cpptest
 	-rm -v timing
 	-rm -v regression_gtest
+	-rm -v $(REGRESSION_TEST_BINS)
 
 setup-gtest:
 	@mkdir -p external
@@ -46,21 +50,29 @@ setup-gtest:
 		echo "googletest already exists in $(GTEST_DIR)"; \
 	fi
 
-regression_gtest: setup-gtest
+
+regression_gtests: setup-gtest $(REGRESSION_TEST_BINS)
+
+$(REGRESSION_TEST_BINS): %: unit/%.cc $(REGRESSION_COMMON_SRC)
 	$(CC) -I ../include \
 		-I $(GTEST_DIR)/googletest/include \
 		-I $(GTEST_DIR)/googletest \
-		regression_gtest.cc \
+		$^ \
 		$(GTEST_DIR)/googletest/src/gtest-all.cc \
 		$(GTEST_DIR)/googletest/src/gtest_main.cc \
-		-o regression_gtest $(LDFLAGS) -pthread
+		-o $@ $(LDFLAGS) -pthread
 
-gtest: regression_gtest
-	./regression_gtest
+regression_gtest: regression_gtests
 
-gtest-parallel: regression_gtest
-	@echo "Running gtest in $(GTEST_SHARDS) shards"
-	@for i in $$(seq 0 $$(( $(GTEST_SHARDS) - 1 ))); do \
-		GTEST_TOTAL_SHARDS=$(GTEST_SHARDS) GTEST_SHARD_INDEX=$$i ./regression_gtest & \
+gtest: regression_gtests
+	@for t in $(REGRESSION_TEST_BINS); do \
+		echo "Running $$t"; \
+		./$$t; \
+	done
+
+gtest-parallel: regression_gtests
+	@echo "Running gtest binaries in parallel"
+	@for t in $(REGRESSION_TEST_BINS); do \
+		./$$t & \
 	done; \
 	wait
