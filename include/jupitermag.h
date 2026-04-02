@@ -1213,17 +1213,7 @@ double trapc(int n, double dx, double *y);
 ***************************************************************/
 double FluxCan(	double rho,double z, double r0, double r1,
 				double mui2, double D, 
-				double deltarho, double deltaz) {
-
-	double A0 = ScalarPotential(rho,z,r0,mui2,D,deltarho,deltaz);
-	double A1 = ScalarPotential(rho,z,r1,mui2,D,deltarho,deltaz);
-
-	/* according to Edwards et al., 2001 the flux is simply
-	rho times the scalar potential */
-	double F = rho*(A0 - A1);
-
-	return F;
-}
+				double deltarho, double deltaz);
 
 /***************************************************************
 *
@@ -1237,12 +1227,7 @@ double FluxCan(	double rho,double z, double r0, double r1,
 *       double  g		Magnetic dipole coefficient, nT
 *
 ***************************************************************/
-double FluxDip(double r, double theta, double g) {
-
-	double sint = sin(theta);
-	double F = (g*sint*sint)/r;
-	return F;
-}
+double FluxDip(double r, double theta, double g);
 
 
 

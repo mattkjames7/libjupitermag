@@ -51,13 +51,13 @@ all: internal con2020 spline
 	cd src; make all
 
 internal:
-	cd lib/libinternalfield; make header obj
+	cd lib/libinternalfield; make obj
 
 con2020:
-	cd lib/libcon2020; make header obj
+	cd lib/libcon2020; make obj
 
 spline:
-	cd lib/libspline; make header obj
+	cd lib/libspline; make obj
 
 obj:
 	$(MD) $(BUILDDIR)
