@@ -24,7 +24,7 @@ else
 	ARCFILE=libjupitermag.a
 endif
 
-all: header obj lib
+all: obj lib
 
 
 .PHONY: all lib clean header
