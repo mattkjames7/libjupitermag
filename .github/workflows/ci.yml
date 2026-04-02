@@ -1,4 +1,4 @@
-name: Linux PR Build and Test
+name: Linux CMake Build and Test
 
 on:
   pull_request:
@@ -24,13 +24,18 @@ jobs:
       - name: Show tool versions
         run: |
           g++ --version
-          make --version
+          cmake --version
           git --version
 
-      - name: Build library and linked components
-        run: make
-
-      - name: Run regression tests
+      - name: Configure CMake
         run: |
-          cd test
-          make gtest
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON \
+            -DLIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Run CTest
+        run: ctest --test-dir build-cmake --output-on-failure
