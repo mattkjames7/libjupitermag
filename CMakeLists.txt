@@ -9,6 +9,7 @@ include(FetchContent)
 option(LIBJUPITERMAG_BUILD_TESTS "Build sample test executables" ON)
 option(LIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS "Build GoogleTest regression unit tests" ON)
 option(LIBJUPITERMAG_BUILD_TIMING_EXE "Build legacy timing executable" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries instead of static" ON)
 
 set(LIBJUPITERMAG_LIBCON2020_GIT_TAG "a55701a7c8a94aa5a2e2a15d6a77e8674539b3ff" CACHE STRING "Git tag/branch for libcon2020 when using FetchContent")
 set(LIBJUPITERMAG_LIBSPLINE_GIT_TAG "0d3c05b291a3887541331423e0d2cbbcfe4c7bca" CACHE STRING "Git tag/branch for libspline when using FetchContent")

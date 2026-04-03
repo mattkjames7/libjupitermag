@@ -19,7 +19,7 @@ foreach(regression_test_source ${REGRESSION_TEST_SOURCES})
 
     target_link_libraries(${regression_test_name}
         PRIVATE
-            jupitermag_shared
+            jupitermag
             GTest::gtest_main
     )
 

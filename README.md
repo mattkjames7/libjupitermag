@@ -53,6 +53,12 @@ cmake --build build-cmake -j
 
 Dependencies are fetched directly from Git using CMake FetchContent.
 
+Migration note:
+
+- This project no longer uses git submodules for dependencies.
+- Dependency sources are resolved at CMake configure time.
+- Pin dependency refs with `*_GIT_TAG` cache variables for reproducible builds.
+
 To use a specific dependency revision or branch:
 
 ```bash
@@ -62,6 +68,16 @@ cmake -S . -B build-cmake \
     -DLIBJUPITERMAG_LIBSPLINE_GIT_TAG=<libspline-tag-or-sha> \
     -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=<internalfield-tag-or-sha>
 cmake --build build-cmake -j
+```
+
+Select shared or static library output (builds one type at a time):
+
+```bash
+# Shared library (default)
+cmake -S . -B build-cmake -DBUILD_SHARED_LIBS=ON
+
+# Static library
+cmake -S . -B build-cmake -DBUILD_SHARED_LIBS=OFF
 ```
 
 Optional install step:

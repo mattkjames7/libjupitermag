@@ -7,38 +7,35 @@ set(LIBJUPITERMAG_SOURCES
     libjupitermag.cc
 )
 
-add_library(jupitermag_shared SHARED ${LIBJUPITERMAG_SOURCES})
-add_library(jupitermag_static STATIC ${LIBJUPITERMAG_SOURCES})
+add_library(jupitermag ${LIBJUPITERMAG_SOURCES})
+add_library(jupitermag::jupitermag ALIAS jupitermag)
 
-set_target_properties(jupitermag_shared PROPERTIES OUTPUT_NAME jupitermag)
-set_target_properties(jupitermag_static PROPERTIES OUTPUT_NAME jupitermag)
+set_target_properties(jupitermag PROPERTIES OUTPUT_NAME jupitermag)
 
-foreach(target jupitermag_shared jupitermag_static)
-    target_include_directories(${target}
-        PUBLIC
-            $<BUILD_INTERFACE:${LIBJUPITERMAG_INCLUDE_DIR}>
-            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        PRIVATE
-            ${LIBCON2020_ROOT}/include
-            ${LIBCON2020_ROOT}/src
-            ${LIBINTERNALFIELD_ROOT}/include
-            ${LIBSPLINE_ROOT}/include
-            ${LIBSPLINE_ROOT}/src
-            ${LIBJUPITERMAG_SRC_DIR}
-    )
+target_include_directories(jupitermag
+    PUBLIC
+        $<BUILD_INTERFACE:${LIBJUPITERMAG_INCLUDE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    PRIVATE
+        ${LIBCON2020_ROOT}/include
+        ${LIBCON2020_ROOT}/src
+        ${LIBINTERNALFIELD_ROOT}/include
+        ${LIBSPLINE_ROOT}/include
+        ${LIBSPLINE_ROOT}/src
+        ${LIBJUPITERMAG_SRC_DIR}
+)
 
-    target_compile_options(${target} PRIVATE -Wextra)
+target_compile_options(jupitermag PRIVATE -Wextra)
 
-    target_link_libraries(${target}
-        PUBLIC
-            con2020::con2020
-            internalfield
-            spline::spline
-            m
-    )
-endforeach()
+target_link_libraries(jupitermag
+    PUBLIC
+        con2020::con2020
+        internalfield
+        spline::spline
+        m
+)
 
-install(TARGETS jupitermag_shared jupitermag_static
+install(TARGETS jupitermag
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

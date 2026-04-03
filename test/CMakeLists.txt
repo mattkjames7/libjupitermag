@@ -1,15 +1,15 @@
 add_executable(cpptest cpptest.cc)
-target_link_libraries(cpptest PRIVATE jupitermag_shared)
+target_link_libraries(cpptest PRIVATE jupitermag)
 target_include_directories(cpptest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
 
 add_executable(ctest ctest.c)
 set_target_properties(ctest PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(ctest PRIVATE jupitermag_shared m)
+target_link_libraries(ctest PRIVATE jupitermag m)
 target_include_directories(ctest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
 
 if(LIBJUPITERMAG_BUILD_TIMING_EXE)
     add_executable(timing timing.cc timing.h)
-    target_link_libraries(timing PRIVATE jupitermag_shared)
+    target_link_libraries(timing PRIVATE jupitermag)
     target_include_directories(timing PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
 endif()
 
