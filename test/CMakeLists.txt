@@ -16,17 +16,15 @@ endif()
 add_test(NAME ctest_sample COMMAND ctest)
 add_test(NAME cpptest_sample COMMAND cpptest)
 
-if(LIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS)
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/CMakeLists.txt")
-        add_subdirectory(external/googletest external/googletest-build EXCLUDE_FROM_ALL)
-    else()
-        FetchContent_Declare(
-            googletest
-            GIT_REPOSITORY https://github.com/google/googletest.git
-            GIT_TAG v1.14.0
-        )
-        FetchContent_MakeAvailable(googletest)
-    endif()
-
-    add_subdirectory(unit)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/CMakeLists.txt")
+    add_subdirectory(external/googletest external/googletest-build EXCLUDE_FROM_ALL)
+else()
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
+    )
+    FetchContent_MakeAvailable(googletest)
 endif()
+
+add_subdirectory(unit)

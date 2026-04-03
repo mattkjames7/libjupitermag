@@ -7,7 +7,6 @@ include(CTest)
 include(FetchContent)
 
 option(LIBJUPITERMAG_BUILD_TESTS "Build sample test executables" ON)
-option(LIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS "Build GoogleTest regression unit tests" ON)
 option(LIBJUPITERMAG_BUILD_TIMING_EXE "Build legacy timing executable" OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries instead of static" ON)
 

@@ -99,10 +99,10 @@ To build the sample test executables and run CTest:
 ```bash
 cmake -S . -B build-cmake -DLIBJUPITERMAG_BUILD_TESTS=ON
 cmake --build build-cmake -j
-ctest --test-dir build-cmake -R "(ctest_sample|cpptest_sample)" --output-on-failure
+ctest --test-dir build-cmake --output-on-failure
 ```
 
-Only `libjupitermag` sample tests are registered at the top level; dependency test suites are excluded.
+`LIBJUPITERMAG_BUILD_TESTS=ON` enables both sample tests and gtest regression tests. Dependency test suites remain excluded.
 
 Optional: enable the legacy timing executable (off by default):
 

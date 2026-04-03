@@ -33,8 +33,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=ON \
             -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
-            -DLIBJUPITERMAG_BUILD_TESTS=ON \
-            -DLIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS=ON
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build build-cmake -j 2
@@ -64,8 +63,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
             -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
-            -DLIBJUPITERMAG_BUILD_TESTS=ON \
-            -DLIBJUPITERMAG_BUILD_GTEST_UNIT_TESTS=ON
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build build-cmake -j 2
