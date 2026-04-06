@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 
 project(libjupitermag VERSION 1.5.0 LANGUAGES C CXX)
 
@@ -29,11 +29,13 @@ FetchContent_Declare(
     libcon2020
     GIT_REPOSITORY https://github.com/mattkjames7/libcon2020.git
     GIT_TAG ${LIBJUPITERMAG_LIBCON2020_GIT_TAG}
+    SOURCE_SUBDIR src
 )
 FetchContent_Declare(
     libspline
     GIT_REPOSITORY https://github.com/mattkjames7/libspline.git
     GIT_TAG ${LIBJUPITERMAG_LIBSPLINE_GIT_TAG}
+    SOURCE_SUBDIR src
 )
 FetchContent_Declare(
     libinternalfield
@@ -41,23 +43,7 @@ FetchContent_Declare(
     GIT_TAG ${LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG}
 )
 
-FetchContent_GetProperties(libcon2020)
-if(NOT libcon2020_POPULATED)
-    FetchContent_Populate(libcon2020)
-endif()
-add_subdirectory(${libcon2020_SOURCE_DIR}/src ${libcon2020_BINARY_DIR}/src EXCLUDE_FROM_ALL)
-
-FetchContent_GetProperties(libspline)
-if(NOT libspline_POPULATED)
-    FetchContent_Populate(libspline)
-endif()
-add_subdirectory(${libspline_SOURCE_DIR}/src ${libspline_BINARY_DIR}/src EXCLUDE_FROM_ALL)
-
-FetchContent_GetProperties(libinternalfield)
-if(NOT libinternalfield_POPULATED)
-    FetchContent_Populate(libinternalfield)
-endif()
-add_subdirectory(${libinternalfield_SOURCE_DIR} ${libinternalfield_BINARY_DIR} EXCLUDE_FROM_ALL)
+FetchContent_MakeAvailable(libcon2020 libspline libinternalfield)
 
 set(LIBCON2020_ROOT ${libcon2020_SOURCE_DIR})
 set(LIBSPLINE_ROOT ${libspline_SOURCE_DIR})
