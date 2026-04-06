@@ -655,6 +655,9 @@ void SIIItoMag(	double x3, double y3, double z3,
 				double *xm, double *ym, double *zm);
 
 
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 const double deg2rad = M_PI/180.0;
 const double rad2deg = 180.0/M_PI;
 
@@ -793,10 +796,6 @@ class Spline {
 		bool del_;
 };
 
-
-
-/* needed this to fix compilation using mingw32 for some reason*/
-    #define M_PI 3.14159265358979323846
 
 
 void interptraceClosestPos(	int n, double *x, double *y, double *z,
