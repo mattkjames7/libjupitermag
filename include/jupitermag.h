@@ -1697,6 +1697,7 @@ std::vector<Tkey> listMapKeys(std::map<Tkey,Tval> const &inmap) {
  * 		Class which can access all instances of Internal objects.
  * 
  * ********************************************************************/
+namespace internalfield {
 class InternalModel {
 	
 	public:
@@ -1752,7 +1753,8 @@ class InternalModel {
 
 
 /* we want to initialize the model objects witht heir parameters */
-InternalModel getInternalModel();
+InternalModel& getInternalModel();
+} // namespace internalfield
 
 extern "C" {
 }

@@ -28,7 +28,7 @@ void ModelField(double p0, double p1, double p2,
 				bool CartIn, bool CartOut,
 				double *B0, double *B1, double *B2) {
 
-	InternalModel internalModel = getInternalModel();
+	internalfield::InternalModel internalModel = internalfield::getInternalModel();
 	
 	/* get the internal field model */
 	int Deg;
@@ -69,7 +69,7 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 						bool CartIn, bool CartOut,
 						double *B0, double *B1, double *B2) {
 
-	InternalModel internalModel = getInternalModel();
+	internalfield::InternalModel internalModel = internalfield::getInternalModel();
 
 	/* get the internal field model */
 	int i, Deg;
