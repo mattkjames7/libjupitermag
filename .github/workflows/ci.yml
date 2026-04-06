@@ -70,3 +70,80 @@ jobs:
 
       - name: Run CTest
         run: ctest --test-dir build-cmake --output-on-failure
+
+  build-and-test-macos:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Show tool versions
+        run: |
+          c++ --version
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Run CTest
+        run: ctest --test-dir build-cmake --output-on-failure
+
+  build-and-test-windows-msys2:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            git
+
+      - name: Show tool versions
+        run: |
+          g++ --version
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON \
+            -G Ninja
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Run CTest
+        run: |
+          export PATH="$PWD/build-cmake/src:$PATH"
+          ctest --test-dir build-cmake --output-on-failure
