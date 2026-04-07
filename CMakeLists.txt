@@ -25,6 +25,11 @@ set(LIBJUPITERMAG_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(LIBINTERNALFIELD_BUILD_TESTS OFF CACHE BOOL "Disable libinternalfield tests in superbuild" FORCE)
 
+# Build all FetchContent dependencies as static libraries to avoid
+# platform-specific shared-library runtime lookup issues in CI.
+set(LIBJUPITERMAG_LOCAL_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries instead of static" FORCE)
+
 FetchContent_Declare(
     libcon2020
     GIT_REPOSITORY https://github.com/mattkjames7/libcon2020.git
@@ -44,6 +49,10 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(libcon2020 libspline libinternalfield)
+
+# Restore the originally requested build mode for libjupitermag and
+# subsequent local targets.
+set(BUILD_SHARED_LIBS ${LIBJUPITERMAG_LOCAL_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libraries instead of static" FORCE)
 
 set(LIBCON2020_ROOT ${libcon2020_SOURCE_DIR})
 set(LIBSPLINE_ROOT ${libspline_SOURCE_DIR})
