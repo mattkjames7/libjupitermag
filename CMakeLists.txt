@@ -12,7 +12,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries instead of static" ON)
 
 set(LIBJUPITERMAG_LIBCON2020_GIT_TAG "a55701a7c8a94aa5a2e2a15d6a77e8674539b3ff" CACHE STRING "Git tag/branch for libcon2020 when using FetchContent")
 set(LIBJUPITERMAG_LIBSPLINE_GIT_TAG "0d3c05b291a3887541331423e0d2cbbcfe4c7bca" CACHE STRING "Git tag/branch for libspline when using FetchContent")
-set(LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG "2d1e1f1272cc2e336c50546eacefb0012dc32e70" CACHE STRING "Git tag/branch for libinternalfield when using FetchContent")
+set(LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG "46008b41ab92ce39f789df44dfafe9072a2cc753" CACHE STRING "Git tag/branch for libinternalfield when using FetchContent")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
