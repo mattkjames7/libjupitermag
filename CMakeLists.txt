@@ -10,9 +10,9 @@ option(LIBJUPITERMAG_BUILD_TESTS "Build sample test executables" ON)
 option(LIBJUPITERMAG_BUILD_TIMING_EXE "Build legacy timing executable" OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries instead of static" ON)
 
-set(LIBJUPITERMAG_LIBCON2020_GIT_TAG "a55701a7c8a94aa5a2e2a15d6a77e8674539b3ff" CACHE STRING "Git tag/branch for libcon2020 when using FetchContent")
-set(LIBJUPITERMAG_LIBSPLINE_GIT_TAG "0d3c05b291a3887541331423e0d2cbbcfe4c7bca" CACHE STRING "Git tag/branch for libspline when using FetchContent")
-set(LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG "46008b41ab92ce39f789df44dfafe9072a2cc753" CACHE STRING "Git tag/branch for libinternalfield when using FetchContent")
+set(LIBJUPITERMAG_LIBCON2020_GIT_TAG "47ac846805c57448456a940937f34f5645dfc9cb" CACHE STRING "Git tag/branch for libcon2020 when using FetchContent")  # v1.2.0
+set(LIBJUPITERMAG_LIBSPLINE_GIT_TAG "3de8734a26f333ade75f2ee7d120003be3c32ff3" CACHE STRING "Git tag/branch for libspline when using FetchContent")  # v0.3.0
+set(LIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG "7e41bfaf92818aa74054250609f75a08254cfebc" CACHE STRING "Git tag/branch for libinternalfield when using FetchContent")  # v1.4.0
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
