@@ -18,7 +18,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	 * be configured. This function will not do any of that, so strange
 	 * things could happen. Make sure that all models are Cartesian in 
 	 * and out! */
-	std::vector<FieldFuncPtr> Funcs;
+	std::vector<jupitermag::FieldFuncPtr> Funcs;
 
 	/* internal model */
 	Funcs.push_back(getModelFieldPtr(IntFunc));
@@ -38,7 +38,7 @@ bool TraceField(int n, double *x0, double *y0, double *z0,
 	}
 
 	/* initialise the trace object */
-	Trace T(Funcs);
+	jupitermag::Trace T(Funcs);
 
 	/* add the starting positions fo the traces */
 	T.InputPos(n,x0,y0,z0);

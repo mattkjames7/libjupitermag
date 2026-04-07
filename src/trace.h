@@ -16,6 +16,8 @@
 
 
 /* this will be used for all of the model wrapper functions (configure model first) */
+namespace jupitermag {
+
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
 typedef std::tuple<bool,int> BoolIntTuple;
@@ -215,4 +217,6 @@ class Trace {
 							double *xe1, double *ye1, double *ze1);
 	
 };
+
+} /* namespace jupitermag */
 #endif

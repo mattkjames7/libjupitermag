@@ -1,5 +1,7 @@
 #include "traceclosestpos.h"
 
+namespace jupitermag {
+
 
 void traceClosestPos(	int n, double *x, double *y, double *z,
 						double *bx, double *by, double *bz,
@@ -215,3 +217,5 @@ void _ClosestPosLinear(int nc, double *cx, double *cy, double *cz,
 	
 
 }
+
+} /* namespace jupitermag */

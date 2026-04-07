@@ -7,6 +7,8 @@
 #include <algorithm>
 #include "coordconv.h"
 
+namespace jupitermag {
+
 const double deg2rad = M_PI/180.0;
 const double rad2deg = 180.0/M_PI;
 
@@ -120,5 +122,7 @@ void findFootprint(	double *x, double *y, double *z,
 void eqfootprints(	int n, double *x, double *y, double *z,
 					double *xfe, double *yfe, double *zfe,
 					double *L, double *Lon);
+
+}
 
 #endif

@@ -5,7 +5,8 @@
 #include "libspline.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#endif
+
+namespace jupitermag {
 
 void traceClosestPos(	int n, double *x, double *y, double *z,
 						double *bx, double *by, double *bz,
@@ -30,3 +31,7 @@ void _ClosestPosSpline(int nc, double *cx, double *cy, double *cz,
 void _ClosestPosLinear(int nc, double *cx, double *cy, double *cz,
 						double *costheta,
 						double *xc, double *yc, double *zc);
+
+} /* namespace jupitermag */
+
+#endif

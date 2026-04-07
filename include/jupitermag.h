@@ -645,6 +645,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 
+namespace jupitermag {
+
 
 void MagtoSIII(	double xm, double ym, double zm, 
 				double xt, double xp,
@@ -820,6 +822,8 @@ void OptimizePos(	double x, double y, double z,
 					double s0, 
 					Spline Sx, Spline Sy, Spline Sz,
 					double *xc, double *yc, double *zc);
+
+} /* namespace jupitermag */
 
 
 
@@ -1767,6 +1771,8 @@ extern "C" {
 
 
 /* this will be used for all of the model wrapper functions (configure model first) */
+namespace jupitermag {
+
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
 typedef std::tuple<bool,int> BoolIntTuple;
@@ -1966,6 +1972,8 @@ class Trace {
 							double *xe1, double *ye1, double *ze1);
 	
 };
+
+	} /* namespace jupitermag */
 
 
 

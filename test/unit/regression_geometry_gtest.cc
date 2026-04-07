@@ -25,8 +25,8 @@ TEST(Regressions, CoordinateRoundTripSIIIAndMag) {
         for (const auto &a : angles) {
             double xm = 0.0, ym = 0.0, zm = 0.0;
             double x3 = 0.0, y3 = 0.0, z3 = 0.0;
-            SIIItoMag(v[0], v[1], v[2], a[0], a[1], &xm, &ym, &zm);
-            MagtoSIII(xm, ym, zm, a[0], a[1], &x3, &y3, &z3);
+            jupitermag::SIIItoMag(v[0], v[1], v[2], a[0], a[1], &xm, &ym, &zm);
+            jupitermag::MagtoSIII(xm, ym, zm, a[0], a[1], &x3, &y3, &z3);
 
             EXPECT_TRUE(NearlyEqual(v[0], x3, kGeomAbsTol, kGeomRelTol));
             EXPECT_TRUE(NearlyEqual(v[1], y3, kGeomAbsTol, kGeomRelTol));

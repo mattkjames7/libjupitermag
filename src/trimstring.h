@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cctype>
 
+namespace jupitermag {
 
 // Function to trim whitespace from the start of a string
 std::string leftTrim(const std::string& str);
@@ -13,5 +14,7 @@ std::string rightTrim(const std::string& str);
 
 // Function to trim whitespace from both ends of a string
 std::string trimString(const std::string& str);
+
+} /* namespace jupitermag */
 
 #endif

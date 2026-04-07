@@ -1,5 +1,7 @@
 #include "model.h"
 
+namespace jupitermag {
+
 namespace {
 
 void ConfigureCon2020CartFlags(bool cartIn, bool cartOut) {
@@ -23,8 +25,8 @@ void ConfigureCon2020CartFlags(bool cartIn, bool cartOut) {
 
 }
 
-void ModelField(double p0, double p1, double p2, 
-				const char *internal, const char *external, 
+void ModelField(double p0, double p1, double p2,
+				const char *internal, const char *external,
 				bool CartIn, bool CartOut,
 				double *B0, double *B1, double *B2) {
 
@@ -64,8 +66,8 @@ void ModelField(double p0, double p1, double p2,
 
 }
 
-void ModelFieldArray(	int n, double *p0, double *p1, double *p2, 
-						const char *internal, const char *external, 
+void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+						const char *internal, const char *external,
 						bool CartIn, bool CartOut,
 						double *B0, double *B1, double *B2) {
 
@@ -119,4 +121,24 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 	delete[] Be0;
 	delete[] Be1;
 	delete[] Be2;
+}
+
+}
+
+extern "C" {
+
+void ModelField(double p0, double p1, double p2,
+				const char *internal, const char *external,
+				bool CartIn, bool CartOut,
+				double *B0, double *B1, double *B2) {
+	jupitermag::ModelField(p0,p1,p2,internal,external,CartIn,CartOut,B0,B1,B2);
+}
+
+void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+						const char *internal, const char *external,
+						bool CartIn, bool CartOut,
+						double *B0, double *B1, double *B2) {
+	jupitermag::ModelFieldArray(n,p0,p1,p2,internal,external,CartIn,CartOut,B0,B1,B2);
+}
+
 }

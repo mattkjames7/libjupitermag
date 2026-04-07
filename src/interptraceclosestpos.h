@@ -7,8 +7,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+namespace jupitermag {
 using spline::Spline;
-#endif
 
 
 /* needed this to fix compilation using mingw32 for some reason*/
@@ -39,3 +39,7 @@ void OptimizePos(	double x, double y, double z,
 					double s0, 
 					Spline Sx, Spline Sy, Spline Sz,
 					double *xc, double *yc, double *zc);
+
+}
+
+#endif

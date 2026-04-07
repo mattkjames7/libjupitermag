@@ -1,5 +1,7 @@
 #include "trace.h"
 
+namespace jupitermag {
+
 
 
 
@@ -1258,4 +1260,6 @@ void Trace::SetMagTiltAzimuth(double xp) {
 double Trace::GetMagTiltAzimuth() {
 	return xp_*rad2deg;
 }
+
+} /* namespace jupitermag */
 	
