@@ -4,7 +4,7 @@ target_include_directories(cpptest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
 
 add_executable(ctest ctest.c)
 set_target_properties(ctest PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(ctest PRIVATE jupitermag m)
+target_link_libraries(ctest PRIVATE jupitermag)
 target_include_directories(ctest PRIVATE ${LIBJUPITERMAG_INCLUDE_DIR})
 
 if(LIBJUPITERMAG_BUILD_TIMING_EXE)

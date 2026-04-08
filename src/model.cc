@@ -17,6 +17,10 @@ void ConfigureCon2020CartFlags(bool cartIn, bool cartOut) {
 					  &smooth, &deltaRho, &deltaZ, &g, azfunc,
 					  &wO_open, &wO_om, &thetamm, &dthetamm, &thetaoc, &dthetaoc);
 
+	if (currentCartIn == cartIn && currentCartOut == cartOut) {
+		return;
+	}
+
 	con2020::SetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
 				  edwards, errChk, cartIn, cartOut, smooth,
 				  deltaRho, deltaZ, g, azfunc,

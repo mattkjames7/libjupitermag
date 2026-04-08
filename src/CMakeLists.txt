@@ -25,15 +25,20 @@ target_include_directories(jupitermag
         ${LIBJUPITERMAG_SRC_DIR}
 )
 
-target_compile_options(jupitermag PRIVATE -Wextra)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(jupitermag PRIVATE -Wextra)
+endif()
 
 target_link_libraries(jupitermag
     PUBLIC
         con2020::con2020
         internalfield
         spline::spline
-        m
 )
+
+if (UNIX AND NOT APPLE)
+    target_link_libraries(jupitermag PUBLIC m)
+endif()
 
 install(TARGETS jupitermag
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
