@@ -1,5 +1,7 @@
 #include "coordconv.h"
 
+namespace jupitermag {
+
 void MagtoSIII(	double xm, double ym, double zm, 
 				double xt, double xp,
 				double *x3, double *y3, double *z3) {
@@ -55,4 +57,6 @@ void SIIItoMag(	double x3, double y3, double z3,
 	*ym = -x3*sinxp + y3*cosxp ;
 	*zm = xtmp*sinxt + z3*cosxt;
 	 
+}
+
 }

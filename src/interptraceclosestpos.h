@@ -2,11 +2,13 @@
 #define __INTERPTRACECLOSESTPOS_H__
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/libspline/include/spline.h"
+#include "libspline.h"
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#endif
+
+namespace jupitermag {
+using spline::Spline;
 
 
 /* needed this to fix compilation using mingw32 for some reason*/
@@ -37,3 +39,7 @@ void OptimizePos(	double x, double y, double z,
 					double s0, 
 					Spline Sx, Spline Sy, Spline Sz,
 					double *xc, double *yc, double *zc);
+
+}
+
+#endif

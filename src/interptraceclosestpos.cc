@@ -1,5 +1,7 @@
 #include "interptraceclosestpos.h"
 
+namespace jupitermag {
+
 void interptraceClosestPos(	int n, double *x, double *y, double *z,
 						double *bx, double *by, double *bz,
 						int n0, double *x0, double *y0, double *z0, double *s0,
@@ -218,3 +220,5 @@ void OptimizePos(	double x, double y, double z,
 		
 	//printf("s0: %f, scnt: %f, niter %d, d90: %f, da: %f, dot: %f, angle: %f\n",s0,scnt,n,fabs(0.5*(f[1]+f[0])),fabs(f[1]-f[0]),a,b);
 }
+
+} /* namespace jupitermag */

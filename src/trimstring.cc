@@ -1,5 +1,7 @@
 #include "trimstring.h"
 
+namespace jupitermag {
+
 
 
 
@@ -25,3 +27,5 @@ std::string rightTrim(const std::string& str) {
 std::string trimString(const std::string& str) {
     return leftTrim(rightTrim(str));
 }
+
+} /* namespace jupitermag */

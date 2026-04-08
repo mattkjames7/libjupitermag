@@ -1,11 +1,40 @@
 #include "model.h"
 
-void ModelField(double p0, double p1, double p2, 
-				const char *internal, const char *external, 
+namespace jupitermag {
+
+namespace {
+
+void ConfigureCon2020CartFlags(bool cartIn, bool cartOut) {
+	/* Preserve all Con2020 parameters and only update cartesian I/O flags. */
+	double mui, irho, r0, r1, d, xt, xp;
+	char eqtype[32] = {0};
+	bool edwards, errChk, currentCartIn, currentCartOut, smooth;
+	double deltaRho, deltaZ, g, wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc;
+	char azfunc[32] = {0};
+
+	con2020::GetCon2020Params(&mui, &irho, &r0, &r1, &d, &xt, &xp, eqtype,
+					  &edwards, &errChk, &currentCartIn, &currentCartOut,
+					  &smooth, &deltaRho, &deltaZ, &g, azfunc,
+					  &wO_open, &wO_om, &thetamm, &dthetamm, &thetaoc, &dthetaoc);
+
+	if (currentCartIn == cartIn && currentCartOut == cartOut) {
+		return;
+	}
+
+	con2020::SetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
+				  edwards, errChk, cartIn, cartOut, smooth,
+				  deltaRho, deltaZ, g, azfunc,
+				  wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
+}
+
+}
+
+void ModelField(double p0, double p1, double p2,
+				const char *internal, const char *external,
 				bool CartIn, bool CartOut,
 				double *B0, double *B1, double *B2) {
 
-	InternalModel internalModel = getInternalModel();
+	internalfield::InternalModel internalModel = internalfield::getInternalModel();
 	
 	/* get the internal field model */
 	int Deg;
@@ -27,9 +56,8 @@ void ModelField(double p0, double p1, double p2,
 	/* and the external field */
 	double Be0, Be1, Be2;
 	if (strcmp(external,"Con2020") == 0) {
-		con2020.SetCartIn(CartIn);
-		con2020.SetCartOut(CartOut);
-		con2020.Field(p0,p1,p2,&Be0,&Be1,&Be2);
+		ConfigureCon2020CartFlags(CartIn,CartOut);
+		con2020::Con2020Field(p0,p1,p2,&Be0,&Be1,&Be2);
 	} else {
 		Be0 = 0.0;
 		Be1 = 0.0;
@@ -42,12 +70,12 @@ void ModelField(double p0, double p1, double p2,
 
 }
 
-void ModelFieldArray(	int n, double *p0, double *p1, double *p2, 
-						const char *internal, const char *external, 
+void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+						const char *internal, const char *external,
 						bool CartIn, bool CartOut,
 						double *B0, double *B1, double *B2) {
 
-	InternalModel internalModel = getInternalModel();
+	internalfield::InternalModel internalModel = internalfield::getInternalModel();
 
 	/* get the internal field model */
 	int i, Deg;
@@ -75,9 +103,8 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 	double *Be1 = new double[n];
 	double *Be2 = new double[n];
 	if (strcmp(external,"Con2020") == 0) {
-		con2020.SetCartIn(CartIn);
-		con2020.SetCartOut(CartOut);
-		con2020.Field(n,p0,p1,p2,Be0,Be1,Be2);
+		ConfigureCon2020CartFlags(CartIn,CartOut);
+		con2020::Con2020FieldArray(n,p0,p1,p2,Be0,Be1,Be2);
 	} else {
 		for (i=0;i<n;i++) {
 			Be0[i] = 0.0;
@@ -98,4 +125,24 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 	delete[] Be0;
 	delete[] Be1;
 	delete[] Be2;
+}
+
+}
+
+extern "C" {
+
+void ModelField(double p0, double p1, double p2,
+				const char *internal, const char *external,
+				bool CartIn, bool CartOut,
+				double *B0, double *B1, double *B2) {
+	jupitermag::ModelField(p0,p1,p2,internal,external,CartIn,CartOut,B0,B1,B2);
+}
+
+void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
+						const char *internal, const char *external,
+						bool CartIn, bool CartOut,
+						double *B0, double *B1, double *B2) {
+	jupitermag::ModelFieldArray(n,p0,p1,p2,internal,external,CartIn,CartOut,B0,B1,B2);
+}
+
 }

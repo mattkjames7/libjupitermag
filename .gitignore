@@ -35,3 +35,5 @@
 
 .vscode/
 test/external/
+build/
+build-cmake/

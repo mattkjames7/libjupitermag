@@ -1,5 +1,7 @@
 #include "footprint.h"
 
+namespace jupitermag {
+
 
 void FillFPOutputArray(int n, FPstr *fpi, FPstr *fps, EqFPstr *fpe, double **FP) {
 
@@ -606,3 +608,5 @@ void calculateEquatorialFootprints(int n, double *x, double *y, double *z,
 	efp->lshell = sqrt(x[indmxr]*x[indmxr] + y[indmxr]*y[indmxr] + z[indmxr]*z[indmxr]);
 	efp->mlone = atan2(y[indmxr],x[indmxr]);
 }
+
+} /* namespace jupitermag */

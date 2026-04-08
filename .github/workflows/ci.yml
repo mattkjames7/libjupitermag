@@ -1,4 +1,4 @@
-name: Linux PR Build and Test
+name: CMake Build and Test
 
 on:
   pull_request:
@@ -7,30 +7,208 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: linux-pr-${{ github.workflow }}-${{ github.ref }}
+  group: pr-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
+  build-and-test-linux-shared:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          submodules: recursive
 
       - name: Show tool versions
         run: |
           g++ --version
-          make --version
+          cmake --version
           git --version
 
-      - name: Build library and linked components
-        run: make
-
-      - name: Run regression tests
+      - name: Configure CMake
         run: |
-          cd test
-          make gtest
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Install and verify layout
+        run: |
+          set -euo pipefail
+          prefix="$(mktemp -d)"
+          cmake --install build-cmake --prefix "${prefix}"
+          find "${prefix}" -type f | sort
+
+          test -f "${prefix}/include/jupitermag.h"
+          test -f "${prefix}/include/con2020.h"
+          test -f "${prefix}/include/spline.h"
+          test -f "${prefix}/include/internalfield.h"
+
+          test -f "${prefix}/lib/libcon2020.a"
+          test -f "${prefix}/lib/libspline.a"
+          test -f "${prefix}/lib/libinternalfield.a"
+          test -f "${prefix}/lib/libjupitermag.so"
+
+      - name: Run CTest
+        run: ctest --test-dir build-cmake --output-on-failure
+
+  build-and-test-linux-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Show tool versions
+        run: |
+          g++ --version
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Install and verify layout
+        run: |
+          set -euo pipefail
+          prefix="$(mktemp -d)"
+          cmake --install build-cmake --prefix "${prefix}"
+          find "${prefix}" -type f | sort
+
+          test -f "${prefix}/include/jupitermag.h"
+          test -f "${prefix}/include/con2020.h"
+          test -f "${prefix}/include/spline.h"
+          test -f "${prefix}/include/internalfield.h"
+
+          test -f "${prefix}/lib/libcon2020.a"
+          test -f "${prefix}/lib/libspline.a"
+          test -f "${prefix}/lib/libinternalfield.a"
+          test -f "${prefix}/lib/libjupitermag.a"
+
+      - name: Run CTest
+        run: ctest --test-dir build-cmake --output-on-failure
+
+  build-and-test-macos:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Show tool versions
+        run: |
+          c++ --version
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-cmake -j 2
+
+      - name: Install and verify layout
+        run: |
+          set -euo pipefail
+          prefix="$(mktemp -d)"
+          cmake --install build-cmake --prefix "${prefix}"
+          find "${prefix}" -type f | sort
+
+          test -f "${prefix}/include/jupitermag.h"
+          test -f "${prefix}/include/con2020.h"
+          test -f "${prefix}/include/spline.h"
+          test -f "${prefix}/include/internalfield.h"
+
+          test -f "${prefix}/lib/libcon2020.a"
+          test -f "${prefix}/lib/libspline.a"
+          test -f "${prefix}/lib/libinternalfield.a"
+          test -f "${prefix}/lib/libjupitermag.dylib"
+
+      - name: Run CTest
+        run: ctest --test-dir build-cmake --output-on-failure
+
+  build-and-test-windows-msys2:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            git
+
+      - name: Show tool versions
+        run: |
+          g++ --version
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLIBJUPITERMAG_BUILD_TESTS=ON \
+            -G Ninja
+
+      - name: Build
+        run: |
+          export PATH="$PWD/build-cmake/src:$PWD/build-cmake/bin:$PWD/build-cmake/lib:$PATH"
+          cmake --build build-cmake -j 2
+
+      - name: Install and verify layout
+        run: |
+          set -euo pipefail
+          prefix="$(mktemp -d)"
+          cmake --install build-cmake --prefix "${prefix}"
+          find "${prefix}" -type f | sort
+
+          test -f "${prefix}/include/jupitermag.h"
+          test -f "${prefix}/include/con2020.h"
+          test -f "${prefix}/include/spline.h"
+          test -f "${prefix}/include/internalfield.h"
+
+          test -f "${prefix}/lib/libcon2020.a"
+          test -f "${prefix}/lib/libspline.a"
+          test -f "${prefix}/lib/libinternalfield.a"
+          test -f "${prefix}/bin/libjupitermag.dll"
+          test -f "${prefix}/lib/libjupitermag.dll.a"
+
+      - name: Run CTest
+        run: |
+          export PATH="$PWD/build-cmake/src:$PWD/build-cmake/bin:$PWD/build-cmake/lib:$PATH"
+          ctest --test-dir build-cmake --output-on-failure

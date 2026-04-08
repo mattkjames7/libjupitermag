@@ -5,6 +5,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+namespace jupitermag {
+
 void MagtoSIII(	double xm, double ym, double zm, 
 				double xt, double xp,
 				double *x3, double *y3, double *z3);
@@ -12,5 +14,7 @@ void MagtoSIII(	double xm, double ym, double zm,
 void SIIItoMag(	double x3, double y3, double z3, 
 				double xt, double xp,
 				double *xm, double *ym, double *zm);
+
+}
 
 #endif

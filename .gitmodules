@@ -1,9 +1,0 @@
-[submodule "lib/libinternalfield"]
-	path = lib/libinternalfield
-	url = https://github.com/mattkjames7/libinternalfield
-[submodule "lib/libspline"]
-	path = lib/libspline
-	url = https://github.com/mattkjames7/libspline.git
-[submodule "lib/libcon2020"]
-	path = lib/libcon2020
-	url = https://github.com/mattkjames7/libcon2020.git

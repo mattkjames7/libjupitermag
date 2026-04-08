@@ -3,6 +3,8 @@
 #include <vector>
 #include <jupitermag.h>
 
+using namespace jupitermag;
+
 int main() {
 	
 	printf("C++ Test...\n");

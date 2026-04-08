@@ -31,13 +31,87 @@ This module forms part of the [JupiterMag](https://github.com/mattkjames7/Jupite
 
 ## Cloning and Building
 
-This module requires a few submodules to be fetched, so the following command should clone everything:
+Clone the repository:
 
 ```bash
-git clone --recurse-sumodules https://github.com/mattkjames7/libjupitermag.git
+git clone https://github.com/mattkjames7/libjupitermag.git
 ```
 
-This library requires `g++`, `make` and `ld` (Linux) or `libtool` (Mac) in order to be compiled. On Windows these tools can be provided by TDM-GCC.
+This library can be built using either `make` (legacy workflow) or CMake.
+
+For `make`, this library requires `g++`, `make` and `ld` (Linux) or `libtool` (Mac). On Windows these tools can be provided by TDM-GCC.
+
+For CMake, you will need CMake 3.18+ and a C/C++ compiler.
+
+### Build With CMake (Linux/macOS)
+
+```bash
+cd libjupitermag
+cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build-cmake -j
+```
+
+Dependencies are fetched directly from Git using CMake FetchContent.
+
+Migration note:
+
+- This project no longer uses git submodules for dependencies.
+- Dependency sources are resolved at CMake configure time.
+- Pin dependency refs with `*_GIT_TAG` cache variables for reproducible builds.
+
+To use a specific dependency revision or branch:
+
+```bash
+cmake -S . -B build-cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIBJUPITERMAG_LIBCON2020_GIT_TAG=<con2020-tag-or-sha> \
+    -DLIBJUPITERMAG_LIBSPLINE_GIT_TAG=<libspline-tag-or-sha> \
+    -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=<internalfield-tag-or-sha>
+cmake --build build-cmake -j
+```
+
+Select shared or static library output (builds one type at a time):
+
+```bash
+# Shared library (default)
+cmake -S . -B build-cmake -DBUILD_SHARED_LIBS=ON
+
+# Static library
+cmake -S . -B build-cmake -DBUILD_SHARED_LIBS=OFF
+```
+
+Optional install step:
+
+```bash
+sudo cmake --install build-cmake
+```
+
+To change the install prefix:
+
+```bash
+cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build-cmake -j
+sudo cmake --install build-cmake
+```
+
+To build the sample test executables and run CTest:
+
+```bash
+cmake -S . -B build-cmake -DLIBJUPITERMAG_BUILD_TESTS=ON
+cmake --build build-cmake -j
+ctest --test-dir build-cmake --output-on-failure
+```
+
+`LIBJUPITERMAG_BUILD_TESTS=ON` enables both sample tests and gtest regression tests. Dependency test suites remain excluded.
+
+Optional: enable the legacy timing executable (off by default):
+
+```bash
+cmake -S . -B build-cmake -DLIBJUPITERMAG_BUILD_TIMING_EXE=ON
+cmake --build build-cmake --target timing -j
+```
+
+### Build With Make (Legacy)
 
 To build in Linux and Mac simply run
 
