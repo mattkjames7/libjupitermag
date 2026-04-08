@@ -41,7 +41,7 @@ This library can be built using either `make` (legacy workflow) or CMake.
 
 For `make`, this library requires `g++`, `make` and `ld` (Linux) or `libtool` (Mac). On Windows these tools can be provided by TDM-GCC.
 
-For CMake, you will need CMake 3.16+ and a C/C++ compiler.
+For CMake, you will need CMake 3.18+ and a C/C++ compiler.
 
 ### Build With CMake (Linux/macOS)
 
