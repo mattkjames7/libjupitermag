@@ -122,92 +122,7 @@ typedef struct EqFPstr {
 } EqFPstr;
 
 
-void FillFPOutputArray(int n, FPstr *fpi, FPstr *fps, EqFPstr *fpe, double **FP);
-
-void _fillfp(FPstr *fp, double xt, double xp);
-
-
-void _getbegfp(	int n, double *x, double *y, double *z,
-				bool begfp, bool endfp, int indmxr,
-				double a, double b,
-				double *xfp, double *yfp, double *zfp);
-
-void _getendfp(	int n, double *x, double *y, double *z,
-				bool begfp, bool endfp, int indmxr,
-				double a, double b,
-				double *xfp, double *yfp, double *zfp);
-
-bool _posisfp(double x, double y, double z, double a, double b);
-
-int _maxR(double n, double *x, double *y, double *z);
-
-void _nsends(int n, double *x, double *y, double *z,
-			double xt, double xp,
-			bool begfp, bool endfp,
-			int *begns, int *endns, int *indmxr);
-
-double _fllen(int n, double *x, double *y, double *z) ;
-
-void calculateEquatorialFootprints(int n, double *x, double *y, double *z,
-						double xt, double xp, EqFPstr *efp);
-
-void calculateFootprints(int n, double *x, double *y, double *z,
-							double a, double b, double xt, double xp,
-							FPstr *fp);
-
-void footprints(int n, double *x, double *y, double *z,
-				double a, double b, double xt, double xp,
-				double *xfn, double *yfn, double *zfn,
-				double *xfs, double *yfs, double *zfs);
-
-double planetRadius(double x, double y, double z, double a, double b);
-
-double thetaPlanetRadius(double theta, double a, double b);
-
-bool isCrossing(double x0, double y0, double z0,
-				double x1, double y1, double z1,
-				double a, double b);
-
-void interpCrossing(double x0, double y0, double z0,
-					double x1, double y1, double z1,
-					double a, double b,
-					double *xfp, double *yfp, double *zfp);
-
-void findFootprint(	double *x, double *y, double *z,
-					int starti, int endi,
-					double a, double b,
-					double *xfp, double *yfp, double *zfp);
-
-void eqfootprints(	int n, double *x, double *y, double *z,
-					double *xfe, double *yfe, double *zfe,
-					double *L, double *Lon);
-
-
-
-
-void interptraceClosestPos(	int n, double *x, double *y, double *z,
-						double *bx, double *by, double *bz,
-						int n0, double *x0, double *y0, double *z0, double *s0,
-						int n1, double *x1, double *y1, double *z1, double *s1,
-						double *xc0, double *yc0, double *zc0,
-						double *xc1, double *yc1, double *zc1 );
-						
-double ClosestS(double x, double y, double z,
-				int nt, double *xt, double *yt, double *zt,
-				double *st);
-				
-double AngleDiff( 	double s,								/* current position along the field line */
-					spline::Spline Sx, spline::Spline Sy, spline::Spline Sz,	/* Splines converting s to a  vector */
-					double x, double y, double z,		/* this is the position along the original field line */
-					double bx, double by, double bz);
 					
-					
-void OptimizePos(	double x, double y, double z,
-					double bx, double by, double bz,
-					double s0, 
-					spline::Spline Sx, spline::Spline Sy, spline::Spline Sz,
-					double *xc, double *yc, double *zc);
-
 
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
@@ -410,9 +325,6 @@ class Trace {
 };
 
 } /* namespace jupitermag */
-
-
-
 
 #endif
 #endif
