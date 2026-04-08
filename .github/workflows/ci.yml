@@ -1,4 +1,4 @@
-name: Linux CMake Build and Test
+name: CMake Build and Test
 
 on:
   pull_request:
@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: linux-pr-${{ github.workflow }}-${{ github.ref }}
+  group: pr-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-test-shared:
+  build-and-test-linux-shared:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -55,7 +55,7 @@ jobs:
       - name: Run CTest
         run: ctest --test-dir build-cmake --output-on-failure
 
-  build-and-test-static:
+  build-and-test-linux-static:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
