@@ -57,11 +57,9 @@ extern "C" {
 				int **traceRegion, double **FP,
 				int nalpha, double *alpha, double *halpha);
 #ifdef __cplusplus
-}
+} /* extern "C" */
 
 namespace jupitermag {
-
-using spline::Spline;
 
 
 void MagtoSIII(	double xm, double ym, double zm, 
@@ -72,12 +70,6 @@ void SIIItoMag(	double x3, double y3, double z3,
 				double xt, double xp,
 				double *xm, double *ym, double *zm);
 
-
-#ifndef M_PI
-    #define M_PI 3.14159265358979323846
-#endif
-const double deg2rad = M_PI/180.0;
-const double rad2deg = 180.0/M_PI;
 
 typedef struct FPstr {
 	/* SIII North */
@@ -205,7 +197,7 @@ double ClosestS(double x, double y, double z,
 				double *st);
 				
 double AngleDiff( 	double s,								/* current position along the field line */
-					Spline Sx, Spline Sy, Spline Sz,	/* Splines converting s to a  vector */
+					spline::Spline Sx, spline::Spline Sy, spline::Spline Sz,	/* Splines converting s to a  vector */
 					double x, double y, double z,		/* this is the position along the original field line */
 					double bx, double by, double bz);
 					
@@ -213,42 +205,9 @@ double AngleDiff( 	double s,								/* current position along the field line */
 void OptimizePos(	double x, double y, double z,
 					double bx, double by, double bz,
 					double s0, 
-					Spline Sx, Spline Sy, Spline Sz,
+					spline::Spline Sx, spline::Spline Sy, spline::Spline Sz,
 					double *xc, double *yc, double *zc);
 
-} /* namespace jupitermag */
-
-
-
-
-
-
-
-template <typename T> T clip(T x, T mn, T mx) {
-	return std::min(mx,std::max(x,mn));
-}
-
-
-
-double polyeval(double x, double *c, int d);
-
-double pol1eval(double x, double *c, int d);
-
-
-
-double trap(int n, double *x, double *y);
-double trapc(int n, double dx, double *y);
-
-
-
-
-template <typename T> T sgn(T x) {
-	return (x > 0) - (x < 0);
-}
-
-
-/* this will be used for all of the model wrapper functions (configure model first) */
-namespace jupitermag {
 
 typedef void (*FieldFuncPtr)(double,double,double,double*,double*,double*);
 
