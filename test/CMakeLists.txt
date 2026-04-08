@@ -16,6 +16,8 @@ endif()
 add_test(NAME ctest_sample COMMAND ctest)
 add_test(NAME cpptest_sample COMMAND cpptest)
 
+set(INSTALL_GTEST OFF CACHE BOOL "Disable googletest installation for embedded builds" FORCE)
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/CMakeLists.txt")
     add_subdirectory(external/googletest external/googletest-build EXCLUDE_FROM_ALL)
 else()

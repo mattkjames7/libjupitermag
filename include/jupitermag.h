@@ -11,6 +11,7 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include <string>
+	#include <tuple>
 	#include <vector>
 #else
 	#include <math.h>
@@ -59,6 +60,8 @@ extern "C" {
 }
 
 namespace jupitermag {
+
+using spline::Spline;
 
 
 void MagtoSIII(	double xm, double ym, double zm, 

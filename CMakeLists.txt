@@ -64,4 +64,11 @@ if(LIBJUPITERMAG_BUILD_TESTS)
     add_subdirectory(test)
 endif()
 
-install(FILES include/jupitermag.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(
+    FILES
+        include/jupitermag.h
+        ${LIBCON2020_ROOT}/include/con2020.h
+        ${LIBSPLINE_ROOT}/include/spline.h
+        ${LIBINTERNALFIELD_ROOT}/include/internalfield.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

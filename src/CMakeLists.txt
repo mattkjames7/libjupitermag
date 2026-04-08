@@ -15,12 +15,12 @@ set_target_properties(jupitermag PROPERTIES OUTPUT_NAME jupitermag)
 target_include_directories(jupitermag
     PUBLIC
         $<BUILD_INTERFACE:${LIBJUPITERMAG_INCLUDE_DIR}>
+        $<BUILD_INTERFACE:${LIBCON2020_ROOT}/include>
+        $<BUILD_INTERFACE:${LIBINTERNALFIELD_ROOT}/include>
+        $<BUILD_INTERFACE:${LIBSPLINE_ROOT}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
-        ${LIBCON2020_ROOT}/include
         ${LIBCON2020_ROOT}/src
-        ${LIBINTERNALFIELD_ROOT}/include
-        ${LIBSPLINE_ROOT}/include
         ${LIBSPLINE_ROOT}/src
         ${LIBJUPITERMAG_SRC_DIR}
 )
