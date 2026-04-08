@@ -14,8 +14,6 @@ jobs:
   build-and-test-shared:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
 
     steps:
       - name: Checkout repository
@@ -32,7 +30,6 @@ jobs:
           cmake -S . -B build-cmake \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=ON \
-            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
             -DLIBJUPITERMAG_BUILD_TESTS=ON
 
       - name: Build
@@ -79,7 +76,6 @@ jobs:
           cmake -S . -B build-cmake \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
-            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
             -DLIBJUPITERMAG_BUILD_TESTS=ON
 
       - name: Build
@@ -126,7 +122,6 @@ jobs:
           cmake -S . -B build-cmake \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=ON \
-            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
             -DLIBJUPITERMAG_BUILD_TESTS=ON
 
       - name: Build
@@ -187,7 +182,6 @@ jobs:
           cmake -S . -B build-cmake \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=ON \
-            -DLIBJUPITERMAG_LIBINTERNALFIELD_GIT_TAG=${LIBINTERNALFIELD_FETCH_REF} \
             -DLIBJUPITERMAG_BUILD_TESTS=ON \
             -G Ninja
 
