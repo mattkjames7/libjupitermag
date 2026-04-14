@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(libjupitermag VERSION 1.6.0 LANGUAGES C CXX)
+project(libjupitermag VERSION 1.6.1 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 include(CTest)
