@@ -255,6 +255,10 @@ jobs:
             -DLIBJUPITERMAG_BUILD_TESTS=ON
         shell: cmd
 
+      - name: Patch fetched deps for MSVC compatibility
+        shell: pwsh
+        run: ./.github/scripts/patch-msvc-deps.ps1 -BuildDir build-cmake
+
       - name: Build
         run: cmake --build build-cmake --config Release --parallel 2
 
