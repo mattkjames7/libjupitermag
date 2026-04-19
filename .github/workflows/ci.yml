@@ -277,7 +277,7 @@ jobs:
             "$prefix/lib/spline.lib",
             "$prefix/lib/internalfield.lib",
             "$prefix/bin/libjupitermag.dll",
-            "$prefix/lib/libjupitermag.lib"
+            "$prefix/lib/jupitermag.lib"
           )) {
             if (-not (Test-Path $required)) {
               throw "Missing expected file: $required"

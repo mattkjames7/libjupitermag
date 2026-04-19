@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <jupitermag.h>
 
 int main () {
@@ -31,7 +32,7 @@ int main () {
 	int TraceDir = 0;
 
 	/* trace output */
-	int nstep[n];
+	int *nstep = (int*) malloc(n*sizeof(int));
 	double *x = (double *) malloc(MaxLen*sizeof(double));
 	double *y = (double *) malloc(MaxLen*sizeof(double));
 	double *z = (double *) malloc(MaxLen*sizeof(double));
@@ -50,7 +51,7 @@ int main () {
 	/* this is for polarization */
 	int nalpha = 2;
 	double alpha[] = {0.0,90.0};
-	double halpha[nalpha*n*MaxLen];
+	double *halpha = (double*) malloc(nalpha*n*MaxLen*sizeof(double));
 
 	/* define radii */
 	double as = 1.0, bs = 0.93513, ai = 0.94212, bi = 0.94212;
@@ -104,5 +105,9 @@ int main () {
 	free(Rnorm);
 	free(FP);
 	free(traceRegion);
+	free(nstep);
+	free(halpha);
+
+	return 0;
 
 }
