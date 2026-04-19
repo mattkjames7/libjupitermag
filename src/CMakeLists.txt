@@ -12,6 +12,10 @@ add_library(jupitermag::jupitermag ALIAS jupitermag)
 
 set_target_properties(jupitermag PROPERTIES OUTPUT_NAME jupitermag)
 
+if(WIN32)
+    set_target_properties(jupitermag PROPERTIES PREFIX "lib")
+endif()
+
 if(WIN32 AND BUILD_SHARED_LIBS)
     set_target_properties(jupitermag PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
