@@ -285,4 +285,8 @@ jobs:
           }
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake -C Release --output-on-failure
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PATH = "$PWD/build-cmake/src/Release;$PWD/build-cmake/bin/Release;$env:PATH"
+          ctest --test-dir build-cmake -C Release --output-on-failure
