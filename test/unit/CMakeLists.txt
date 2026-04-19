@@ -32,5 +32,6 @@ foreach(regression_test_source ${REGRESSION_TEST_SOURCES})
     gtest_discover_tests(
         ${regression_test_name}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..
+        DISCOVERY_MODE PRE_TEST
     )
 endforeach()
