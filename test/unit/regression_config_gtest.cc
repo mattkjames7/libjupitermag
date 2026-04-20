@@ -13,23 +13,23 @@ TEST(Regressions, InternalConfigRoundTrip) {
     bool cartOut = false;
     int maxDeg = 0;
 
-    GetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
+    JupitermagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
     const int requestedMaxDeg = (maxDeg > 3) ? (maxDeg - 2) : maxDeg;
 
-    SetInternalCFG("jrm33", false, true, requestedMaxDeg);
+    JupitermagSetInternalCFG("jrm33", false, true, requestedMaxDeg);
 
     char gotModel[64] = {0};
     bool gotCartIn = true;
     bool gotCartOut = false;
     int gotMaxDeg = 0;
-    GetInternalCFG(gotModel, &gotCartIn, &gotCartOut, &gotMaxDeg);
+    JupitermagGetInternalCFG(gotModel, &gotCartIn, &gotCartOut, &gotMaxDeg);
 
     EXPECT_STREQ("jrm33", gotModel);
     EXPECT_FALSE(gotCartIn);
     EXPECT_TRUE(gotCartOut);
     EXPECT_EQ(requestedMaxDeg, gotMaxDeg);
 
-    SetInternalCFG("jrm33", true, true, maxDeg);
+    JupitermagSetInternalCFG("jrm33", true, true, maxDeg);
 }
 
 TEST(Regressions, BaselineCSVSchema) {
@@ -83,9 +83,10 @@ TEST(Regressions, Con2020ConfigRoundTrip) {
     const double thetaoc = 10.9 * kDeg2Rad;
     const double dthetaoc = 0.15 * kDeg2Rad;
 
-    SetCon2020Params(mui, irho, r0, r1, d, xt, xp, "integral", edwards, errChk,
-                     cartIn, cartOut, smooth, deltaRho, deltaZ, g, "lmic",
-                     wOOpen, wOOm, thetamm, dthetamm, thetaoc, dthetaoc);
+    JupitermagSetCon2020Params(mui, irho, r0, r1, d, xt, xp, "integral",
+                               edwards, errChk, cartIn, cartOut, smooth,
+                               deltaRho, deltaZ, g, "lmic", wOOpen, wOOm,
+                               thetamm, dthetamm, thetaoc, dthetaoc);
 
     double gotMui = 0.0, gotIrho = 0.0, gotR0 = 0.0, gotR1 = 0.0, gotD = 0.0;
     double gotXt = 0.0, gotXp = 0.0;
@@ -97,11 +98,12 @@ TEST(Regressions, Con2020ConfigRoundTrip) {
     double gotWOOpen = 0.0, gotWOOm = 0.0, gotThetaMM = 0.0, gotDThetaMM = 0.0,
            gotThetaOC = 0.0, gotDThetaOC = 0.0;
 
-    GetCon2020Params(&gotMui, &gotIrho, &gotR0, &gotR1, &gotD, &gotXt, &gotXp,
-                     gotEqtype, &gotEdwards, &gotErrChk, &gotCartIn,
-                     &gotCartOut, &gotSmooth, &gotDeltaRho, &gotDeltaZ, &gotG,
-                     gotAzfunc, &gotWOOpen, &gotWOOm, &gotThetaMM, &gotDThetaMM,
-                     &gotThetaOC, &gotDThetaOC);
+    JupitermagGetCon2020Params(&gotMui, &gotIrho, &gotR0, &gotR1, &gotD,
+                               &gotXt, &gotXp, gotEqtype, &gotEdwards,
+                               &gotErrChk, &gotCartIn, &gotCartOut,
+                               &gotSmooth, &gotDeltaRho, &gotDeltaZ, &gotG,
+                               gotAzfunc, &gotWOOpen, &gotWOOm, &gotThetaMM,
+                               &gotDThetaMM, &gotThetaOC, &gotDThetaOC);
 
     EXPECT_TRUE(NearlyEqual(mui, gotMui, kFieldAbsTol, kFieldRelTol));
     EXPECT_TRUE(NearlyEqual(irho, gotIrho, kFieldAbsTol, kFieldRelTol));

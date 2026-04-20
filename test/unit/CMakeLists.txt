@@ -2,6 +2,7 @@ include(GoogleTest)
 
 set(REGRESSION_COMMON_SOURCE regression_common.cc)
 set(REGRESSION_TEST_SOURCES
+    config_debug_gtest.cc
     regression_config_gtest.cc
     regression_field_gtest.cc
     regression_geometry_gtest.cc
@@ -32,5 +33,6 @@ foreach(regression_test_source ${REGRESSION_TEST_SOURCES})
     gtest_discover_tests(
         ${regression_test_name}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..
+        DISCOVERY_MODE PRE_TEST
     )
 endforeach()

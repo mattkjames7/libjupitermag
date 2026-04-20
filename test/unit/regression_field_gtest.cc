@@ -21,23 +21,22 @@ TEST(Regressions, ScalarArrayConsistency) {
         p2[i] = points[i][2];
     }
 
-    InternalField(n, p0.data(), p1.data(), p2.data(), iArr0.data(), iArr1.data(),
-                  iArr2.data());
-    Con2020FieldArray(n, p0.data(), p1.data(), p2.data(), eArr0.data(),
-                      eArr1.data(), eArr2.data());
+    ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "jrm33", "none", true,
+                    true, iArr0.data(), iArr1.data(), iArr2.data());
+    ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "none", "Con2020", true,
+                    true, eArr0.data(), eArr1.data(), eArr2.data());
     ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "jrm33", "Con2020",
                     true, true, mArr0.data(), mArr1.data(), mArr2.data());
-
-    modelFieldPtr internalScalar = getModelFieldPtr("jrm33");
-    ASSERT_NE(nullptr, internalScalar);
 
     for (int i = 0; i < n; i++) {
         double is0 = 0.0, is1 = 0.0, is2 = 0.0;
         double es0 = 0.0, es1 = 0.0, es2 = 0.0;
         double ms0 = 0.0, ms1 = 0.0, ms2 = 0.0;
 
-        internalScalar(p0[i], p1[i], p2[i], &is0, &is1, &is2);
-        Con2020Field(p0[i], p1[i], p2[i], &es0, &es1, &es2);
+        ModelField(p0[i], p1[i], p2[i], "jrm33", "none", true, true, &is0, &is1,
+                   &is2);
+        ModelField(p0[i], p1[i], p2[i], "none", "Con2020", true, true, &es0,
+                   &es1, &es2);
         ModelField(p0[i], p1[i], p2[i], "jrm33", "Con2020", true, true, &ms0,
                    &ms1, &ms2);
 
@@ -70,9 +69,8 @@ TEST(Regressions, ModelCompositionIdentity) {
         double boi0 = 0.0, boi1 = 0.0, boi2 = 0.0;
         double boe0 = 0.0, boe1 = 0.0, boe2 = 0.0;
 
-        double xx = x, yy = y, zz = z;
-        InternalField(1, &xx, &yy, &zz, &bi0, &bi1, &bi2);
-        Con2020Field(x, y, z, &be0, &be1, &be2);
+        ModelField(x, y, z, "jrm33", "none", true, true, &bi0, &bi1, &bi2);
+        ModelField(x, y, z, "none", "Con2020", true, true, &be0, &be1, &be2);
         ModelField(x, y, z, "jrm33", "Con2020", true, true, &bc0, &bc1, &bc2);
 
         ModelField(x, y, z, "jrm33", "none", true, true, &boi0, &boi1, &boi2);
@@ -117,8 +115,8 @@ TEST(Regressions, FieldBaselineCSV) {
         double bex = 0.0, bey = 0.0, bez = 0.0;
         double bcx = 0.0, bcy = 0.0, bcz = 0.0;
 
-        InternalField(1, &x, &y, &z, &bix, &biy, &biz);
-        Con2020Field(x, y, z, &bex, &bey, &bez);
+        ModelField(x, y, z, "jrm33", "none", true, true, &bix, &biy, &biz);
+        ModelField(x, y, z, "none", "Con2020", true, true, &bex, &bey, &bez);
         ModelField(x, y, z, "jrm33", "Con2020", true, true, &bcx, &bcy, &bcz);
 
         EXPECT_TRUE(NearlyEqual(r[3], bix, kFieldAbsTol, kFieldRelTol)) << i;
@@ -153,14 +151,14 @@ TEST(Regressions, InputArraysNotModified) {
     const auto p2Orig = p2;
 
     std::vector<double> o0(n), o1(n), o2(n);
-    InternalField(n, p0.data(), p1.data(), p2.data(), o0.data(), o1.data(),
-                  o2.data());
+    ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "jrm33", "none", true,
+                    true, o0.data(), o1.data(), o2.data());
     EXPECT_EQ(p0Orig, p0);
     EXPECT_EQ(p1Orig, p1);
     EXPECT_EQ(p2Orig, p2);
 
-    Con2020FieldArray(n, p0.data(), p1.data(), p2.data(), o0.data(), o1.data(),
-                      o2.data());
+    ModelFieldArray(n, p0.data(), p1.data(), p2.data(), "none", "Con2020", true,
+                    true, o0.data(), o1.data(), o2.data());
     EXPECT_EQ(p0Orig, p0);
     EXPECT_EQ(p1Orig, p1);
     EXPECT_EQ(p2Orig, p2);

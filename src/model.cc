@@ -1,5 +1,25 @@
 #include "model.h"
 
+extern "C" void GetCon2020Params(
+	double *mui, double *irho, double *r0, double *r1, double *d, double *xt,
+	double *xp, char *eqtype, bool *Edwards, bool *ErrChk, bool *CartIn,
+	bool *CartOut, bool *smooth, double *DeltaRho, double *DeltaZ, double *g,
+	char *azfunc, double *wO_open, double *wO_om, double *thetamm,
+	double *dthetamm, double *thetaoc, double *dthetaoc);
+
+extern "C" void SetCon2020Params(
+	double mui, double irho, double r0, double r1, double d, double xt,
+	double xp, const char *eqtype, bool Edwards, bool ErrChk, bool CartIn,
+	bool CartOut, bool smooth, double DeltaRho, double DeltaZ, double g,
+	const char *azfunc, double wO_open, double wO_om, double thetamm,
+	double dthetamm, double thetaoc, double dthetaoc);
+
+extern "C" void Con2020Field(double p0, double p1, double p2,
+	double *B0, double *B1, double *B2);
+
+extern "C" void Con2020FieldArray(int n, double *p0, double *p1, double *p2,
+	double *B0, double *B1, double *B2);
+
 namespace jupitermag {
 
 namespace {
@@ -12,19 +32,19 @@ void ConfigureCon2020CartFlags(bool cartIn, bool cartOut) {
 	double deltaRho, deltaZ, g, wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc;
 	char azfunc[32] = {0};
 
-	con2020::GetCon2020Params(&mui, &irho, &r0, &r1, &d, &xt, &xp, eqtype,
-					  &edwards, &errChk, &currentCartIn, &currentCartOut,
-					  &smooth, &deltaRho, &deltaZ, &g, azfunc,
-					  &wO_open, &wO_om, &thetamm, &dthetamm, &thetaoc, &dthetaoc);
+	GetCon2020Params(&mui, &irho, &r0, &r1, &d, &xt, &xp, eqtype,
+				 &edwards, &errChk, &currentCartIn, &currentCartOut,
+				 &smooth, &deltaRho, &deltaZ, &g, azfunc,
+				 &wO_open, &wO_om, &thetamm, &dthetamm, &thetaoc, &dthetaoc);
 
 	if (currentCartIn == cartIn && currentCartOut == cartOut) {
 		return;
 	}
 
-	con2020::SetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
-				  edwards, errChk, cartIn, cartOut, smooth,
-				  deltaRho, deltaZ, g, azfunc,
-				  wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
+	SetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
+				 edwards, errChk, cartIn, cartOut, smooth,
+				 deltaRho, deltaZ, g, azfunc,
+				 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
 }
 
 }
@@ -57,7 +77,7 @@ void ModelField(double p0, double p1, double p2,
 	double Be0, Be1, Be2;
 	if (strcmp(external,"Con2020") == 0) {
 		ConfigureCon2020CartFlags(CartIn,CartOut);
-		con2020::Con2020Field(p0,p1,p2,&Be0,&Be1,&Be2);
+		Con2020Field(p0,p1,p2,&Be0,&Be1,&Be2);
 	} else {
 		Be0 = 0.0;
 		Be1 = 0.0;
@@ -104,7 +124,7 @@ void ModelFieldArray(	int n, double *p0, double *p1, double *p2,
 	double *Be2 = new double[n];
 	if (strcmp(external,"Con2020") == 0) {
 		ConfigureCon2020CartFlags(CartIn,CartOut);
-		con2020::Con2020FieldArray(n,p0,p1,p2,Be0,Be1,Be2);
+		Con2020FieldArray(n,p0,p1,p2,Be0,Be1,Be2);
 	} else {
 		for (i=0;i<n;i++) {
 			Be0[i] = 0.0;

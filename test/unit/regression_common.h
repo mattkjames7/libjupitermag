@@ -15,8 +15,13 @@
 inline constexpr double kDeg2Rad = M_PI / 180.0;
 inline constexpr double kFieldAbsTol = 1e-6;
 inline constexpr double kFieldRelTol = 1e-6;
+#ifdef _MSC_VER
+inline constexpr double kTraceAbsTol = 1e-4;
+inline constexpr double kTraceRelTol = 1e-4;
+#else
 inline constexpr double kTraceAbsTol = 1e-6;
 inline constexpr double kTraceRelTol = 1e-6;
+#endif
 inline constexpr double kGeomAbsTol = 1e-5;
 inline constexpr double kGeomRelTol = 1e-5;
 

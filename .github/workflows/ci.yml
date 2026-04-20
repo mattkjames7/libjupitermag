@@ -5,13 +5,35 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      build_job:
+        description: Select which build job to run
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - linux-shared
+          - linux-static
+          - macos
+          - windows-msys2
+          - windows-msvc
+      test_scope:
+        description: Select which tests to run
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - config-debug
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-test-linux-shared:
+  linux-shared:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-shared'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -53,9 +75,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.so"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
-  build-and-test-linux-static:
+  linux-static:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-static'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -99,9 +127,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.a"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
-  build-and-test-macos:
+  macos:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'macos'
     runs-on: macos-latest
     timeout-minutes: 15
     env:
@@ -145,9 +179,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.dylib"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
-  build-and-test-windows-msys2:
+  windows-msys2:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msys2'
     runs-on: windows-latest
     timeout-minutes: 20
     env:
@@ -211,4 +251,74 @@ jobs:
       - name: Run CTest
         run: |
           export PATH="$PWD/build-cmake/src:$PWD/build-cmake/bin:$PWD/build-cmake/lib:$PATH"
-          ctest --test-dir build-cmake --output-on-failure
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
+
+  windows-msvc:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msvc'
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      LIBINTERNALFIELD_FETCH_REF: simplify-codegen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Show tool versions
+        run: |
+          cmake --version
+          git --version
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build-cmake ^
+            -G "Visual Studio 17 2022" ^
+            -A x64 ^
+            -DBUILD_SHARED_LIBS=ON ^
+            -DLIBJUPITERMAG_BUILD_TESTS=ON
+        shell: cmd
+
+      - name: Build
+        run: cmake --build build-cmake --config Release --parallel 2
+
+      - name: Install and verify layout
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $prefix = Join-Path $env:RUNNER_TEMP ("jupitermag-install-" + [guid]::NewGuid().ToString())
+          New-Item -ItemType Directory -Path $prefix | Out-Null
+
+          cmake --install build-cmake --config Release --prefix "$prefix"
+          Get-ChildItem -File -Recurse "$prefix" | Sort-Object FullName | ForEach-Object { $_.FullName }
+
+          foreach ($required in @(
+            "$prefix/include/jupitermag.h",
+            "$prefix/include/con2020.h",
+            "$prefix/include/spline.h",
+            "$prefix/include/internalfield.h",
+            "$prefix/lib/con2020.lib",
+            "$prefix/lib/spline.lib",
+            "$prefix/lib/internalfield.lib",
+            "$prefix/bin/libjupitermag.dll",
+            "$prefix/lib/libjupitermag.lib"
+          )) {
+            if (-not (Test-Path $required)) {
+              throw "Missing expected file: $required"
+            }
+          }
+
+      - name: Run CTest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PATH = "$PWD/build-cmake/src/Release;$PWD/build-cmake/bin/Release;$env:PATH"
+          if ("${{ github.event_name }}" -eq "workflow_dispatch" -and "${{ github.event.inputs.test_scope }}" -eq "config-debug") {
+            $env:LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC = "1"
+            ctest --test-dir build-cmake -C Release --output-on-failure -R "^ConfigDebug\."
+          } else {
+            ctest --test-dir build-cmake -C Release --output-on-failure
+          }
