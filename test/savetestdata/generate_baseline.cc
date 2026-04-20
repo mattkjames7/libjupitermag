@@ -10,14 +10,14 @@ extern "C" {
 
 void InternalField(int n, double *p0, double *p1, double *p2, double *B0,
                    double *B1, double *B2);
-void JupitermagSetInternalCFG(const char *Model, bool CartIn, bool CartOut,
+void JupiterMagSetInternalCFG(const char *Model, bool CartIn, bool CartOut,
                               int MaxDeg);
-void JupitermagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut,
+void JupiterMagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut,
                               int *MaxDeg);
 
 void Con2020Field(double p0, double p1, double p2, double *B0, double *B1,
                   double *B2);
-void JupitermagSetCon2020Params(
+void JupiterMagSetCon2020Params(
     double mui, double irho, double r0, double r1, double d, double xt,
     double xp, const char *eqtype, bool Edwards, bool ErrChk, bool CartIn,
     bool CartOut, bool smooth, double DeltaRho, double DeltaZ, double g,
@@ -187,13 +187,13 @@ int main() {
     bool cartOut = true;
     int maxDeg = 0;
 
-    JupitermagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
+    JupiterMagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
 
     (void)model;
     (void)cartIn;
     (void)cartOut;
-    JupitermagSetInternalCFG("jrm33", true, true, maxDeg);
-    JupitermagSetCon2020Params(
+    JupiterMagSetInternalCFG("jrm33", true, true, maxDeg);
+    JupiterMagSetCon2020Params(
         139.6, 16.7, 7.8, 51.4, 3.6, 9.3 * deg2rad, 155.8 * deg2rad, "hybrid",
         true, true, true, true, true, 1.0, 0.1, 417659.38364764, "lmic", 0.1,
         0.35, 16.1 * deg2rad, 0.5 * deg2rad, 10.716 * deg2rad,

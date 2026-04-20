@@ -65,7 +65,7 @@ Con2020Snapshot ReadCon2020SnapshotViaJupitermag() {
     char eqtype[64] = {0};
     char azfunc[64] = {0};
 
-    JupitermagGetCon2020Params(&s.mui, &s.irho, &s.r0, &s.r1, &s.d, &s.xt,
+    JupiterMagGetCon2020Params(&s.mui, &s.irho, &s.r0, &s.r1, &s.d, &s.xt,
                                &s.xp, eqtype, &s.edwards, &s.errChk,
                                &s.cartIn, &s.cartOut, &s.smooth, &s.deltaRho,
                                &s.deltaZ, &s.g, azfunc, &s.wO_open, &s.wO_om,

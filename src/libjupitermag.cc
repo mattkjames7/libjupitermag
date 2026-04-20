@@ -1,6 +1,6 @@
 #include "libjupitermag.h"
 
-extern "C" void JupitermagGetCon2020Params(
+extern "C" void JupiterMagGetCon2020Params(
 	double *mui, double *irho, double *r0, double *r1,
 	double *d, double *xt, double *xp, char *eqtype,
 	bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
@@ -13,7 +13,7 @@ extern "C" void JupitermagGetCon2020Params(
 					 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
 }
 
-extern "C" void JupitermagSetCon2020Params(
+extern "C" void JupiterMagSetCon2020Params(
 	double mui, double irho, double r0, double r1,
 	double d, double xt, double xp, const char *eqtype,
 	bool Edwards, bool ErrChk, bool CartIn, bool CartOut,
@@ -26,11 +26,11 @@ extern "C" void JupitermagSetCon2020Params(
 					 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
 }
 
-extern "C" void JupitermagSetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg) {
+extern "C" void JupiterMagSetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg) {
 	SetInternalCFG(Model, CartIn, CartOut, MaxDeg);
 }
 
-extern "C" void JupitermagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg) {
+extern "C" void JupiterMagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg) {
 	GetInternalCFG(Model, CartIn, CartOut, MaxDeg);
 }
 

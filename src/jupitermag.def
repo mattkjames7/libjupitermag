@@ -5,10 +5,10 @@ EXPORTS
     Con2020FieldArray
     InternalField
     InternalFieldDeg
-    JupitermagGetCon2020Params
-    JupitermagGetInternalCFG
-    JupitermagSetCon2020Params
-    JupitermagSetInternalCFG
+    JupiterMagGetCon2020Params
+    JupiterMagGetInternalCFG
+    JupiterMagSetCon2020Params
+    JupiterMagSetInternalCFG
     ModelField
     ModelFieldArray
     TraceField

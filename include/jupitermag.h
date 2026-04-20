@@ -46,7 +46,7 @@ extern "C" {
 							double *B0, double *B1, double *B2);
 
 	/* Diagnostic helper: read Con2020 params via libjupitermag module. */
-	void JupitermagGetCon2020Params(double *mui, double *irho, double *r0, double *r1,
+	void JupiterMagGetCon2020Params(double *mui, double *irho, double *r0, double *r1,
 					double *d, double *xt, double *xp, char *eqtype,
 					bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
 					bool *smooth, double *DeltaRho, double *DeltaZ,
@@ -54,7 +54,7 @@ extern "C" {
 					double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc);
 
 	/* Diagnostic helper: set Con2020 params via libjupitermag module. */
-	void JupitermagSetCon2020Params(double mui, double irho, double r0, double r1,
+	void JupiterMagSetCon2020Params(double mui, double irho, double r0, double r1,
 					double d, double xt, double xp, const char *eqtype,
 					bool Edwards, bool ErrChk, bool CartIn, bool CartOut,
 					bool smooth, double DeltaRho, double DeltaZ,
@@ -62,10 +62,10 @@ extern "C" {
 					double thetamm, double dthetamm, double thetaoc, double dthetaoc);
 
 	/* Diagnostic helper: set internalfield config via libjupitermag module. */
-	void JupitermagSetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg);
+	void JupiterMagSetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg);
 
 	/* Diagnostic helper: read internalfield config via libjupitermag module. */
-	void JupitermagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg);
+	void JupiterMagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg);
 
 	bool TraceField(int n, double *x0, double *y0, double *z0,
 				const char *IntFunc, int nExt, char **ExtFunc,

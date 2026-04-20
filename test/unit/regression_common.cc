@@ -77,10 +77,10 @@ void ConfigureModelsForBaseline() {
     bool cartOut = true;
     int maxDeg = 0;
 
-    JupitermagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
-    JupitermagSetInternalCFG("jrm33", true, true, maxDeg);
+    JupiterMagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
+    JupiterMagSetInternalCFG("jrm33", true, true, maxDeg);
 
-    JupitermagSetCon2020Params(139.6, 16.7, 7.8, 51.4, 3.6, 9.3 * kDeg2Rad,
+    JupiterMagSetCon2020Params(139.6, 16.7, 7.8, 51.4, 3.6, 9.3 * kDeg2Rad,
                                155.8 * kDeg2Rad, "hybrid", true, true, true,
                                true, true, 1.0, 0.1, 417659.38364764, "lmic",
                                0.1, 0.35, 16.1 * kDeg2Rad, 0.5 * kDeg2Rad,
