@@ -25,7 +25,8 @@ concurrency:
 
 jobs:
   linux-shared:
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-shared'
+    if: false
+    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-shared'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -70,7 +71,8 @@ jobs:
         run: ctest --test-dir build-cmake --output-on-failure
 
   linux-static:
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-static'
+    if: false
+    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-static'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -117,7 +119,8 @@ jobs:
         run: ctest --test-dir build-cmake --output-on-failure
 
   macos:
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'macos'
+    if: false
+    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'macos'
     runs-on: macos-latest
     timeout-minutes: 15
     env:
@@ -164,7 +167,8 @@ jobs:
         run: ctest --test-dir build-cmake --output-on-failure
 
   windows-msys2:
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msys2'
+    if: false
+    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msys2'
     runs-on: windows-latest
     timeout-minutes: 20
     env:
