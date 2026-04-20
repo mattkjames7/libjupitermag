@@ -1,6 +1,6 @@
 #include "libjupitermag.h"
 
-void JupitermagGetCon2020Params(
+extern "C" void JupitermagGetCon2020Params(
 	double *mui, double *irho, double *r0, double *r1,
 	double *d, double *xt, double *xp, char *eqtype,
 	bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
