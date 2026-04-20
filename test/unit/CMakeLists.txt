@@ -2,6 +2,7 @@ include(GoogleTest)
 
 set(REGRESSION_COMMON_SOURCE regression_common.cc)
 set(REGRESSION_TEST_SOURCES
+    config_debug_gtest.cc
     regression_config_gtest.cc
     regression_field_gtest.cc
     regression_geometry_gtest.cc
