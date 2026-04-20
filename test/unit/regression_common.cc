@@ -77,14 +77,14 @@ void ConfigureModelsForBaseline() {
     bool cartOut = true;
     int maxDeg = 0;
 
-    GetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
-    SetInternalCFG("jrm33", true, true, maxDeg);
+    JupitermagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
+    JupitermagSetInternalCFG("jrm33", true, true, maxDeg);
 
-    SetCon2020Params(139.6, 16.7, 7.8, 51.4, 3.6, 9.3 * kDeg2Rad,
-                     155.8 * kDeg2Rad, "hybrid", true, true, true, true, true,
-                     1.0, 0.1, 417659.38364764, "lmic", 0.1, 0.35,
-                     16.1 * kDeg2Rad, 0.5 * kDeg2Rad, 10.716 * kDeg2Rad,
-                     0.125 * kDeg2Rad);
+    JupitermagSetCon2020Params(139.6, 16.7, 7.8, 51.4, 3.6, 9.3 * kDeg2Rad,
+                               155.8 * kDeg2Rad, "hybrid", true, true, true,
+                               true, true, 1.0, 0.1, 417659.38364764, "lmic",
+                               0.1, 0.35, 16.1 * kDeg2Rad, 0.5 * kDeg2Rad,
+                               10.716 * kDeg2Rad, 0.125 * kDeg2Rad);
 }
 
 std::filesystem::path TestDataDir() {

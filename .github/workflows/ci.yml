@@ -18,6 +18,14 @@ on:
           - macos
           - windows-msys2
           - windows-msvc
+      test_scope:
+        description: Select which tests to run
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - config-debug
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.ref }}
@@ -25,8 +33,7 @@ concurrency:
 
 jobs:
   linux-shared:
-    if: false
-    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-shared'
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-shared'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -68,11 +75,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.so"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
   linux-static:
-    if: false
-    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-static'
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'linux-static'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -116,11 +127,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.a"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
   macos:
-    if: false
-    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'macos'
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'macos'
     runs-on: macos-latest
     timeout-minutes: 15
     env:
@@ -164,11 +179,15 @@ jobs:
           test -f "${prefix}/lib/libjupitermag.dylib"
 
       - name: Run CTest
-        run: ctest --test-dir build-cmake --output-on-failure
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
   windows-msys2:
-    if: false
-    # if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msys2'
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msys2'
     runs-on: windows-latest
     timeout-minutes: 20
     env:
@@ -232,7 +251,11 @@ jobs:
       - name: Run CTest
         run: |
           export PATH="$PWD/build-cmake/src:$PWD/build-cmake/bin:$PWD/build-cmake/lib:$PATH"
-          ctest --test-dir build-cmake --output-on-failure
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
+            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+          else
+            ctest --test-dir build-cmake --output-on-failure
+          fi
 
   windows-msvc:
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.build_job == 'all' || github.event.inputs.build_job == 'windows-msvc'
@@ -293,4 +316,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $env:PATH = "$PWD/build-cmake/src/Release;$PWD/build-cmake/bin/Release;$env:PATH"
-          ctest --test-dir build-cmake -C Release --output-on-failure -R "^ConfigDebug\."
+          if ("${{ github.event_name }}" -eq "workflow_dispatch" -and "${{ github.event.inputs.test_scope }}" -eq "config-debug") {
+            ctest --test-dir build-cmake -C Release --output-on-failure -R "^ConfigDebug\."
+          } else {
+            ctest --test-dir build-cmake -C Release --output-on-failure
+          }

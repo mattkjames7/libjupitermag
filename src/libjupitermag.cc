@@ -13,6 +13,27 @@ extern "C" void JupitermagGetCon2020Params(
 					 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
 }
 
+extern "C" void JupitermagSetCon2020Params(
+	double mui, double irho, double r0, double r1,
+	double d, double xt, double xp, const char *eqtype,
+	bool Edwards, bool ErrChk, bool CartIn, bool CartOut,
+	bool smooth, double DeltaRho, double DeltaZ,
+	double g, const char *azfunc, double wO_open, double wO_om,
+	double thetamm, double dthetamm, double thetaoc, double dthetaoc) {
+	con2020::SetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
+					 Edwards, ErrChk, CartIn, CartOut,
+					 smooth, DeltaRho, DeltaZ, g, azfunc,
+					 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
+}
+
+extern "C" void JupitermagSetInternalCFG(const char *Model, bool CartIn, bool CartOut, int MaxDeg) {
+	SetInternalCFG(Model, CartIn, CartOut, MaxDeg);
+}
+
+extern "C" void JupitermagGetInternalCFG(char *Model, bool *CartIn, bool *CartOut, int *MaxDeg) {
+	GetInternalCFG(Model, CartIn, CartOut, MaxDeg);
+}
+
 
 bool TraceField(int n, double *x0, double *y0, double *z0,
 				const char *IntFunc, int nExt, char **ExtFunc,
