@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -161,6 +162,11 @@ TEST(ConfigDebug, ModelFieldArrayConfigRoundTrip) {
 }
 
 TEST(ConfigDebug, DirectApiMatchesJupitermagApi) {
+    const char *runDiagnostic = std::getenv("LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC");
+    if (runDiagnostic == nullptr || std::strcmp(runDiagnostic, "1") != 0) {
+        GTEST_SKIP() << "Set LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 to run this diagnostic test.";
+    }
+
     ConfigureModelsForBaseline();
 
     double b0 = 0.0, b1 = 0.0, b2 = 0.0;

@@ -77,7 +77,7 @@ jobs:
       - name: Run CTest
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
-            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
           else
             ctest --test-dir build-cmake --output-on-failure
           fi
@@ -129,7 +129,7 @@ jobs:
       - name: Run CTest
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
-            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
           else
             ctest --test-dir build-cmake --output-on-failure
           fi
@@ -181,7 +181,7 @@ jobs:
       - name: Run CTest
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
-            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
           else
             ctest --test-dir build-cmake --output-on-failure
           fi
@@ -252,7 +252,7 @@ jobs:
         run: |
           export PATH="$PWD/build-cmake/src:$PWD/build-cmake/bin:$PWD/build-cmake/lib:$PATH"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test_scope }}" = "config-debug" ]; then
-            ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
+            LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC=1 ctest --test-dir build-cmake --output-on-failure -R "^ConfigDebug\\."
           else
             ctest --test-dir build-cmake --output-on-failure
           fi
@@ -317,6 +317,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $env:PATH = "$PWD/build-cmake/src/Release;$PWD/build-cmake/bin/Release;$env:PATH"
           if ("${{ github.event_name }}" -eq "workflow_dispatch" -and "${{ github.event.inputs.test_scope }}" -eq "config-debug") {
+            $env:LIBJUPITERMAG_RUN_DIRECT_API_DIAGNOSTIC = "1"
             ctest --test-dir build-cmake -C Release --output-on-failure -R "^ConfigDebug\."
           } else {
             ctest --test-dir build-cmake -C Release --output-on-failure
