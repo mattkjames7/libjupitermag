@@ -21,6 +21,7 @@ endif()
 
 if(WIN32 AND BUILD_SHARED_LIBS)
     set_target_properties(jupitermag PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    target_sources(jupitermag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/jupitermag.def)
 endif()
 
 target_include_directories(jupitermag
