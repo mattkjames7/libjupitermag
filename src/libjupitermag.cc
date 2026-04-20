@@ -7,10 +7,10 @@ void JupitermagGetCon2020Params(
 	bool *smooth, double *DeltaRho, double *DeltaZ,
 	double *g, char *azfunc, double *wO_open, double *wO_om,
 	double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc) {
-	GetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
-				 Edwards, ErrChk, CartIn, CartOut,
-				 smooth, DeltaRho, DeltaZ, g, azfunc,
-				 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
+	con2020::GetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
+					 Edwards, ErrChk, CartIn, CartOut,
+					 smooth, DeltaRho, DeltaZ, g, azfunc,
+					 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
 }
 
 
