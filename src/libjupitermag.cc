@@ -1,5 +1,18 @@
 #include "libjupitermag.h"
 
+void JupitermagGetCon2020Params(
+	double *mui, double *irho, double *r0, double *r1,
+	double *d, double *xt, double *xp, char *eqtype,
+	bool *Edwards, bool *ErrChk, bool *CartIn, bool *CartOut,
+	bool *smooth, double *DeltaRho, double *DeltaZ,
+	double *g, char *azfunc, double *wO_open, double *wO_om,
+	double *thetamm, double *dthetamm, double *thetaoc, double *dthetaoc) {
+	GetCon2020Params(mui, irho, r0, r1, d, xt, xp, eqtype,
+				 Edwards, ErrChk, CartIn, CartOut,
+				 smooth, DeltaRho, DeltaZ, g, azfunc,
+				 wO_open, wO_om, thetamm, dthetamm, thetaoc, dthetaoc);
+}
+
 
 bool TraceField(int n, double *x0, double *y0, double *z0,
 				const char *IntFunc, int nExt, char **ExtFunc,
