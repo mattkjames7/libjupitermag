@@ -40,12 +40,21 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     target_compile_options(jupitermag PRIVATE -Wextra)
 endif()
 
-target_link_libraries(jupitermag
-    PUBLIC
-        con2020::con2020
-        internalfield
-        spline::spline
-)
+if(WIN32 AND BUILD_SHARED_LIBS)
+    target_link_libraries(jupitermag
+        PRIVATE
+            con2020::con2020
+            internalfield
+            spline::spline
+    )
+else()
+    target_link_libraries(jupitermag
+        PUBLIC
+            con2020::con2020
+            internalfield
+            spline::spline
+    )
+endif()
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(jupitermag PUBLIC m)
