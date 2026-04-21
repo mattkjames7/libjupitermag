@@ -1,0 +1,14 @@
+LIBRARY libjupitermag
+
+EXPORTS
+    Con2020Field
+    Con2020FieldArray
+    InternalField
+    InternalFieldDeg
+    JupiterMagGetCon2020Params
+    JupiterMagGetInternalCFG
+    JupiterMagSetCon2020Params
+    JupiterMagSetInternalCFG
+    ModelField
+    ModelFieldArray
+    TraceField

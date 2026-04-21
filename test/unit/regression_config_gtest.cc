@@ -13,23 +13,23 @@ TEST(Regressions, InternalConfigRoundTrip) {
     bool cartOut = false;
     int maxDeg = 0;
 
-    JupitermagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
+    JupiterMagGetInternalCFG(model, &cartIn, &cartOut, &maxDeg);
     const int requestedMaxDeg = (maxDeg > 3) ? (maxDeg - 2) : maxDeg;
 
-    JupitermagSetInternalCFG("jrm33", false, true, requestedMaxDeg);
+    JupiterMagSetInternalCFG("jrm33", false, true, requestedMaxDeg);
 
     char gotModel[64] = {0};
     bool gotCartIn = true;
     bool gotCartOut = false;
     int gotMaxDeg = 0;
-    JupitermagGetInternalCFG(gotModel, &gotCartIn, &gotCartOut, &gotMaxDeg);
+    JupiterMagGetInternalCFG(gotModel, &gotCartIn, &gotCartOut, &gotMaxDeg);
 
     EXPECT_STREQ("jrm33", gotModel);
     EXPECT_FALSE(gotCartIn);
     EXPECT_TRUE(gotCartOut);
     EXPECT_EQ(requestedMaxDeg, gotMaxDeg);
 
-    JupitermagSetInternalCFG("jrm33", true, true, maxDeg);
+    JupiterMagSetInternalCFG("jrm33", true, true, maxDeg);
 }
 
 TEST(Regressions, BaselineCSVSchema) {
@@ -83,7 +83,7 @@ TEST(Regressions, Con2020ConfigRoundTrip) {
     const double thetaoc = 10.9 * kDeg2Rad;
     const double dthetaoc = 0.15 * kDeg2Rad;
 
-    JupitermagSetCon2020Params(mui, irho, r0, r1, d, xt, xp, "integral",
+    JupiterMagSetCon2020Params(mui, irho, r0, r1, d, xt, xp, "integral",
                                edwards, errChk, cartIn, cartOut, smooth,
                                deltaRho, deltaZ, g, "lmic", wOOpen, wOOm,
                                thetamm, dthetamm, thetaoc, dthetaoc);
@@ -98,7 +98,7 @@ TEST(Regressions, Con2020ConfigRoundTrip) {
     double gotWOOpen = 0.0, gotWOOm = 0.0, gotThetaMM = 0.0, gotDThetaMM = 0.0,
            gotThetaOC = 0.0, gotDThetaOC = 0.0;
 
-    JupitermagGetCon2020Params(&gotMui, &gotIrho, &gotR0, &gotR1, &gotD,
+    JupiterMagGetCon2020Params(&gotMui, &gotIrho, &gotR0, &gotR1, &gotD,
                                &gotXt, &gotXp, gotEqtype, &gotEdwards,
                                &gotErrChk, &gotCartIn, &gotCartOut,
                                &gotSmooth, &gotDeltaRho, &gotDeltaZ, &gotG,
